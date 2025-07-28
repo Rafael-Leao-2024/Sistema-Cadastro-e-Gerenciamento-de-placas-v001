@@ -1,0 +1,100 @@
+{% extends "layout.html" %} {% block title %}Consultar Placa{% endblock %} {%
+block content %}
+<div class="animate-fadeIn">
+  <div class="flex justify-between items-center mb-8">
+    <h2 class="text-2xl font-bold">
+      <i class="fas fa-search mr-2"></i> Consultar Placa
+    </h2>
+    <a href="{{ url_for('placas.todas') }}" class="btn btn-outline">
+      <i class="fas fa-arrow-left mr-2"></i> Voltar
+    </a>
+  </div>
+
+  <div class="card mb-8">
+    <div class="card-body">
+      <form method="POST" class="flex items-end gap-4">
+        {{ form.hidden_tag() }}
+
+        <div class="flex-grow">
+          {{ form.placa.label(class="form-label") }}
+          <div class="relative">
+            {{ form.placa(class="form-control pl-10 uppercase",
+            placeholder="AAA1B23") }}
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
+              <i class="fas fa-car text-primary-400"></i>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary h-[42px]">
+          <i class="fas fa-search mr-2"></i> Buscar
+        </button>
+      </form>
+    </div>
+  </div>
+
+  {% if resultados %}
+  <div class="card">
+    <div class="card-header">
+      <h3 class="text-xl font-semibold">
+        Resultados ({{ resultados|length }})
+      </h3>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="table w-full">
+        <thead>
+          <tr>
+            <th>Placa</th>
+            <th>Usuário</th>
+            <th>Data</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for placa in resultados %}
+          <tr>
+            <td class="font-mono">{{ placa.placa }}</td>
+            <td>{{ placa.author.username }}</td>
+            <td>{{ placa.date_create.strftime('%d/%m/%Y') }}</td>
+            <td>
+              {% if placa.received %}
+              <span class="badge bg-green-500">Recebida</span>
+              {% elif placa.placa_a_caminho %}
+              <span class="badge bg-yellow-500">A caminho</span>
+              {% elif placa.placa_confeccionada %}
+              <span class="badge bg-blue-500">Confeccionada</span>
+              {% else %}
+              <span class="badge bg-gray-500">Pendente</span>
+              {% endif %}
+            </td>
+            <td>
+              <a
+                href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}"
+                class="btn btn-sm btn-outline"
+              >
+                <i class="fas fa-eye"></i>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const placaInput = document.querySelector('.uppercase');
+    if (placaInput) {
+      placaInput.addEventListener('input', function () {
+        this.value = this.value.toUpperCase();
+      });
+    }
+  });
+</script>
+{% endblock %}

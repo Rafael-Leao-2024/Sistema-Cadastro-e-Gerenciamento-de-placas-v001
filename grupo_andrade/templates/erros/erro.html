@@ -1,0 +1,30 @@
+{% extends "layout.html" %} {% block title %}Acesso Negado{% endblock %} {%
+block content %}
+<div class="max-w-md mx-auto py-12 animate-fadeIn">
+  <div class="card text-center">
+    <div class="card-body p-8">
+      <!-- Ícone de erro -->
+      <div class="text-red-500 text-6xl mb-6">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+
+      <!-- Título -->
+      <h2 class="text-3xl font-bold mb-4 text-red-400">Acesso Negado</h2>
+
+      <!-- Mensagem -->
+      <p class="text-lg mb-8 text-gray-300">
+        Você não tem permissão para acessar esta página ou o recurso solicitado.
+      </p>
+
+      <!-- Botão de ação -->
+      <a
+        href="{{ url_for('placas.homepage') }}"
+        class="btn btn-primary inline-flex items-center px-6 py-3"
+      >
+        <i class="fas fa-home mr-2"></i>
+        Voltar à Página Inicial
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

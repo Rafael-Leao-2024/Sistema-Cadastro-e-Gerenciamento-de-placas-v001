@@ -1,0 +1,163 @@
+{% extends "layout.html" %} {% block title %}Gerenciar Pedidos{% endblock %} {%
+block content %}
+<div class="animate-fadeIn">
+  <div class="flex justify-between items-center mb-8">
+    <h2 class="text-2xl font-bold">
+      <i class="fas fa-tasks mr-2"></i> Gerenciamento de Pedidos
+    </h2>
+    <div class="flex space-x-2">
+      <a href="{{ url_for('placas.consulta') }}" class="btn btn-outline">
+        <i class="fas fa-search mr-2"></i> Consultar
+      </a>
+      <a href="{{ url_for('placas.todas') }}" class="btn btn-primary">
+        <i class="fas fa-list mr-2"></i> Ver Todas
+      </a>
+    </div>
+  </div>
+
+  <div class="card mb-6">
+    <div class="overflow-x-auto">
+      <table class="table w-full">
+        <thead>
+          <tr>
+            <th>Placa</th>
+            <th>Cliente</th>
+            <th>Data</th>
+            <th>Status</th>
+            <th>Confeccionada</th>
+            <th>Encaminhada</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for placa in placas.items %}
+          <tr>
+            <td class="font-mono">{{ placa.placa }}</td>
+            <td>{{ placa.author.username }}</td>
+            <td>{{ placa.date_create.strftime('%d/%m/%Y') }}</td>
+            <td>
+              {% if placa.received %}
+              <span class="badge bg-green-500">Recebida</span>
+              {% elif placa.placa_a_caminho %}
+              <span class="badge bg-yellow-500">A caminho</span>
+              {% elif placa.placa_confeccionada %}
+              <span class="badge bg-blue-500">Confeccionada</span>
+              {% else %}
+              <span class="badge bg-gray-500">Pendente</span>
+              {% endif %}
+            </td>
+            <td>
+              <form
+                method="POST"
+                action="{{ url_for('placas.gerenciamento_final', id_placa=placa.id) }}"
+                class="flex space-x-2"
+              >
+                {{ form.hidden_tag() }}
+                <input
+                  type="checkbox"
+                  name="placa_confeccionada"
+                  value="{{ placa.placa_confeccionada }}"
+                  class=""
+                  {%
+                  if
+                  placa.placa_confeccionada
+                  %}checked{%
+                  endif
+                  %}
+                />
+                <button
+                  type="submit"
+                  name="action"
+                  value="confeccionada"
+                  class="btn btn-sm {% if placa.placa_confeccionada %}btn-primary{% else %}btn-outline{% endif %}"
+                >
+                  <i class="fas fa-check"></i>
+                </button>
+              </form>
+            </td>
+            <td>
+              <form
+                method="POST"
+                action="{{ url_for('placas.gerenciamento_final', id_placa=placa.id) }}"
+                class="flex space-x-2"
+              >
+                {{ form.hidden_tag() }}
+
+                <input
+                  type="checkbox"
+                  name="placa_a_caminho"
+                  class=""
+                  value="{{ placa.placa_a_caminho }}"
+                  {%
+                  if
+                  placa.placa_a_caminho
+                  %}checked{%
+                  endif
+                  %}
+                />
+
+                <button
+                  type="submit"
+                  name="action"
+                  value="a_caminho"
+                  class="btn btn-sm {% if placa.placa_a_caminho %}btn-primary{% else %}btn-outline{% endif %}"
+                >
+                  <i class="fas fa-truck"></i>
+                </button>
+                <a
+                  href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}"
+                  class="btn btn-sm btn-outline"
+                >
+                  <i class="fas fa-eye"></i>
+                </a>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Paginação -->
+
+  <div class="flex justify-center mt-8">
+    <nav aria-label="Paginação">
+      <ul class="flex items-center space-x-1">
+        {% for page_num in placas.iter_pages(left_edge=1, right_edge=1,
+        left_current=2, right_current=3) %} {% if page_num %} {% if placas.page
+        == page_num %}
+        <!-- Página Ativa -->
+        <li>
+          <a
+            href="{{ url_for('placas.gerenciamento_pedidos', page=page_num) }}"
+            class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-primary-600 to-primary-800 text-white font-semibold shadow-md transition-all transform hover:scale-105"
+          >
+            {{ page_num }}
+          </a>
+        </li>
+        {% else %}
+        <!-- Página Normal -->
+        <li>
+          <a
+            href="{{ url_for('placas.gerenciamento_pedidos', page=page_num) }}"
+            class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-800 text-gray-300 font-medium hover:bg-gray-700 hover:text-white transition-all border border-gray-700 shadow-sm"
+          >
+            {{ page_num }}
+          </a>
+        </li>
+        {% endif %} {% else %}
+        <!-- Separador -->
+        <li class="px-2 py-1 text-gray-500">
+          <span class="flex items-center justify-center w-6">...</span>
+        </li>
+        {% endif %} {% endfor %}
+
+        <!-- Contador de Páginas (Opcional) -->
+        <li class="ml-4 text-sm text-gray-400 hidden md:block">
+          Página {{ placas.page }} de {{ placas.pages }}
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "layout.html" %} {% block title %}Meu Endereço{% endblock %} {% block
+content %}
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 animate-fadeIn">
+  <!-- Sidebar -->
+  <div class="md:col-span-1">
+    <div class="card">
+      <div class="text-center p-6">
+        <img
+          src="{{ url_for('static', filename='profile_pics/' + current_user.image_file) }}"
+          class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-primary-500"
+        />
+        <h3 class="text-xl font-semibold">{{ current_user.username }}</h3>
+        <p class="text-secondary">{{ current_user.email }}</p>
+      </div>
+      <div class="space-y-2 p-4 border-t border-gray-700">
+        <a
+          href="{{ url_for('users.account') }}"
+          class="block px-4 py-2 rounded hover:bg-gray-800"
+        >
+          <i class="fas fa-user-circle mr-2"></i> Perfil
+        </a>
+
+        <a
+          href="{{ url_for('users.endereco') }}"
+          class="block px-4 py-2 rounded bg-primary-900 text-primary-100"
+        >
+          <i class="fas fa-map-marker-alt mr-2"></i> Endereço
+        </a>
+        <a
+          href="{{ url_for('placas.minhas_placas') }}"
+          class="block px-4 py-2 rounded hover:bg-gray-800"
+        >
+          <i class="fas fa-car mr-2"></i> Minhas Placas
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="md:col-span-3">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="text-xl font-semibold">
+          <i class="fas fa-map-marker-alt mr-2"></i> Meu Endereço
+        </h3>
+      </div>
+      <div class="card-body">
+        <form method="POST">
+          {{ form.hidden_tag() }}
+
+          <div class="form-group mb-6">
+            {{ form.endereco.label(class="form-label") }}
+            <div class="relative">
+              {{ form.endereco(class="form-control pl-10", rows="4") }}
+              <div
+                class="absolute inset-y-0 left-0 pl-3 pt-3 flex items-start pointer-events-none"
+              >
+                <i class="fas fa-home text-primary-400"></i>
+              </div>
+            </div>
+            {% if form.endereco.errors %} {% for error in form.endereco.errors
+            %}
+            <p class="text-red-400 text-sm mt-1">{{ error }}</p>
+            {% endfor %} {% endif %}
+          </div>
+
+          <button type="submit" class="btn btn-primary px-8">
+            <i class="fas fa-save mr-2"></i> Salvar Endereço
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

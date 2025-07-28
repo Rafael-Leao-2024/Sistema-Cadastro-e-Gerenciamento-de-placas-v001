@@ -1,0 +1,92 @@
+{% extends "layout.html" %} {% block title %}Minhas Placas{% endblock %} {%
+block content %}
+<div class="animate-fadeIn">
+  <div class="flex justify-between items-center mb-8">
+    <h2 class="text-2xl font-bold">
+      <i class="fas fa-car mr-2"></i> Minhas Placas
+    </h2>
+    <a href="{{ url_for('placas.solicitar_placas') }}" class="btn btn-primary">
+      <i class="fas fa-plus mr-2"></i> Nova Placa
+    </a>
+  </div>
+
+  <div class="overflow-x-auto">
+    <table class="table w-full">
+      <thead>
+        <tr>
+          <th>Placa</th>
+          <th>Data</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for placa in placas.items %}
+        <tr class="hover:bg-gray-800 transition-colors">
+          <td class="font-mono">{{ placa.placa }}</td>
+          <td>{{ placa.date_create.strftime('%d/%m/%Y') }}</td>
+          <td>
+            {% if placa.received %}
+            <span class="badge bg-green-500">Recebida</span>
+            {% elif placa.placa_a_caminho %}
+            <span class="badge bg-yellow-500">A caminho</span>
+            {% elif placa.placa_confeccionada %}
+            <span class="badge bg-blue-500">Confeccionada</span>
+            {% else %}
+            <span class="badge bg-gray-500">Pendente</span>
+            {% endif %}
+          </td>
+          <td class="flex space-x-2">
+            <a
+              href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}"
+              class="btn btn-sm btn-outline"
+            >
+              <i class="fas fa-eye"></i>
+            </a>
+            <a
+              href="{{ url_for('placas.editar_placa', placa_id=placa.id) }}"
+              class="btn btn-sm btn-outline"
+            >
+              <i class="fas fa-edit"></i>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginação -->
+  <div class="mt-6 flex justify-center">
+    <nav>
+      <ul class="pagination">
+        {% for page_num in placas.iter_pages(left_edge=1, right_edge=1,
+        left_current=2, right_current=3) %} {% if page_num %} {% if placas.page
+        == page_num %}
+        <li class="page-item active">
+          <a
+            class="page-link bg-primary-600"
+            href="{{ url_for('placas.minhas_placas', page=page_num) }}"
+          >
+            {{ page_num }}
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item">
+          <a
+            class="page-link hover:bg-gray-700"
+            href="{{ url_for('placas.minhas_placas', page=page_num) }}"
+          >
+            {{ page_num }}
+          </a>
+        </li>
+        {% endif %} {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">...</span>
+        </li>
+        {% endif %} {% endfor %}
+      </ul>
+    </nav>
+  </div>
+</div>
+{% endblock %}

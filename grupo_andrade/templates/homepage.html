@@ -1,0 +1,129 @@
+{% extends "layout.html" %} {% block title %}Homepage{% endblock %} {% block
+content %}
+<div class="animate-fadeIn">
+  <!-- Hero Section -->
+  <section
+    class="flex flex-col items-center justify-center text-center py-12 mb-8"
+  >
+    <h1 class="text-4xl md:text-5xl font-bold mb-6">
+      Sistema de Emplacamento Veicular
+    </h1>
+    <p class="text-lg text-secondary max-w-3xl mx-auto mb-8">
+      Soluções completas para emplacamento de veículos com agilidade e segurança
+    </p>
+
+    {% if not current_user.is_authenticated %}
+    <div class="flex space-x-4">
+      <a
+        href="{{ url_for('auth.register') }}"
+        class="btn btn-primary px-8 py-3"
+      >
+        <i class="fas fa-user-plus mr-2"></i> Criar Conta
+      </a>
+      <a href="{{ url_for('auth.login') }}" class="btn btn-outline px-8 py-3">
+        <i class="fas fa-sign-in-alt mr-2"></i> Acessar Sistema
+      </a>
+    </div>
+    {% else %}
+    <div class="flex space-x-4">
+      <a
+        href="{{ url_for('placas.solicitar_placas') }}"
+        class="btn btn-primary px-8 py-3"
+      >
+        <i class="fas fa-plus-circle mr-2"></i> Nova Solicitação
+      </a>
+      <a
+        href="{{ url_for('placas.minhas_placas') }}"
+        class="btn btn-outline px-8 py-3"
+      >
+        <i class="fas fa-list-ol mr-2"></i> Ver Minhas Placas
+      </a>
+    </div>
+    {% endif %}
+  </section>
+
+  <!-- Features Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+    <a href="{{ url_for('users.listar_usuarios') }}">
+      <div class="card hover-scale">
+        <div class="text-center p-6">
+          <div class="text-primary-400 text-4xl mb-4">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-3">Community</h3>
+          <p class="text-secondary">
+            Processos ágeis e eficientes para você não perder tempo
+          </p>
+        </div>
+      </div>
+    </a>
+
+    <!-- Feature 1 -->
+    <div class="card hover-scale">
+      <div class="text-center p-6">
+        <div class="text-primary-400 text-4xl mb-4">
+          <i class="fas fa-bolt"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-3">Rapidez</h3>
+        <p class="text-secondary">
+          Processos ágeis e eficientes para você não perder tempo
+        </p>
+      </div>
+    </div>
+
+    <!-- Feature 2 -->
+    <div class="card hover-scale">
+      <div class="text-center p-6">
+        <div class="text-primary-400 text-4xl mb-4">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-3">Segurança</h3>
+        <p class="text-secondary">
+          Seus dados protegidos com as melhores práticas do mercado
+        </p>
+      </div>
+    </div>
+
+    <div class="card hover-scale">
+      <a href="{{ url_for('pagamentos.relatorio') }}">
+        <div class="text-center p-6">
+          <div class="text-primary-400 text-4xl mb-4">
+            <i class="fa-brands fa-cc-apple-pay"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-3">FastPay</h3>
+          <p class="text-secondary">
+            Equipe especializada pronta para te ajudar quando precisar
+          </p>
+        </div>
+      </a>
+    </div>
+
+    <div class="card hover-scale">
+      <div class="text-center p-6">
+        <div class="text-primary-400 text-4xl mb-4">
+          <i class="fas fa-headset"></i>
+        </div>
+        <h3 class="text-xl font-semibold mb-3">Suporte</h3>
+        <p class="text-secondary">
+          Equipe especializada pronta para te ajudar quando precisar
+        </p>
+      </div>
+    </div>
+
+    <!-- Feature 3 -->
+    <a href="{{ url_for('placas.gerenciamento_pedidos') }}">
+      <div class="card hover-scale">
+        <div class="text-center p-6">
+          <div class="text-primary-400 text-4xl mb-4">
+            <i class="fa-solid fa-list-check"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-3">management</h3>
+          <p class="text-secondary">
+            Equipe especializada pronta para te ajudar quando precisar
+          </p>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+{% endblock %}

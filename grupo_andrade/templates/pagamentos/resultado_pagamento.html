@@ -1,0 +1,33 @@
+{% extends "layout.html" %} {% block title %}Resultado do Pagamento{% endblock
+%} {% block content %}
+<div class="max-w-lg mx-auto animate-fadeIn">
+  <div class="card text-center">
+    <div class="card-body">
+      {% if status_pagamento == 'approved' %}
+      <div class="text-green-500 text-6xl mb-4">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <h2 class="text-2xl font-bold mb-2">Pagamento Aprovado!</h2>
+      <p class="text-lg mb-6">Seu pagamento foi processado com sucesso.</p>
+      <div class="bg-gray-800 rounded-lg p-4 mb-6">
+        <p class="font-mono">ID: {{ pagamento.id_pagamento }}</p>
+        <p class="font-mono">Status: {{ pagamento.status_pagamento }}</p>
+        <p class="font-mono">
+          Data: {{ pagamento.data_pagamento.strftime('%d/%m/%Y %H:%M') }}
+        </p>
+      </div>
+      {% else %}
+      <div class="text-yellow-500 text-6xl mb-4">
+        <i class="fas fa-exclamation-circle"></i>
+      </div>
+      <h2 class="text-2xl font-bold mb-2">Pagamento Pendente</h2>
+      <p class="text-lg mb-6">Seu pagamento está sendo processado.</p>
+      {% endif %}
+
+      <a href="{{ url_for('placas.minhas_placas') }}" class="btn btn-primary">
+        <i class="fas fa-arrow-left mr-2"></i> Voltar para Minhas Placas
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

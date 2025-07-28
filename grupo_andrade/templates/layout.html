@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grupo Andrade - {% block title %}{% endblock %}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    {% block head %}{% endblock %}
+  </head>
+  <body class="bg-dark">
+    <nav class="navbar glass-effect shadow-lg">
+      <div class="container flex justify-between items-center">
+        <a href="{{ url_for('placas.homepage') }}" class="navbar-brand">
+          <i class="fas fa-car-alt mr-2"></i> Grupo Andrade
+        </a>
+        <div class="flex space-x-4">
+          {% if current_user.is_authenticated %}
+          <a
+            href="{{ url_for('placas.minhas_placas') }}"
+            class="btn btn-outline"
+          >
+            <i class="fas fa-list mr-2"></i> Minhas Placas
+          </a>
+          <a href="{{ url_for('users.account') }}" class="btn btn-outline">
+            <i class="fas fa-user-circle mr-2"></i> Minha Conta
+          </a>
+          <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">
+            <i class="fas fa-sign-out-alt mr-2"></i> Sair
+          </a>
+          {% else %}
+          <a href="{{ url_for('auth.login') }}" class="btn btn-outline">
+            <i class="fas fa-sign-in-alt mr-2"></i> Entrar
+          </a>
+          <a href="{{ url_for('auth.register') }}" class="btn btn-primary">
+            <i class="fas fa-user-plus mr-2"></i> Registrar
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    <main class="container py-8">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="alert alert-{{ category }} mb-6 animate-fadeIn">
+        {{ message }}
+      </div>
+      {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-darker py-6 mt-12">
+      <div class="container text-center text-secondary">
+        <p>&copy; 2023 Grupo Andrade. Todos os direitos reservados.</p>
+      </div>
+    </footer>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+      defer
+    ></script>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

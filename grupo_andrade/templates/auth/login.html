@@ -1,0 +1,75 @@
+{% extends "layout.html" %} {% block title %}Login{% endblock %} {% block
+content %}
+<div class="max-w-md mx-auto animate-fadeIn">
+  <div class="card">
+    <div class="card-header text-center">
+      <h2 class="text-2xl font-bold">
+        <i class="fas fa-sign-in-alt mr-2"></i> Acessar Sistema
+      </h2>
+    </div>
+    <div class="card-body">
+      <form method="POST" action="{{ url_for('auth.login') }}">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group mb-4">
+          {{ form.email.label(class="form-label") }}
+          <div class="relative">
+            {{ form.email(class="form-control pl-10",
+            placeholder="seu@email.com") }}
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
+              <i class="fas fa-envelope text-primary-400"></i>
+            </div>
+          </div>
+          {% if form.email.errors %} {% for error in form.email.errors %}
+          <p class="text-red-400 text-sm mt-1">{{ error }}</p>
+          {% endfor %} {% endif %}
+        </div>
+
+        <div class="form-group mb-4">
+          {{ form.password.label(class="form-label") }}
+          <div class="relative">
+            {{ form.password(class="form-control pl-10", placeholder="••••••••")
+            }}
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
+              <i class="fas fa-lock text-primary-400"></i>
+            </div>
+          </div>
+          {% if form.password.errors %} {% for error in form.password.errors %}
+          <p class="text-red-400 text-sm mt-1">{{ error }}</p>
+          {% endfor %} {% endif %}
+        </div>
+
+        <div class="flex items-center justify-between mb-6">
+          <div class="form-check">
+            {{ form.remember(class="form-check-input") }} {{
+            form.remember.label(class="form-check-label text-sm") }}
+          </div>
+          <a
+            href="{{ url_for('auth.reset_request') }}"
+            class="text-sm text-primary-300 hover:underline"
+          >
+            Esqueceu a senha?
+          </a>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full py-3">
+          <i class="fas fa-sign-in-alt mr-2"></i> Entrar
+        </button>
+      </form>
+    </div>
+    <div class="card-footer text-center text-sm pt-4 border-t border-gray-700">
+      Não tem uma conta?
+      <a
+        href="{{ url_for('auth.register') }}"
+        class="text-primary-300 hover:underline"
+      >
+        Registre-se aqui
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

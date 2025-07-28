@@ -1,0 +1,156 @@
+{% extends "layout.html" %} {% block title %}Detalhes da Placa{% endblock %} {%
+block content %}
+<div class="animate-fadeIn">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold">
+      <i class="fas fa-car mr-2"></i> Detalhes da Placa: {{ placa.placa }}
+    </h2>
+    <div class="flex space-x-2">
+      <a href="{{ url_for('placas.minhas_placas') }}" class="btn btn-outline">
+        <i class="fas fa-arrow-left mr-2"></i> Voltar
+      </a>
+      <a
+        href="{{ url_for('placas.editar_placa', placa_id=placa.id) }}"
+        class="btn btn-primary"
+      >
+        <i class="fas fa-edit mr-2"></i> Editar
+      </a>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Informações da Placa -->
+    <div class="card col-span-2">
+      <div class="card-header">
+        <h3 class="text-xl font-semibold">
+          <i class="fas fa-info-circle mr-2"></i> Informações
+        </h3>
+      </div>
+      <div class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <p class="text-sm text-secondary">Placa</p>
+            <p class="font-mono text-lg">{{ placa.placa }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-secondary">Renavan</p>
+            <p class="font-mono text-lg">{{ placa.renavan }}</p>
+          </div>
+          {% if placa.received %}
+          <div>
+            <p class="text-sm text-secondary">Recebimento</p>
+            <p class="font-mono text-lg">
+              {{ usuario.username if usuario else "usuario nao encontrado"}}
+            </p>
+          </div>
+          {% endif %}
+        </div>
+
+        <div>
+          <p class="text-sm text-secondary">CRLV</p>
+          <p class="font-mono text-lg">{{ placa.crlv }}</p>
+        </div>
+
+        <div>
+          <p class="text-sm text-secondary">Endereço para Entrega</p>
+          <p class="text-lg">{{ placa.endereco_placa }}</p>
+        </div>
+
+        <div>
+          <p class="text-sm text-secondary">Data de Criação</p>
+          <p class="text-lg">
+            {{ placa.date_create.strftime('%d/%m/%Y %H:%M') }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status e Ações -->
+    <div class="space-y-6">
+      <!-- Status -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="text-xl font-semibold">
+            <i class="fas fa-tasks mr-2"></i> Status
+          </h3>
+        </div>
+        <div class="space-y-4">
+          <div class="progress-container">
+            <div class="flex justify-between text-sm mb-1">
+              <span>Solicitada</span>
+              <span>100%</span>
+            </div>
+            <div class="progress-bar bg-primary-600 w-full"></div>
+          </div>
+
+          <div class="progress-container">
+            <div class="flex justify-between text-sm mb-1">
+              <span>Confeccionada</span>
+              <span
+                >{% if placa.placa_confeccionada %}100%{% else %}0%{% endif
+                %}</span
+              >
+            </div>
+            <div
+              class="progress-bar {% if placa.placa_confeccionada %}bg-primary-600 w-full{% else %}bg-gray-600 w-0{% endif %}"
+            ></div>
+          </div>
+
+          <div class="progress-container">
+            <div class="flex justify-between text-sm mb-1">
+              <span>A caminho</span>
+              <span
+                >{% if placa.placa_a_caminho %}100%{% else %}0%{% endif %}</span
+              >
+            </div>
+            <div
+              class="progress-bar {% if placa.placa_a_caminho %}bg-primary-600 w-full{% else %}bg-gray-600 w-0{% endif %}"
+            ></div>
+          </div>
+
+          <div class="progress-container">
+            <div class="flex justify-between text-sm mb-1">
+              <span>Recebida</span>
+              <span>{% if placa.received %}100%{% else %}0%{% endif %}</span>
+            </div>
+            <div
+              class="progress-bar {% if placa.received %}bg-primary-600 w-full{% else %}bg-gray-600 w-0{% endif %}"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Marcar como Recebida -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="text-xl font-semibold">
+            <i class="fas fa-check-circle mr-2"></i> Confirmação
+          </h3>
+        </div>
+        <form method="POST" class="p-4">
+          <div class="form-check mb-4">
+            <input
+              type="checkbox"
+              id="received"
+              name="received"
+              class="form-check-input"
+              {%
+              if
+              placa.received
+              %}checked{%
+              endif
+              %}
+            />
+            <label for="received" class="form-check-label">
+              Marcar como recebida
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary w-full">
+            <i class="fas fa-save mr-2"></i> Atualizar Status
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,161 @@
+{% extends "layout.html" %} {% block title %}Solicitar Placas{% endblock %} {%
+block content %}
+<div class="animate-fadeIn">
+  <div class="flex justify-between items-center mb-8">
+    <h2 class="text-2xl font-bold">
+      <i class="fas fa-plus-circle mr-2"></i> Solicitar Placas
+    </h2>
+    <a href="{{ url_for('placas.minhas_placas') }}" class="btn btn-outline">
+      <i class="fas fa-arrow-left mr-2"></i> Voltar
+    </a>
+  </div>
+
+  <div class="card mb-6">
+    <div class="card-header">
+      <h3 class="text-xl font-semibold">
+        <i class="fas fa-info-circle mr-2"></i> Informações do Cliente
+      </h3>
+    </div>
+    <div class="card-body">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div>
+          <p class="text-sm text-secondary">Nome</p>
+          <p class="text-lg">{{ current_user.username }}</p>
+        </div>
+        <div>
+          <p class="text-sm text-secondary">Email</p>
+          <p class="text-lg">{{ current_user.email }}</p>
+        </div>
+      </div>
+      <div>
+        <p class="text-sm text-secondary">Endereço para Entrega</p>
+        <p class="text-lg">{{ endereco }}</p>
+      </div>
+    </div>
+  </div>
+
+  <form method="POST">
+    <div class="card mb-4">
+      <div class="card-header flex justify-between items-center">
+        <h3 class="text-xl font-semibold">
+          <i class="fas fa-car mr-2"></i> Dados das Placas
+        </h3>
+        <button type="button" id="add-placa" class="btn btn-sm btn-primary">
+          <i class="fas fa-plus mr-2"></i> Adicionar Placa
+        </button>
+      </div>
+      <div class="card-body space-y-4" id="placas-container">
+        <!-- Primeira Placa -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-4 gap-4 placa-item group relative"
+        >
+          <div class="form-group">
+            <label class="form-label">Placa</label>
+            <input
+              type="text"
+              name="placa"
+              class="form-control uppercase"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Renavan</label>
+            <input type="text" name="renavam" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">CRLV</label>
+            <input type="text" name="crlv" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Endereço (opcional)</label>
+            <input
+              type="text"
+              name="endereco_placa"
+              class="form-control"
+              value="{{ endereco }}"
+            />
+          </div>
+          <!-- Botão de Remover (só aparece em blocos adicionais) -->
+          <button
+            type="button"
+            class="remove-placa-btn absolute -top-3 -right-3 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md hover:bg-red-600"
+            title="Remover placa"
+          >
+            <i class="fas fa-times text-xs"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-right">
+      <button type="submit" class="btn btn-primary px-8 py-3">
+        <i class="fas fa-paper-plane mr-2"></i> Enviar Solicitação
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Converter para maiúsculas
+    const inputs = document.querySelectorAll('.uppercase');
+    inputs.forEach((input) => {
+      input.addEventListener('input', function () {
+        this.value = this.value.toUpperCase();
+      });
+    });
+
+    // Adicionar nova placa
+    const addButton = document.getElementById('add-placa');
+    const container = document.getElementById('placas-container');
+
+    if (addButton && container) {
+      addButton.addEventListener('click', function () {
+        const placaItems = document.querySelectorAll('.placa-item');
+        const newPlaca = placaItems[0].cloneNode(true);
+
+        // Limpar os valores
+        const inputs = newPlaca.querySelectorAll('input');
+        inputs.forEach((input) => (input.value = ''));
+
+        // Garantir que o botão de remover está visível
+        const removeBtn = newPlaca.querySelector('.remove-placa-btn');
+        removeBtn.classList.remove('opacity-0');
+        removeBtn.classList.add('opacity-100');
+
+        container.appendChild(newPlaca);
+
+        // Adicionar evento de remoção
+        addRemoveEvent(newPlaca);
+      });
+    }
+
+    // Função para adicionar evento de remoção
+    function addRemoveEvent(element) {
+      const removeBtn = element.querySelector('.remove-placa-btn');
+      if (removeBtn) {
+        removeBtn.addEventListener('click', function () {
+          const allPlacas = document.querySelectorAll('.placa-item');
+          if (allPlacas.length > 1) {
+            element.remove();
+          } else {
+            alert('Você precisa ter pelo menos um bloco de placa.');
+          }
+        });
+      }
+    }
+
+    // Adicionar eventos de remoção aos blocos existentes
+    document.querySelectorAll('.placa-item').forEach((item) => {
+      if (item !== document.querySelector('.placa-item:first-child')) {
+        const removeBtn = item.querySelector('.remove-placa-btn');
+        if (removeBtn) {
+          removeBtn.classList.remove('opacity-0');
+          removeBtn.classList.add('opacity-100');
+          addRemoveEvent(item);
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

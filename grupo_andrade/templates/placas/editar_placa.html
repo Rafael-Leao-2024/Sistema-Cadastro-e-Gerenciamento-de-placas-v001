@@ -1,0 +1,91 @@
+{% extends "layout.html" %} {% block title %}Editar Placa{% endblock %} {% block
+content %}
+<div class="animate-fadeIn">
+  <div class="flex justify-between items-center mb-8">
+    <h2 class="text-2xl font-bold">
+      <i class="fas fa-edit mr-2"></i> Editar Placa: {{ placa.placa }}
+    </h2>
+    <div class="flex space-x-2">
+      <a
+        href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}"
+        class="btn btn-outline"
+      >
+        <i class="fas fa-arrow-left mr-2"></i> Voltar
+      </a>
+    </div>
+  </div>
+
+  <div class="card">
+    <form method="POST">
+      {{ form.hidden_tag() }}
+      <div class="card-body grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="form-group">
+          <label class="form-label">Placa</label>
+          <input
+            type="text"
+            name="placa"
+            value="{{ placa.placa }}"
+            class="form-control uppercase"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Renavan</label>
+          <input
+            type="text"
+            name="renavan"
+            value="{{ placa.renavan }}"
+            class="form-control"
+          />
+        </div>
+
+        <div class="form-group md:col-span-2">
+          <label class="form-label">Endereço para Entrega</label>
+          <textarea
+            name="endereco_placa"
+            class="form-control"
+            rows="3"
+            required
+          >
+{{ placa.endereco_placa }}</textarea
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">CRLV</label>
+          <input
+            type="text"
+            name="crlv"
+            value="{{ placa.crlv }}"
+            class="form-control"
+          />
+        </div>
+      </div>
+      <div class="card-footer text-right border-t border-gray-700">
+        <a href="{{ url_for('placas.editar_placa', placa_id=placa.id) }}">
+          <button type="" class="btn btn-primary">
+            <i class="fas fa-save mr-2"></i> Salvar Alterações
+          </button>
+        </a>
+        <a href="{{ url_for('placas.deletar', placa_id=placa.id) }}">
+          <button type="" class="btn btn-danger">
+            <i class="fas fa-trash-alt mr-2"></i>Deletar Permanente
+          </button>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const placaInput = document.querySelector('.uppercase');
+    if (placaInput) {
+      placaInput.addEventListener('input', function () {
+        this.value = this.value.toUpperCase();
+      });
+    }
+  });
+</script>
+{% endblock %}

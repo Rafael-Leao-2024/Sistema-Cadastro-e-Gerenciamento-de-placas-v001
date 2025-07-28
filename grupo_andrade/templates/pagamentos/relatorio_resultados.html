@@ -1,0 +1,96 @@
+{% extends "layout.html" %} {% block title %}Relatório de Pagamento{% endblock
+%} {% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h4>Relatório: {{ mes }}/{{ ano }}</h4>
+      </div>
+      <div class="card-body">
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="card text-white bg-primary">
+              <div class="card-body">
+                <h5 class="card-title">Quantidade</h5>
+                <p class="card-text display-4">{{ quantidade }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card text-white bg-success">
+              <div class="card-body">
+                <h5 class="card-title">Valor Total</h5>
+                <p class="card-text display-4">R$ {{ valor_total }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h5 class="mb-3">Placas incluídas:</h5>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Placa</th>
+                <th>Data</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for placa in placas %}
+              <tr>
+                <td>{{ placa.placa }}</td>
+                <td>{{ placa.date_create.strftime('%d/%m/%Y') }}</td>
+                <td>
+                  {% if placa.received %}
+                  <span class="badge badge-success">Recebida</span>
+                  {% elif placa.placa_a_caminho %}
+                  <span class="badge badge-warning">A caminho</span>
+                  {% elif placa.placa_confeccionada %}
+                  <span class="badge badge-info">Confeccionada</span>
+                  {% else %}
+                  <span class="badge badge-secondary">Pendente</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">
+        <h5>Pagamento</h5>
+      </div>
+      <div class="card-body">
+        <p class="card-text">
+          Total a pagar: <strong>R$ {{ valor_total }}</strong>
+        </p>
+        <p class="card-text">
+          Quantidade de placas: <strong>{{ quantidade }}</strong>
+        </p>
+
+        {% if quantidade > 0 %}
+        <a href="{{ init_point }}" class="btn btn-success btn-block mt-4"
+          >Pagar com Mercado Pago</a
+        >
+        {% else %}
+        <button class="btn btn-secondary btn-block mt-4" disabled>
+          Nenhuma placa para pagar
+        </button>
+        {% endif %}
+
+        <a
+          href="{{ url_for('pagamentos.relatorio') }}"
+          class="btn btn-outline-primary btn-block mt-2"
+          >Voltar</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
