@@ -36,6 +36,14 @@ block content %}
             <p class="text-sm text-secondary">Renavan</p>
             <p class="font-mono text-lg">{{ placa.renavan }}</p>
           </div>
+          <div>
+            <p class="text-sm text-secondary">Identificador</p>
+            <p class="font-mono text-lg">{{ placa.id }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-secondary">Solicitante</p>
+            <p class="font-mono text-lg">{{ usuario_solicitante.username }}</p>
+          </div>
           {% if placa.received %}
           <div>
             <p class="text-sm text-secondary">Recebimento</p>

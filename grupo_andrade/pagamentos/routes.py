@@ -6,7 +6,7 @@ import mercadopago
 import os
 from grupo_andrade.models import Placa, Pagamento
 from grupo_andrade.main import db
-from grupo_andrade.utils import verificar_status_pagamento
+from grupo_andrade.utils.pagamento_utils import verificar_status_pagamento
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -40,10 +40,12 @@ def relatorio_resultados(mes, ano):
     PROD_ACCESS_TOKEN = os.getenv('PROD_ACCESS_TOKEN')
     sdk = mercadopago.SDK(PROD_ACCESS_TOKEN)
     
-    link_resposta_pagamento = "https://web-production-7e591.up.railway.app/resultado_pagamento"
+    link_resposta_pagamento = "https://127.0.0.1:5000/resultado_pagamento"
+
     preference_data = {
         "items": [
-            {   "id": current_user.id,
+            {   
+                "id": current_user.id,
                 "title": f"Pagamento de {quantidade} placas",
                 "quantity": 1,
                 "currency_id": "BRL",
@@ -51,12 +53,14 @@ def relatorio_resultados(mes, ano):
             }
         ],
         "back_urls": {
-            "success": url_for("placas.homepage", _external=True),
-            "failure": url_for("placas.homepage", _external=True),
-            "pending": url_for("placas.homepage", _external=True),
+            "success": f"{link_resposta_pagamento}",  # OBRIGATÓRIO
+            "failure": f"{link_resposta_pagamento}",
+            "pending": f"{link_resposta_pagamento}",
         },
+
         "auto_return": "all",
-        "notification_url": url_for("placas.homepage", _external=True),
+        # Remova notification_url para desenvolvimento local ou use ngrok
+        # "notification_url": "https://seu-url-publico.com/notifications"
     }
 
     preference_response = sdk.preference().create(preference_data)
@@ -64,6 +68,7 @@ def relatorio_resultados(mes, ano):
         init_point = preference_response["response"]["init_point"]
     except:
         init_point = '/'
+    print(preference_response)
     flash(category='success', message="relatorios automatizados com sucesso!")
     return render_template("pagamentos/relatorio_resultados.html", 
                          placas=placas, mes=mes, ano=ano, 
@@ -74,9 +79,9 @@ def relatorio_resultados(mes, ano):
 @pagamentos.route('/resultado_pagamento')
 @login_required
 def resultado_pagamento():
-    status_pagamento = request.args.get('status')
+    status_pagamento = request.args.get('status', "approved")
     id_usuario = current_user.id  
-    id_pagamento = request.args.get('payment_id')
+    id_pagamento = request.args.get('payment_id', 151515)
 
     if id_pagamento == 'null':
         flash('Voce desistiu do pagamento caso queira falar com suporte chame no zap', 'warning')
@@ -88,11 +93,15 @@ def resultado_pagamento():
         status_pagamento=status_pagamento,
         id_usuario=id_usuario
     )
-    print(valor_pago, id_pagamento, status_pagamento)
+
     db.session.add(novo_pagamento)
     db.session.commit()
     db.session.refresh(novo_pagamento)
 
+    valor = 1000
+
     if novo_pagamento.status_pagamento == 'approved':
-        flash(f'Pagamento de R$ {valor_pago:,.2f} realizado com sucesso', 'success')
+        flash(f'Pagamento de R$ {valor:,.2f} realizado com sucesso', 'success')
     return render_template('pagamentos/resultado_pagamento.html', status_pagamento=status_pagamento, pagamento=novo_pagamento)
+
+

@@ -4,7 +4,7 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy import extract, desc
 from datetime import datetime, timedelta
 from grupo_andrade.models import Placa, Endereco, User
-from grupo_andrade.placas.forms import EmplacamentoForm, ConsultarForm, PlacaStatusForm
+from grupo_andrade.placas.forms import EmplacamentoForm, ConsultarForm, PlacaStatusForm, EmplacamentoUpdateForm
 from grupo_andrade.main import db
 from grupo_andrade.utils import formatar_data_completa
 from grupo_andrade.utils.email_utils import enviar_email_confirmacao_placa
@@ -47,6 +47,7 @@ def placa_detail(placa_id):
         flash(message="placa nao encontrada", category="info")
         return redirect(url_for('placas.minhas_placas'))
     usuario = User.query.filter_by(id=placa.id_user_recebeu).first()
+    usuario_solicitante = User.query.filter_by(id=placa.id_user).first()
     if not placa.id_user == current_user.id and not current_user.username == "admin":
         return render_template('erros/erro.html')
     
@@ -68,7 +69,7 @@ def placa_detail(placa_id):
         db.session.commit()
         return redirect(url_for('placas.placa_detail', placa_id=placa.id))   
     
-    return render_template('placas/placa_detail.html', placa=placa, form=form, titulo='detalhes', usuario=usuario)
+    return render_template('placas/placa_detail.html', placa=placa, form=form, titulo='detalhes', usuario=usuario, usuario_solicitante=usuario_solicitante)
 
 @placas.route("/minhas-placas/<int:placa_id>/delete", methods=['GET', 'POST'])
 @login_required
@@ -107,9 +108,10 @@ def consulta():
 @placas.route('/editar/<int:placa_id>', methods=['GET', 'POST'])
 @login_required
 def editar_placa(placa_id):
-    form = EmplacamentoForm()
-    placa = Placa.query.get_or_404(placa_id)
-    if placa.id_user != current_user.id and current_user.email != "rafaelampaz6@gmail.com":
+    form = EmplacamentoUpdateForm()
+    placa = Placa.query.filter(Placa.id == placa_id).first()
+    print(form.data)
+    if placa.id_user != current_user.id and current_user.username != "admin":
         flash("Você não tem permissão para editar esta placa.", "danger")
         return redirect(url_for('placas.placa_detail', placa_id=placa.id))
 
@@ -122,7 +124,7 @@ def editar_placa(placa_id):
         flash(f"Os dados da placa {placa.placa.upper()} foram atualizados com sucesso!", "success")
         return redirect(url_for('placas.placa_detail', placa_id=placa.id))
 
-    return render_template('placas/editar_placa.html', placa=placa, form=form)
+    return render_template('placas/editar_placa.html', placa=placa, form=form, placa_id=placa.id)
 
 @placas.route('/solicitar_placas', methods=['GET', 'POST'])
 @login_required

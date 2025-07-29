@@ -42,13 +42,13 @@ block content %}
             <td>{{ placa.date_create.strftime('%d/%m/%Y') }}</td>
             <td>
               {% if placa.received %}
-              <span class="badge bg-green-500">Recebida</span>
+              <span class="badge text-green-500">Recebida</span>
               {% elif placa.placa_a_caminho %}
-              <span class="badge bg-yellow-500">A caminho</span>
+              <span class="badge text-yellow-500">A caminho</span>
               {% elif placa.placa_confeccionada %}
-              <span class="badge bg-blue-500">Confeccionada</span>
+              <span class="badge text-blue-500">Confeccionada</span>
               {% else %}
-              <span class="badge bg-gray-500">Pendente</span>
+              <span class="badge text-gray-500">Pendente</span>
               {% endif %}
             </td>
             {% if current_user.username == "admin" %}
@@ -57,7 +57,7 @@ block content %}
                 href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}"
                 class="btn btn-sm btn-outline"
               >
-                <i class="fas fa-eye"></i>
+                <i class="fas fa-eye {% if placa.received %} text-green-600 {% endif %}"></i>
               </a>
             </td>
             {% endif %}
@@ -78,7 +78,7 @@ block content %}
         <!-- Página Ativa -->
         <li>
           <a
-            href="{{ url_for('placas.gerenciamento_pedidos', page=page_num) }}"
+            href="{{ url_for('placas.todas', page=page_num) }}"
             class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-primary-600 to-primary-800 text-white font-semibold shadow-md transition-all transform hover:scale-105"
           >
             {{ page_num }}
@@ -88,7 +88,7 @@ block content %}
         <!-- Página Normal -->
         <li>
           <a
-            href="{{ url_for('placas.gerenciamento_pedidos', page=page_num) }}"
+            href="{{ url_for('placas.todas', page=page_num) }}"
             class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-800 text-gray-300 font-medium hover:bg-gray-700 hover:text-white transition-all border border-gray-700 shadow-sm"
           >
             {{ page_num }}

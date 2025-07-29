@@ -16,7 +16,10 @@ content %}
   </div>
 
   <div class="card">
-    <form method="POST">
+    <form
+      method="POST"
+      action="{{ url_for('placas.editar_placa', placa_id=placa.id) }}"
+    >
       {{ form.hidden_tag() }}
       <div class="card-body grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="form-group">
@@ -64,12 +67,12 @@ content %}
       </div>
       <div class="card-footer text-right border-t border-gray-700">
         <a href="{{ url_for('placas.editar_placa', placa_id=placa.id) }}">
-          <button type="" class="btn btn-primary">
+          <button type="sumit" class="btn btn-primary">
             <i class="fas fa-save mr-2"></i> Salvar Alterações
           </button>
         </a>
-        <a href="{{ url_for('placas.deletar', placa_id=placa.id) }}">
-          <button type="" class="btn btn-danger">
+        <a href="{{ url_for('placas.delete', placa_id=placa.id) }}">
+          <button type="button" class="btn btn-danger">
             <i class="fas fa-trash-alt mr-2"></i>Deletar Permanente
           </button>
         </a>

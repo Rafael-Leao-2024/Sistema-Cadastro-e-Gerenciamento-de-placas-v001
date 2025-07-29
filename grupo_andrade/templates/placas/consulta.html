@@ -61,13 +61,13 @@ block content %}
             <td>{{ placa.date_create.strftime('%d/%m/%Y') }}</td>
             <td>
               {% if placa.received %}
-              <span class="badge bg-green-500">Recebida</span>
+              <span class="badge text-green-500">Recebida</span>
               {% elif placa.placa_a_caminho %}
-              <span class="badge bg-yellow-500">A caminho</span>
+              <span class="badge text-yellow-500">A caminho</span>
               {% elif placa.placa_confeccionada %}
-              <span class="badge bg-blue-500">Confeccionada</span>
+              <span class="badge text-blue-500">Confeccionada</span>
               {% else %}
-              <span class="badge bg-gray-500">Pendente</span>
+              <span class="badge text-gray-500">Pendente</span>
               {% endif %}
             </td>
             <td>
