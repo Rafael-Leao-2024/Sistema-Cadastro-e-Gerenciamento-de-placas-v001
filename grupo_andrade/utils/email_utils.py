@@ -1,5 +1,5 @@
 from flask_mail import Message
-from flask import render_template, current_app, url_for
+from flask import  url_for
 from grupo_andrade.main import mail
 import requests
 import os
@@ -19,8 +19,7 @@ obrigado {user.username}
 def enviar_email_confirmacao_placa(user, placas):
     mensagem = Message(
         subject='Solicitação de Placas',
-        sender=(user.username,  "rafaelampaz6@gmail.com"), 
-        recipients=['rafaelampaz6@gmail.com']
+        recipients=[user.email]
     )
     detalhes_placas = ""
     for placa in placas:

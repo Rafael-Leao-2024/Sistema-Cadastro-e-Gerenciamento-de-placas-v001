@@ -34,9 +34,10 @@ def logout():
 @auth.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
-    if verificar_email(form.email.data):
-        flash(f'Email nao valido use um email exitente', 'info')
-        return redirect(url_for('auth.register'))
+    if request.method == "POST":
+        if not verificar_email(form.email.data):
+            flash(f'Email nao valido use um email exitente', 'info')
+            return redirect(url_for('auth.register'))
     if current_user.is_authenticated:
         flash(f'{current_user.username} Voce ja esta logado e resgristrado pode postar', 'info')
         return redirect(url_for('placas.solicitar_placas'))

@@ -77,6 +77,7 @@ class Pagamento(db.Model):
     status_pagamento = db.Column(db.String(50), nullable=False)
     data_pagamento = db.Column(db.DateTime, default=datetime.utcnow)
     id_usuario = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    valor_transacao = db.Column(db.Float)
 
     def __repr__(self):
         return f"Pagamento('{self.id_pagamento}', '{self.status_pagamento}')"

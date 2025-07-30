@@ -8,6 +8,8 @@ from grupo_andrade.placas.forms import EmplacamentoForm, ConsultarForm, PlacaSta
 from grupo_andrade.main import db
 from grupo_andrade.utils import formatar_data_completa
 from grupo_andrade.utils.email_utils import enviar_email_confirmacao_placa
+from grupo_andrade.utils.pagamento_utils import verificar_status_pagamento
+
 
 placas = Blueprint('placas', __name__)
 
@@ -15,6 +17,7 @@ placas = Blueprint('placas', __name__)
 def homepage():
     print(formatar_data_completa(datetime.utcnow()))
     flash(message="Pagina Principal", category="success")
+    print(verificar_status_pagamento(120320809474))
     return render_template('homepage.html', titulo='homepage')
 
 @placas.route("/todas")
