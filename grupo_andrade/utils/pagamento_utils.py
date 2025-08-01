@@ -9,7 +9,7 @@ load_dotenv()
 PROD_ACCESS_TOKEN = os.environ.get('PROD_ACCESS_TOKEN')
 
 def criar_preferencia(placas):
-    corpo = {"items":[{"id": str(placa.id), "title": placa.placa.upper(), "quantity": 1, "unit_price": 90}
+    corpo = {"items":[{"id": str(placa.id), "title": placa.placa.upper(), "quantity": 1, "unit_price": 0.01}
                       for placa in placas],
             "back_urls": {
             "success": f"https://sistemacbm.com/#/login",
@@ -32,15 +32,15 @@ def verificar_status_pagamento(payment_id):
     headers = {
         "Authorization": f"Bearer {PROD_ACCESS_TOKEN}"
     }
-    response = requests.get(url, headers=headers)
-
+    response = requests.get(url=url, headers=headers)
+    print(response.json())
     if response.status_code == 200 and response.json().get('status') == 'approved':
         payment_info = response.json()  # Converte a resposta para JSON
         status_pagamento = payment_info['status']
         id_pagamento = payment_info['point_of_interaction']['transaction_data']['transaction_id']
         valor_pago = payment_info.get('transaction_amount')
     else:
-        payment_info = response.json() 
+        payment_info = response.json()
         status_pagamento = payment_info.get('status')
         id_pagamento = payment_id
         valor_pago = payment_info.get('transaction_amount')

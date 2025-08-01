@@ -17,7 +17,6 @@ placas = Blueprint('placas', __name__)
 def homepage():
     print(formatar_data_completa(datetime.utcnow()))
     flash(message="Pagina Principal", category="success")
-    print(verificar_status_pagamento(120320809474))
     return render_template('homepage.html', titulo='homepage')
 
 @placas.route("/todas")
