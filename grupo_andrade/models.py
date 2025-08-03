@@ -19,10 +19,12 @@ class User(db.Model, UserMixin):
     placas = db.relationship('Placa', backref='author', lazy=True)
     enderecos = db.relationship('Endereco', backref='user', lazy=True)
     pagamentos = db.relationship('Pagamento', backref='user', lazy=True)
+    is_admin = db.Column(db.Boolean, default=False)
+    data_criacao = db.Column(db.DateTime)
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'])
-        return s.dumps({'user_id': self.id})
+        return s.dumps({'user_id': self.id, 'exp': expires_sec})
 
     @staticmethod
     def verify_reset_token(token):
@@ -34,7 +36,7 @@ class User(db.Model, UserMixin):
         return User.query.get(user_id)
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}')"
+        return f"User(username={self.username}, email={self.email}, admin={self.is_admin})"
 
 
 class Placa(db.Model):
@@ -80,5 +82,5 @@ class Pagamento(db.Model):
     valor_transacao = db.Column(db.Float)
 
     def __repr__(self):
-        return f"Pagamento('{self.id_pagamento}', '{self.status_pagamento}')"
+        return f"Pagamento(id={self.id_pagamento}, status={self.status_pagamento}, valor_transacao={self.valor_transacao})"
     

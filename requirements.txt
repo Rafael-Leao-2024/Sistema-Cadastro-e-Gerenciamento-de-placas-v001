@@ -38,11 +38,3 @@ tzdata==2024.2
 urllib3==2.2.3
 Werkzeug==3.1.3
 WTForms==3.2.1
-
-# # DATABASE_URL=postgresql://postgres:lzWXMUiEnpheEfywuljmmelShahBQyIm@junction.proxy.rlwy.net:35789/railway
-# DEBUG=True
-# PROD_ACCESS_TOKEN=APP_USR-5038680304315561-052600-e98b65198607ae8fee3b6b409500a955-435616263
-# MAIL_PASSWORD=khdwyucxztubcsgw
-# MAIL_USERNAME=rafaelampaz6@gmail.com
-# CHAVE_API_DE_EMAIL=bd01f89f5d2fc347cefef01c53991644dd293c09
-# SECRET_KEY=bbdyvsydvyvAVIVDt7cdyuob

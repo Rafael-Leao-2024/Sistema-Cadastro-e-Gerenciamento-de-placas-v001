@@ -15,7 +15,6 @@ placas = Blueprint('placas', __name__)
 
 @placas.route("/")
 def homepage():
-    print(formatar_data_completa(datetime.utcnow()))
     flash(message="Pagina Principal", category="success")
     return render_template('homepage.html', titulo='homepage')
 
@@ -50,7 +49,7 @@ def placa_detail(placa_id):
         return redirect(url_for('placas.minhas_placas'))
     usuario = User.query.filter_by(id=placa.id_user_recebeu).first()
     usuario_solicitante = User.query.filter_by(id=placa.id_user).first()
-    if not placa.id_user == current_user.id and not current_user.username == "admin":
+    if not placa.id_user == current_user.id and not current_user.is_admin:
         return render_template('erros/erro.html')
     
     if request.method == 'POST':
@@ -112,10 +111,14 @@ def consulta():
 def editar_placa(placa_id):
     form = EmplacamentoUpdateForm()
     placa = Placa.query.filter(Placa.id == placa_id).first()
-    print(form.data)
-    if placa.id_user != current_user.id and current_user.username != "admin":
-        flash("Você não tem permissão para editar esta placa.", "danger")
-        return redirect(url_for('placas.placa_detail', placa_id=placa.id))
+    if not placa:
+        flash(f"placa de ID {placa_id} nao existe.", "info")
+        return redirect(url_for('placas.minhas_placas'))
+
+    if placa.id_user != current_user.id:
+        if not current_user.is_admin:
+            flash("Você não tem permissão para editar esta placa.", "danger")
+            return redirect(url_for('placas.placa_detail', placa_id=placa.id))
 
     if request.method == 'POST':
         placa.placa = request.form.get('placa')
@@ -220,7 +223,7 @@ def gerenciamento_final(id_placa):
 
     
     if request.method == "POST":
-        if current_user.username == "admin":
+        if current_user.is_admin:
             if form.validate_on_submit():
                 # Botão de placa confeccionada
                 if 'placa_confeccionada' in request.form:

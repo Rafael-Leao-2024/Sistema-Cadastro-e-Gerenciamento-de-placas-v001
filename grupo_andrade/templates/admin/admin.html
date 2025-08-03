@@ -1,9 +1,9 @@
-{% extends "layout.html" %} {% block title %}Lista de Usuários{% endblock %} {%
-block content %}
+{% extends "layout.html" %} {% block title %}Area Adimn{% endblock %} {% block
+content %}
 <div class="animate-fadeIn">
   <div class="flex justify-between items-center mb-8">
     <h2 class="text-2xl font-bold">
-      <i class="fas fa-users mr-2"></i> Usuários Cadastrados
+      <i class="fas fa-users mr-2"></i>Gerenciar administradores
     </h2>
     <a href="{{ url_for('placas.homepage') }}" class="btn btn-outline">
       <i class="fas fa-arrow-left mr-2"></i> Voltar
@@ -19,7 +19,7 @@ block content %}
             <th>Nome</th>
             <th>Email</th>
             <th>Data Cadastro</th>
-            <th>Ações</th>
+            <th>Permissao</th>
           </tr>
         </thead>
         <tbody>
@@ -31,10 +31,14 @@ block content %}
             <td>{{ usuario.data_criacao }}</td>
             <td>
               <a
-                href="{{ url_for('users.account', user_id=usuario.id) }}"
+                href="{{ url_for('admin.permitir', id_usuario=usuario.id) }}"
                 class="btn btn-sm btn-outline"
               >
-                <i class="fas fa-eye"></i>
+                {% if usuario.is_admin %}
+                <i style="color: white" class="fa-solid fa-lock-open"></i>
+                {% else %}
+                <i class="fa-solid fa-lock"></i>
+                {% endif %}
               </a>
             </td>
           </tr>

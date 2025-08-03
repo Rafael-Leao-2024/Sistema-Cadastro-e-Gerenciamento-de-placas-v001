@@ -22,7 +22,14 @@
     <nav class="navbar glass-effect shadow-lg">
       <div class="container flex justify-between items-center">
         <a href="{{ url_for('placas.homepage') }}" class="navbar-brand">
-          <i class="fas fa-car-alt mr-2"></i> Grupo Andrade
+          <i class="fas fa-car-alt mr-2"></i> Grupo Andrade {% if
+          current_user.is_admin %}
+          <span class="text-sm text-primary-300 hover:underline">verified</span>
+          <i
+            class="fas fa-check-circle"
+            style="color: #1db954; font-size: 1.2em"
+          ></i>
+          {% endif %}
         </a>
         <div class="flex space-x-4">
           {% if current_user.is_authenticated %}

@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
-from flask_login import login_user, logout_user, current_user, login_required
+from flask_login import login_user, logout_user, current_user
 from grupo_andrade.models import User
 from grupo_andrade.auth.forms import RegistrationForm, LoginForm, RequestResetForm, ResetPasswordForm
 from grupo_andrade.main import db, bcrypt, mail
 from grupo_andrade.utils.email_utils import enviar_email_reset_senha
 from grupo_andrade.utils.email_utils import verificar_email
+from datetime import datetime
 
 auth = Blueprint('auth', __name__)
 
@@ -43,7 +44,7 @@ def register():
         return redirect(url_for('placas.solicitar_placas'))
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password, data_criacao=datetime.utcnow())
         db.session.add(user)
         db.session.commit()
         flash(f'Account created for {user.username} Success!', 'success')

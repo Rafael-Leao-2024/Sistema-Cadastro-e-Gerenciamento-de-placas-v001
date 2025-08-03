@@ -40,11 +40,13 @@ def create_app():
     
     from grupo_andrade.auth.routes import auth
     from grupo_andrade.users.routes import users
+    from grupo_andrade.admin.routes import admin
     from grupo_andrade.placas.routes import placas
     from grupo_andrade.pagamentos.routes import pagamentos
     
     app.register_blueprint(auth)
     app.register_blueprint(users)
+    app.register_blueprint(admin)
     app.register_blueprint(placas)
     app.register_blueprint(pagamentos)
     

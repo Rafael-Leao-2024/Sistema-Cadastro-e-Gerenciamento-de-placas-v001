@@ -29,7 +29,7 @@ block content %}
             <th>Usuário</th>
             <th>Data</th>
             <th>Status</th>
-            {% if current_user.username == "admin" %}
+            {% if current_user.is_admin %}
             <th>Ações</th>
             {% endif %}
           </tr>
@@ -51,13 +51,15 @@ block content %}
               <span class="badge text-gray-500">Pendente</span>
               {% endif %}
             </td>
-            {% if current_user.username == "admin" %}
+            {% if current_user.is_admin %}
             <td>
               <a
                 href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}"
                 class="btn btn-sm btn-outline"
               >
-                <i class="fas fa-eye {% if placa.received %} text-green-600 {% endif %}"></i>
+                <i
+                  class="fas fa-eye {% if placa.received %} text-green-600 {% endif %}"
+                ></i>
               </a>
             </td>
             {% endif %}
