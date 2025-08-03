@@ -50,6 +50,7 @@ def relatorio_resultados(mes, ano):
 @pagamentos.route('/resultado_pagamento')
 @login_required
 def resultado_pagamento():
+    valor_pagamento = 0
     id_pagamento = request.args.get('payment_id')
     if id_pagamento == 'null' or id_pagamento == None:
         flash('Voce desistiu do pagamento caso queira falar com suporte chame no zap', 'warning')
@@ -66,6 +67,8 @@ def resultado_pagamento():
 
     if pagamento.status_pagamento == 'approved':
         flash(f'Pagamento de R$ {valor_pagamento:,.2f} realizado com sucesso!', 'success')
+    elif pagamento.status_pagamento == 'canceled':
+        flash(f'Pagamento de R$ {valor_pagamento:,.2f} foi cancelado!', 'danger')
     else:
         flash(f'Pagamento de R$ {valor_pagamento:,.2f} esta Pendente!', 'warning')
 

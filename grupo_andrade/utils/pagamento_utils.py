@@ -9,13 +9,16 @@ load_dotenv()
 PROD_ACCESS_TOKEN = os.environ.get('PROD_ACCESS_TOKEN')
 
 def criar_preferencia(placas):
-    corpo = {"items":[{"id": str(placa.id), "title": placa.placa.upper(), "quantity": 1, "unit_price": 0.01}
-                      for placa in placas],
+    corpo = {"items":[
+        {"id": str(placa.id), "title": placa.placa.upper(), "quantity": 1, "unit_price": 0.01}
+        for placa in placas
+        ],
             "back_urls": {
             "success": f"https://sistemacbm.com/#/login",
             "failure": f"https://sistemacbm.com/#/login",
             "pending": f"https://sistemacbm.com/#/login",
-        },}
+        },
+        }
     corpo_js = json.dumps(corpo)
     headers = {"Authorization": f"Bearer {PROD_ACCESS_TOKEN}"}
     resposta = requests.post('https://api.mercadopago.com/checkout/preferences',
