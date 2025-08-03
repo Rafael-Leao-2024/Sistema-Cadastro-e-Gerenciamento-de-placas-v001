@@ -104,17 +104,22 @@ content %}
       </a>
     </div>
 
-    <div class="card hover-scale">
-      <div class="text-center p-6">
-        <div class="text-primary-400 text-4xl mb-4">
-          <i class="fas fa-headset"></i>
+    <a href="{{ url_for('support.chat') }}">
+      <div class="card hover-scale">
+        <div class="text-center p-6">
+          <div class="text-primary-400 text-4xl mb-4">
+            <i class="fas fa-headset"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-3">Suporte</h3>
+          <p class="text-secondary">
+            🛠️ Suporte Rápido e Eficiente! Precisa de ajuda? Nosso suporte
+            especializado está aqui para resolver suas dúvidas e problemas de
+            forma ágil. 📞 Atendimento Personalizado | Respostas Rápidas |
+            Soluções Práticas
+          </p>
         </div>
-        <h3 class="text-xl font-semibold mb-3">Suporte</h3>
-        <p class="text-secondary">
-          Equipe especializada pronta para te ajudar quando precisar
-        </p>
       </div>
-    </div>
+    </a>
 
     <!-- Feature 3 -->
     <a href="{{ url_for('placas.gerenciamento_pedidos') }}">

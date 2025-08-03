@@ -1,14 +1,14 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, abort
+from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
-from sqlalchemy.orm import joinedload
-from sqlalchemy import extract, desc
 from datetime import datetime, timedelta
-from grupo_andrade.models import Placa, Endereco, User
+from sqlalchemy.orm import joinedload
+from sqlalchemy import desc
+
 from grupo_andrade.placas.forms import EmplacamentoForm, ConsultarForm, PlacaStatusForm, EmplacamentoUpdateForm
-from grupo_andrade.main import db
-from grupo_andrade.utils import formatar_data_completa
 from grupo_andrade.utils.email_utils import enviar_email_confirmacao_placa
-from grupo_andrade.utils.pagamento_utils import verificar_status_pagamento
+from grupo_andrade.models import Placa, Endereco, User
+from grupo_andrade.main import db
+
 
 
 placas = Blueprint('placas', __name__)

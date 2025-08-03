@@ -1,0 +1,226 @@
+{% extends "layout.html" %} {% block title %}Chat de Suporte{% endblock %} {%
+block content %}
+<div class="animate-fadeIn">
+  <div class="flex flex-col md:flex-row gap-6">
+    <!-- Área principal do chat -->
+    <div class="md:w-3/4">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="text-2xl font-bold">
+            <i class="fas fa-robot text-primary-400 mr-2"></i>
+            Jasmine - Assistente Virtual
+          </h2>
+          <p class="text-secondary mt-1">
+            Faça perguntas sobre nossos serviços de emplacamento
+          </p>
+        </div>
+
+        <div class="card-body p-0">
+          <!-- Histórico do chat -->
+          <div id="chat-history" class="h-96 overflow-y-auto p-4 space-y-4">
+            <div class="chat-message bot-message">
+              <div class="flex items-start">
+                <div
+                  class="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3"
+                >
+                  <i class="fas fa-robot"></i>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-3 max-w-3/4">
+                  <p>
+                    Olá! Sou a Jasmine, assistente virtual do Grupo Andrade.
+                    Como posso te ajudar hoje com nossos serviços de
+                    emplacamento?
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Área de input -->
+          <div class="border-t border-gray-700 p-4">
+            <form id="chat-form" class="flex gap-2">
+              <input
+                type="text"
+                id="user-input"
+                class="form-control flex-grow"
+                placeholder="Digite sua pergunta..."
+                required
+              />
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-paper-plane mr-2"></i> Enviar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar de informações -->
+    <div class="md:w-1/4">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="text-xl font-semibold">
+            <i class="fas fa-info-circle mr-2"></i> Informações
+          </h3>
+        </div>
+        <div class="card-body">
+          <p class="text-secondary mb-4">Jasmine pode responder sobre:</p>
+          <ul class="space-y-2">
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              Documentação necessária
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              Prazos e taxas
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              Status de processos
+            </li>
+            <li class="flex items-center">
+              <i class="fas fa-check-circle text-green-500 mr-2"></i>
+              Endereços e contatos
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const chatForm = document.getElementById('chat-form');
+    const chatHistory = document.getElementById('chat-history');
+    const userInput = document.getElementById('user-input');
+
+    chatForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const question = userInput.value.trim();
+      if (!question) return;
+
+      // Adiciona mensagem do usuário ao chat
+      addMessageToChat('user', question);
+      userInput.value = '';
+
+      try {
+        // Mostra indicador de digitação
+        const typingIndicator = addTypingIndicator();
+
+        // Faz a requisição para o backend
+        const response = await fetch("{{ url_for('support.ask_question') }}", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ question: question }),
+        });
+
+        // Remove indicador de digitação
+        chatHistory.removeChild(typingIndicator);
+
+        if (response.ok) {
+          const data = await response.json();
+          addMessageToChat('bot', data.response);
+        } else {
+          const error = await response.json();
+          addMessageToChat('bot', `Desculpe, ocorreu um erro: ${error.error}`);
+        }
+      } catch (error) {
+        addMessageToChat('bot', `Erro de conexão: ${error.message}`);
+      }
+    });
+
+    function addMessageToChat(sender, message) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `chat-message ${sender}-message mb-4`;
+
+      if (sender === 'user') {
+        messageDiv.innerHTML = `
+                <div class="flex items-start justify-end">
+                    <div class="bg-gray-700 rounded-lg p-3 max-w-3/4">
+                        <p>${message}</p>
+                    </div>
+                    <div class="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center ml-3">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            `;
+      } else {
+        messageDiv.innerHTML = `
+                <div class="flex items-start">
+                    <div class="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="bg-gray-800 rounded-lg p-3 max-w-3/4">
+                        <p>${message}</p>
+                    </div>
+                </div>
+            `;
+      }
+
+      chatHistory.appendChild(messageDiv);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    function addTypingIndicator() {
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'chat-message bot-message mb-4';
+      typingDiv.innerHTML = `
+            <div class="flex items-start">
+                <div class="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="bg-gray-800 rounded-lg p-3 max-w-3/4">
+                    <div class="flex space-x-1">
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+      chatHistory.appendChild(typingDiv);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+      return typingDiv;
+    }
+  });
+</script>
+
+<style>
+  .chat-message {
+    transition: all 0.3s ease;
+  }
+
+  .user-message .bg-gray-700 {
+    background-color: rgba(55, 65, 81, 0.8);
+    border-radius: 1rem 1rem 0 1rem;
+  }
+
+  .bot-message .bg-gray-800 {
+    background-color: rgba(31, 41, 55, 0.8);
+    border-radius: 1rem 1rem 1rem 0;
+  }
+
+  #chat-history {
+    scrollbar-width: thin;
+    scrollbar-color: #3b82f6 #1f2937;
+  }
+
+  #chat-history::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  #chat-history::-webkit-scrollbar-track {
+    background: #1f2937;
+  }
+
+  #chat-history::-webkit-scrollbar-thumb {
+    background-color: #3b82f6;
+    border-radius: 3px;
+  }
+</style>
+{% endblock %}
