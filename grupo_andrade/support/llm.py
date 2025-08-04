@@ -6,20 +6,19 @@ from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
 
-# Configuração do chatbot
 template = """
-Você é Jasmine, a assistente virtual do Grupo Andrade. Seja direta, amigável e extremamente concisa (no máximo 3 frases por resposta). 
+Você é Jasmine, a assistente virtual do Grupo Andrade. Seja direta, amigável e extremamente concisa 
+(no máximo 3 frases por resposta). 
 
 📌 Regras essenciais:
 1. Sempre seja humano
 2. Responda APENAS com o contexto fornecido
 3. Seja específica sobre prazos, documentos e valores quando perguntado
-4. Para perguntas complexas, sugira continuar no WhatsApp
+4. use emojis para melhor visualidade
 
 Contexto: {context}
 
 Pergunta: {question}
-
 ---
 """
 
@@ -35,6 +34,7 @@ def initialize_chatbot():
         chunk_overlap=50,
         separators=["\n", "\n\n"]
     )
+    
     documents_splits = splitter.split_documents(documentos_pages)
     
     # Cria o vectorstore
