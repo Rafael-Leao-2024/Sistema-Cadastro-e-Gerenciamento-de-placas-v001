@@ -3,8 +3,9 @@ from flask_login import login_required, current_user
 from PIL import Image
 import secrets
 import os
-from grupo_andrade.models import User, Endereco
+
 from grupo_andrade.users.forms import EnderecoForm, UpdateAccountForm
+from grupo_andrade.models import User, Endereco
 from grupo_andrade.main import db
 
 users = Blueprint('users', __name__)

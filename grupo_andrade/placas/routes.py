@@ -13,10 +13,12 @@ from grupo_andrade.main import db
 
 placas = Blueprint('placas', __name__)
 
+
 @placas.route("/")
 def homepage():
     flash(message="Pagina Principal", category="success")
     return render_template('homepage.html', titulo='homepage')
+
 
 @placas.route("/todas")
 def todas():
@@ -27,6 +29,7 @@ def todas():
                     .paginate(page=page, per_page=per_page, error_out=False)
     total_placas = Placa.query.count()
     return render_template('placas/todas.html', placas=placas, total_placas=total_placas, titulo='todas')
+
 
 @placas.route("/minhas-placas")
 @login_required
@@ -39,6 +42,7 @@ def minhas_placas():
                .paginate(page=page, per_page=per_page, error_out=False)
     return render_template('placas/minhas_placas.html', placas=placas, titulo='minhas placas')
 
+
 @placas.route('/minhas-placas/<int:placa_id>', methods=['GET', 'POST'])
 @login_required
 def placa_detail(placa_id):
@@ -49,6 +53,10 @@ def placa_detail(placa_id):
         return redirect(url_for('placas.minhas_placas'))
     usuario = User.query.filter_by(id=placa.id_user_recebeu).first()
     usuario_solicitante = User.query.filter_by(id=placa.id_user).first()
+<<<<<<< HEAD
+=======
+
+>>>>>>> af238aa077c9547ef50708e4aae6e4f15e0491e1
     if not placa.id_user == current_user.id:
         if not current_user.is_admin:
             return render_template('erros/erro.html')
@@ -58,19 +66,19 @@ def placa_detail(placa_id):
         if received and not placa.received:
             placa.id_user_recebeu = current_user.id
             placa.received = True
-            placa.received_at = datetime.now()
+            placa.received_at = datetime.utcnow()
             flash(f"Placa {placa.placa.upper()} Recebida com sucesso.", 'success')
         elif not received and placa.received:
             time_limit = placa.received_at + timedelta(minutes=10)
             if datetime.now() <= time_limit:
                 placa.id_user_recebeu = current_user.id
                 placa.received = False
-                placa.received_at = None  
+                placa.received_at = None
+                placa.id_user_recebeu = None
             else:
                 flash("Não é possível desmarcar após 10 minutos.", 'info')
         db.session.commit()
-        return redirect(url_for('placas.placa_detail', placa_id=placa.id))   
-    
+        return redirect(url_for('placas.placa_detail', placa_id=placa.id))    
     return render_template('placas/placa_detail.html', placa=placa, form=form, titulo='detalhes', usuario=usuario, usuario_solicitante=usuario_solicitante)
 
 @placas.route("/minhas-placas/<int:placa_id>/delete", methods=['GET', 'POST'])
@@ -98,9 +106,8 @@ def consulta():
     form = ConsultarForm()
     if request.method == 'POST':
         placa = request.form.get('placa')
-        placa = placa.upper()
         if placa:
-            resultados = Placa.query.filter(Placa.placa.ilike(f"%{placa}%")).order_by(Placa.date_create.desc()).all()
+            resultados = Placa.query.filter(Placa.placa.ilike(f"%{placa.upper()}%")).order_by(Placa.date_create.desc()).all()
             if not resultados:
                 flash("Placa não encontrada!", "warning")
             else:
@@ -215,13 +222,6 @@ def gerenciamento_final(id_placa):
     form = PlacaStatusForm()
     placa = Placa.query.filter(Placa.id==id_placa).first()
     page = int(pegar_pagina(dict(request.headers).get('Referer')))
-    # page = 1
-    print(form.placa_confeccionada.data)
-    print(form.placa_a_caminho.data)
-    print(form.data.get("placa_a_caminho"))
-    print(form.data.get("placa_confeccionada"))
-    print(form.data)
-
     
     if request.method == "POST":
         if current_user.is_admin:
