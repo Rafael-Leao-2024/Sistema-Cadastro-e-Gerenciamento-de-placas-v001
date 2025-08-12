@@ -53,10 +53,7 @@ def placa_detail(placa_id):
         return redirect(url_for('placas.minhas_placas'))
     usuario = User.query.filter_by(id=placa.id_user_recebeu).first()
     usuario_solicitante = User.query.filter_by(id=placa.id_user).first()
-# <<<<<<< HEAD
-# =======
 
-# >>>>>>> af238aa077c9547ef50708e4aae6e4f15e0491e1
     if not placa.id_user == current_user.id:
         if not current_user.is_admin:
             return render_template('erros/erro.html')
