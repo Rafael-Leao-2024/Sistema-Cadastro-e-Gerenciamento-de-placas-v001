@@ -4,7 +4,9 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+from dotenv import load_dotenv
 
+load_dotenv()
 
 template = """
 Você é Jasmine, a assistente virtual do Grupo Andrade. Seja direta, amigável e extremamente concisa 
@@ -24,7 +26,7 @@ Pergunta: {question}
 
 def initialize_chatbot():
     # Carrega o PDF
-    caminho_pdf = r"C:\Users\Positivo union\DeepSeek\grupo_andrade\support\servicos_de_veiculos.pdf"
+    caminho_pdf = r"C:\Users\TRANS MASSENA\Grupov001\Sistema-Cadastro-e-Gerenciamento-de-placas-v001\grupo_andrade\support\servicos_de_veiculos.pdf"
     loader = PyPDFLoader(caminho_pdf)
     documentos_pages = loader.load()
     
@@ -43,7 +45,7 @@ def initialize_chatbot():
     
     # Configura a chain
     prompt = PromptTemplate(template=template, input_variables=["context", "question"])
-    llm = ChatOpenAI(temperature=0.7, model_name="gpt-4o")
+    llm = ChatOpenAI(temperature=0.7, model_name="gpt-4o-mini")
     chain = prompt | llm | StrOutputParser()
     
     return retriever, chain

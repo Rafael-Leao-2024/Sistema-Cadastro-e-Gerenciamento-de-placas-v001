@@ -1,8 +1,8 @@
-"""Initial migration.
+"""colunas admin e data criacai
 
-Revision ID: e8aaef70ac8b
+Revision ID: 013c5ca4a9bc
 Revises: 
-Create Date: 2025-07-27 18:46:39.931934
+Create Date: 2025-08-04 13:57:55.341933
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e8aaef70ac8b'
+revision = '013c5ca4a9bc'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,10 +23,11 @@ def upgrade():
     sa.Column('username', sa.String(length=20), nullable=False),
     sa.Column('email', sa.String(length=120), nullable=False),
     sa.Column('image_file', sa.String(length=20), nullable=False),
-    sa.Column('password', sa.String(length=60), nullable=False),
+    sa.Column('password', sa.String(length=100), nullable=False),
+    sa.Column('is_admin', sa.Boolean(), nullable=True),
+    sa.Column('data_criacao', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email'),
-    sa.UniqueConstraint('username')
+    sa.UniqueConstraint('email')
     )
     op.create_table('enderecos',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -42,6 +43,7 @@ def upgrade():
     sa.Column('status_pagamento', sa.String(length=50), nullable=False),
     sa.Column('data_pagamento', sa.DateTime(), nullable=True),
     sa.Column('id_usuario', sa.Integer(), nullable=False),
+    sa.Column('valor_transacao', sa.Float(), nullable=True),
     sa.ForeignKeyConstraint(['id_usuario'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -57,6 +59,7 @@ def upgrade():
     sa.Column('placa_confeccionada', sa.Boolean(), nullable=True),
     sa.Column('placa_a_caminho', sa.Boolean(), nullable=True),
     sa.Column('id_user', sa.Integer(), nullable=False),
+    sa.Column('id_user_recebeu', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['id_user'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

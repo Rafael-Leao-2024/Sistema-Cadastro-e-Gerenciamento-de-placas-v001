@@ -1,9 +1,9 @@
 # from langchain_groq import ChatGroq  
 from langchain_openai import ChatOpenAI  
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder  
+from langchain_core.runnables import RunnablePassthrough, RunnableWithMessageHistory
 from langchain_core.output_parsers import StrOutputParser  
 from langchain_community.chat_message_histories import SQLChatMessageHistory  
-from langchain_core.runnables import RunnablePassthrough, RunnableWithMessageHistory
 
 from dotenv import load_dotenv
 
@@ -15,16 +15,16 @@ Você é Jasmine, a assistente virtual do Grupo Andrade. Seja direta, amigável 
 
 📌 Regras essenciais:
 1. Sempre seja humano
-2. Responda APENAS com o contexto fornecido
+2. Responda APENAS com o contexto fornecido 
 3. Seja específica sobre prazos, documentos e valores quando perguntado
 4. use emojis nas respostas a cada duas resposta.
+5. use informaçao de  resultados "resposta_do_agente_para_LLM" para melhor esclarecimento de ferramentas 
 
-
-Contexto_retriver: {contexto_retriver}
+contexto de ferramentas:
+{contexto_ferramentas}
+Contexto_retriver:
+{contexto_retriver}
 ---------------------
-resultado de ferramentas simples composto:{contexto_agente_executor}
-Contexto_agente_executor: {contexto_agente_executor}
-
 """
 
 prompt = ChatPromptTemplate.from_messages([("system", sistema),
@@ -41,7 +41,7 @@ def memory_window(messages, k=30):
 
 def conversa_memoria():
 # crie uma cadeia LLM simples que usa apenas as últimas K conversas  
-    chatgpt = ChatOpenAI(model_name="gpt-4o", temperature=0)
+    chatgpt = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
 
     llm_chain = (RunnablePassthrough.assign(history=lambda x: memory_window(x["history"]))  
                 | prompt  
@@ -54,7 +54,6 @@ def conversa_memoria():
         get_session_history_db,
         input_messages_key="input",
         history_messages_key="history",
-
         )
 
 
