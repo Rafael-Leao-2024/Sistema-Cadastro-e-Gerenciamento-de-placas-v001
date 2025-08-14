@@ -34,7 +34,37 @@ block content %}
                 </div>
               </div>
             </div>
+          {% for mensagem in mensagens %}
+
+          {% if "User" in mensagem %}
+        
+            <div  class="chat-message bot-message">
+                <div class="flex items-start justify-end">
+                    <div class="bg-gray-700 rounded-lg p-3 max-w-3/4">
+                        <p>{{ mensagem[1].content }}</p>
+                    </div>
+                    <div class="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center ml-3">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </div>
+          {% else %}
+            <div class="chat-message bot-message">
+              <div class="flex items-start">
+                    <div class="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="bg-gray-800 rounded-lg p-3 max-w-3/4">
+                        <p>{{ mensagem[1].content }}</p>
+                    </div>
+                </div>
+            </div>
+          
+          {% endif %}
+         
+          {% endfor %}
           </div>
+          
 
           <!-- Área de input -->
           <div class="border-t border-gray-700 p-4">

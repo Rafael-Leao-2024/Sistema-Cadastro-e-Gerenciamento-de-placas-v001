@@ -2,7 +2,11 @@ from flask import Blueprint, render_template, request, jsonify
 from grupo_andrade.support.llm_memory import conversa_memoria
 from grupo_andrade.support.llm_tools import agent_ferramenta
 from grupo_andrade.support.llm import initialize_chatbot
+from langchain_community.chat_message_histories import SQLChatMessageHistory
+from langchain.memory import ConversationBufferMemory
 from flask_login import login_required, current_user
+from langchain_core.messages import HumanMessage, SystemMessage
+
 
 support = Blueprint('support', __name__, url_prefix='/support')
 
@@ -13,7 +17,14 @@ chain_memoria = conversa_memoria()
 @support.route('/chat')
 @login_required
 def chat():
-    return render_template('support/chat.html')
+    message_history = SQLChatMessageHistory(session_id=current_user.id, connection_string="sqlite:///memory.db")
+    memory = ConversationBufferMemory(chat_memory=message_history, memory_key="chat_history", return_messages=True)
+    historicos = memory.buffer_as_messages
+    mensagens = [("User", historico) if isinstance(historico, HumanMessage) else ("AI", historico) for historico in historicos]
+    if not len(mensagens) > 1:
+        mensagens = []
+    print(mensagens)           
+    return render_template('support/chat.html', mensagens=mensagens)
 
 @support.route('/question', methods=['POST'])
 def ask_question():

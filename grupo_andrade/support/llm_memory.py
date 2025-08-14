@@ -1,4 +1,3 @@
-# from langchain_groq import ChatGroq  
 from langchain_openai import ChatOpenAI  
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder  
 from langchain_core.runnables import RunnablePassthrough, RunnableWithMessageHistory
