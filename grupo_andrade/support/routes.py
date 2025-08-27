@@ -1,24 +1,29 @@
 from flask import Blueprint, render_template, request, jsonify
 from grupo_andrade.support.llm_memory import conversa_memoria
-from grupo_andrade.support.llm_tools import agent_ferramenta
 from grupo_andrade.support.llm import initialize_chatbot
 from langchain_community.chat_message_histories import SQLChatMessageHistory
 from langchain.memory import ConversationBufferMemory
 from flask_login import login_required, current_user
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage
+from langchain.agents import initialize_agent, AgentType
+from langchain_openai import ChatOpenAI
+from grupo_andrade.support.llm_tools import ferramentas
 
 
 support = Blueprint('support', __name__, url_prefix='/support')
 
 retriever, chain = initialize_chatbot()
-chain_ferramenta = agent_ferramenta()
 chain_memoria = conversa_memoria()
+
+def memoria_session():
+    message_history = SQLChatMessageHistory(session_id=current_user.id, connection_string="sqlite:///memory.db")
+    memory = ConversationBufferMemory(chat_memory=message_history, memory_key="chat_history", return_messages=True)
+    return memory
 
 @support.route('/chat')
 @login_required
 def chat():
-    message_history = SQLChatMessageHistory(session_id=current_user.id, connection_string="sqlite:///memory.db")
-    memory = ConversationBufferMemory(chat_memory=message_history, memory_key="chat_history", return_messages=True)
+    memory = memoria_session()
     historicos = memory.buffer_as_messages
     mensagens = [("User", historico) if isinstance(historico, HumanMessage) else ("AI", historico) for historico in historicos]
     if not len(mensagens) > 1:
@@ -26,20 +31,38 @@ def chat():
     print(mensagens)           
     return render_template('support/chat.html', mensagens=mensagens)
 
+def agent_ferramenta(memory):
+        agent = initialize_agent(
+        agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
+        llm=ChatOpenAI(temperature=0.5, model_name="gpt-4o-mini"),
+        tools=ferramentas,
+        memory=memory,
+        verbose=True,
+        handle_parsing_errors=True,
+       )
+        return agent
+
+
+
+
 @support.route('/question', methods=['POST'])
+@login_required
 def ask_question():
+    memory = memoria_session()
+    agente = agent_ferramenta(memory)
+
     data = request.get_json()
     pergunta = data['question']
     
     try:
         contextos = retriever.invoke(pergunta)
         contexto_retriver = "\n".join(
-            f"Source: {ctx.metadata}\n\nContent: {ctx.page_content}" 
+            f"Content: {ctx.page_content}" 
             for ctx in contextos
         )
-        resposta_agente = chain_ferramenta.invoke(pergunta)
+        resposta_agente = agente.invoke(pergunta)
         resposta_memoria = chain_memoria.invoke(input={"input": resposta_agente.get('input'), "contexto_retriver": contexto_retriver, "contexto_ferramentas":resposta_agente.get('output')}, config={'configurable': { 'session_id': current_user.id}})
+        
         return jsonify({"response": resposta_memoria})
-    
     except Exception as erro:
         return jsonify({"error": str(erro)}), 500

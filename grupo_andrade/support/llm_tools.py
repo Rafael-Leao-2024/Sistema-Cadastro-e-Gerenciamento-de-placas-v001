@@ -1,5 +1,4 @@
-from langchain.agents import initialize_agent, AgentType
-from langchain_openai import ChatOpenAI
+
 # <<<<<<< HEAD
 from langchain.tools import tool
 from bs4 import BeautifulSoup
@@ -9,14 +8,10 @@ from grupo_andrade.models import User
 from grupo_andrade.models import Placa
 from grupo_andrade.main import db
 
-from langchain.memory import ConversationBufferMemory
-from langchain_community.chat_message_histories import SQLChatMessageHistory
-from flask_login import login_required, current_user
+
 from dotenv import load_dotenv
 load_dotenv()
 
-message_history = SQLChatMessageHistory(session_id=1, connection_string="sqlite:///memory.db")
-memory = ConversationBufferMemory(chat_memory=message_history, memory_key="chat_history", return_messages=True)
 
 @tool
 def informacao_placa(placa):
@@ -39,6 +34,8 @@ retorno informacoes em TEXTO
         } 
         for placa in placas
         ]
+    if len(informacoes) < 1:
+        return f"Placa {placa} nao consta no nosso Banco de Dados!"
     return informacoes
     
 @tool
@@ -54,6 +51,7 @@ def meu_debito(mes):
     informacao = soup.body.main.get_text()
     informacao_txt = informacao.replace('\n', '').replace('  ', '')
     return informacao_txt
+
 
 @tool
 def permissao_admin(id_usuario):
@@ -102,16 +100,7 @@ def cotaçao_moeda(dinheiro) -> float:
         return f"Erro ao consultar cotação: {e}"
 
 
-tools = [cotaçao_moeda, meu_debito, informacao_placa, permissao_admin, tirar_permissao_admin]
+ferramentas = [cotaçao_moeda, meu_debito, informacao_placa, permissao_admin, tirar_permissao_admin]
 
-def agent_ferramenta():
-    agent = initialize_agent(
-        agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
-        llm=ChatOpenAI(temperature=0.5, model_name="gpt-4o-mini"),
-        tools=tools,
-        memory=memory,
-        verbose=True,
-        handle_parsing_errors=True,
-       )
-    return agent
+
 

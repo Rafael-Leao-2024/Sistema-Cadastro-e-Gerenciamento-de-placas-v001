@@ -1,0 +1,58 @@
+{% extends "layout.html" %} {% block content %}
+
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+  <h2 class="text-2xl font-bold mb-6 text-center text-secondary">
+    Solicite Varios Documentos  </h2>
+
+  <form
+    id="upload-container"
+    method="POST"
+    enctype="multipart/form-data"
+    class="space-y-4"
+  >
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1"
+        >Selecione varios arquivos PDF</label
+      >
+      <input
+        id="file-input"
+        type="file"
+        name="file"
+        accept=".pdf"
+        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+        multiple
+      />
+    </div>
+
+    <button
+      onclick="uploadFiles()"
+      type="submit"
+      class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition duration-200"
+    >
+      Enviar Arquivos
+    </button>
+    <div id="progress"></div>
+  </form>
+  <div class="mt-6 text-center">
+    <a
+      href="{{ url_for('documentos.download_anexos', id_placa=placa.id) }}"
+      class="text-blue-600 hover:text-blue-800 underline"
+    >
+      Ir para os Downloads
+    </a>
+  </div>
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %}
+  <div class="mt-4">
+    {% for category, message in messages %}
+    <div
+      class="p-3 rounded-md {% if category == 'success' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}"
+    >
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %} {% endwith %}
+</div>
+
+{% endblock %}

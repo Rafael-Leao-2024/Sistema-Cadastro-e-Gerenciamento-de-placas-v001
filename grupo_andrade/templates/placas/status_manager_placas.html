@@ -26,6 +26,7 @@ block content %}
             <th>Status</th>
             <th>Confeccionada</th>
             <th>Encaminhada</th>
+            <th>Anexos</th>
           </tr>
         </thead>
         <tbody>
@@ -112,6 +113,14 @@ block content %}
                   ></i>
                 </a>
               </form>
+            </td>
+            <td>
+              <a
+                  href="{{ url_for('documentos.download_anexos', id_placa=placa.id) }}"
+                  class="btn btn-sm btn-outline"
+                >
+                  <i class="fa-solid fa-paperclip"></i>
+              </a>
             </td>
           </tr>
           {% endfor %}

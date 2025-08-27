@@ -28,9 +28,9 @@ def relatorio():
 
 @pagamentos.route("/relatorio/<int:mes>/<int:ano>")
 @login_required
-def relatorio_resultados(mes, ano):
+def relatorio_resultados(mes, ano, id_usuario=current_user):
     placas = Placa.query.filter(
-        Placa.id_user == current_user.id,
+        Placa.id_user == id_usuario.id,
         extract("month", Placa.date_create) == mes,
         extract("year", Placa.date_create) == ano
     ).all()

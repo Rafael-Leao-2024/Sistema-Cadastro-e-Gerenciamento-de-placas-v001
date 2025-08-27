@@ -41,7 +41,7 @@ def initialize_chatbot():
     
     # Cria o vectorstore
     vectorstore = FAISS.from_documents(documents_splits, OpenAIEmbeddings())
-    retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 5})
+    retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 3})
     
     # Configura a chain
     prompt = PromptTemplate(template=template, input_variables=["context", "question"])

@@ -18,6 +18,7 @@ block content %}
           <th>Data</th>
           <th>Status</th>
           <th>Ações</th>
+          <th>Uploads</th>
         </tr>
       </thead>
       <tbody>
@@ -50,6 +51,14 @@ block content %}
               class="btn btn-sm btn-outline"
             >
               <i class="fas fa-edit"></i>
+            </a>
+          </td>
+          <td>
+            <a
+              href="{{ url_for('documentos.upload_file_anexo', id_placa=placa.id) }}"
+              class="btn btn-sm btn-outline"
+            >
+            <i class="fa-solid fa-file-arrow-up"></i>
             </a>
           </td>
         </tr>
