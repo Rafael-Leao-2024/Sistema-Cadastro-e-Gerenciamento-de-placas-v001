@@ -32,7 +32,7 @@ prompt = ChatPromptTemplate.from_messages([("system", sistema),
 
 # persistir todas as conversas baseadas em sessão do usuário em um banco de dados SQL  
 def get_session_history_db(session_id):  
-    return SQLChatMessageHistory(session_id, connection="sqlite:///memory.db") 
+    return SQLChatMessageHistory(session_id, connection="sqlite:///memory_llm.db")
 
 # crie uma função de janela de buffer de memória para retornar as últimas K conversas  
 def memory_window(messages, k=30):  

@@ -171,4 +171,5 @@ cython_debug/
 # db.py
 zinspecionar.txt
 venv_2
-memory.db
+memory_llm.db
+memory_agent.db

@@ -165,12 +165,12 @@ def solicitar_placas():
         db.session.commit()
         
         if len(lista_placas) > 0:
-            enviar_email_confirmacao_placa(current_user, lista_placas)  
+            enviar_email_confirmacao_placa(current_user, lista_placas)
             flash('Placas solicitadas com sucesso e e-mail enviado!', 'success')
             return redirect(url_for('placas.minhas_placas'))
         else:
             flash('Voce não preencheu os campos com os dados!', 'info')
-            return redirect(url_for('placas.solicitar_placas'))        
+            return redirect(url_for('placas.solicitar_placas'))     
     return render_template('placas/solicitar_placas.html', titulo='solicitar varias placas', endereco=endereco)
 
 @placas.route("/gerenciamento-pedidos")

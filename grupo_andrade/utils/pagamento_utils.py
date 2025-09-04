@@ -7,10 +7,11 @@ import os
 load_dotenv()
 
 PROD_ACCESS_TOKEN = os.environ.get('PROD_ACCESS_TOKEN')
+UNIT_PRICE = float(os.environ.get('UNIT_PRICE'))
 
 def criar_preferencia(placas):
     corpo = {"items":[
-        {"id": str(placa.id), "title": placa.placa.upper(), "quantity": 1, "unit_price": 90.0}
+        {"id": str(placa.id), "title": placa.placa.upper(), "quantity": 1, "unit_price": UNIT_PRICE}
         for placa in placas
         ],
             "back_urls": {

@@ -16,7 +16,7 @@ retriever, chain = initialize_chatbot()
 chain_memoria = conversa_memoria()
 
 def memoria_session():
-    message_history = SQLChatMessageHistory(session_id=current_user.id, connection_string="sqlite:///memory.db")
+    message_history = SQLChatMessageHistory(session_id=current_user.id, connection_string="sqlite:///memory_llm.db")
     memory = ConversationBufferMemory(chat_memory=message_history, memory_key="chat_history", return_messages=True)
     return memory
 
@@ -28,8 +28,8 @@ def chat():
     mensagens = [("User", historico) if isinstance(historico, HumanMessage) else ("AI", historico) for historico in historicos]
     if not len(mensagens) > 1:
         mensagens = []
-    print(mensagens)           
     return render_template('support/chat.html', mensagens=mensagens)
+
 
 def agent_ferramenta(memory):
         agent = initialize_agent(
