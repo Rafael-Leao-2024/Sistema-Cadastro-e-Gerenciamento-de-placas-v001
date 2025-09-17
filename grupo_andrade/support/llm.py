@@ -26,7 +26,7 @@ Pergunta: {question}
 
 def initialize_chatbot():
     # Carrega o PDF
-    caminho_pdf = r"C:\Users\TRANS MASSENA\Grupov001\Sistema-Cadastro-e-Gerenciamento-de-placas-v001\grupo_andrade\support\servicos_de_veiculos.pdf"
+    caminho_pdf = r"C:\Users\rafae\Documents\Sistema-Cadastro-e-Gerenciamento-de-placas-v001\grupo_andrade\support\servicos_de_veiculos.pdf"
     loader = PyPDFLoader(caminho_pdf)
     documentos_pages = loader.load()
     

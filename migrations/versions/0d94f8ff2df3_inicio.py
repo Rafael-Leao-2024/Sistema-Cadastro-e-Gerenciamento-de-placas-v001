@@ -1,8 +1,8 @@
-"""coluna de id placa 
+"""inicio
 
-Revision ID: 609fe5da141f
+Revision ID: 0d94f8ff2df3
 Revises: 
-Create Date: 2025-08-25 12:26:45.865715
+Create Date: 2025-09-14 12:59:34.320516
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '609fe5da141f'
+revision = '0d94f8ff2df3'
 down_revision = None
 branch_labels = None
 depends_on = None

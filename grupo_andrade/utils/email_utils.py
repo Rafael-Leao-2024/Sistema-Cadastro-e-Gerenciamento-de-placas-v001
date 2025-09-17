@@ -1,5 +1,5 @@
 from flask_mail import Message
-from flask import  url_for
+from flask import  url_for, current_app as app
 from grupo_andrade.main import mail
 import requests
 import os
@@ -7,7 +7,7 @@ import os
 
 def enviar_email_reset_senha(user):
     token = user.get_reset_token()
-    mensagem = Message('Password Reset Request', sender='noreply@demo.com', recipients=[user.email])
+    mensagem = Message('Password Reset Request', sender='noreply@demo.com', recipients=[user.email, app.config['MAIL_DEFAULT_SENDER']])
     mensagem.body = f'''Para redefinir sua senha, visite o seguinte link::
 {url_for('auth.reset_token', token=token, _external=True)}
 Se você não fez esta solicitação, simplesmente ignore este e-mail e nenhuma alteração será feita.
@@ -24,6 +24,7 @@ def enviar_email_confirmacao_placa(user, placas):
     detalhes_placas = ""
     for placa in placas:
         detalhes_placas += f'''
+CHASSI:  {placa.chassi.upper()}
 Placa:  {placa.placa.upper()}
 RENAVAM:{placa.renavan}
 CRLV:   {placa.crlv}

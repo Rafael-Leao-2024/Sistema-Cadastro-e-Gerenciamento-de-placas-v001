@@ -42,8 +42,19 @@ block content %}
           </div>
           <div>
             <p class="text-sm text-secondary">Solicitante</p>
-            <p class="font-mono text-lg">{{ usuario_solicitante.username }}</p>
+            <p class="font-mono text-lg">{{ usuario_solicitante.username.capitalize() }}</p>
           </div>
+          {% if placa.chassi %}
+          <div>
+            <p class="text-sm text-secondary">Chassi</p>
+            <p class="font-mono text-lg">{{ placa.chassi.upper() }}</p>
+          </div>
+          {% else %}
+          <div>
+            <p class="text-sm text-secondary">Chassi</p>
+            <p class="font-mono text-lg italic text-gray-500">N/A</p>
+          </div>
+          {% endif %}
           {% if placa.received %}
           <div>
             <p class="text-sm text-secondary">Recebimento</p>

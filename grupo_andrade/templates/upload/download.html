@@ -1,4 +1,6 @@
-{% extends "layout.html" %} {% block content %}
+{% extends "layout.html" %} 
+{% block title %} {{ title }} {% endblock %}
+{% block content %}
 <div class="container py-8 animate-fadeIn">
   <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
     <h2 class="text-2xl font-bold mb-6 text-center text-secondary">
@@ -11,7 +13,9 @@
       <div class="flex items-center justify-between p-3 bg-gray-100 rounded-md">
         <span class="text-gray-700">{{ file.id }}</span>
         <span class="text-gray-700">{{ file.id_placa }}</span>
-        <span class="text-gray-700">{{ file.filename }}</span>
+        <a href="{{ url_for('documentos.delete_file', id_file=file.id) }}" class="text-red-600 hover:text-red-800 underline">
+          <span class="text-gray-700">{{ file.filename }}</span>
+        </a>
         <span class="text-gray-700">{{ file.date_create.strftime('%Y-%m-%d %H:%M:%S') }}</span>
         <a
           href="{{ url_for('documentos.download_file', name=file.filename) }}"

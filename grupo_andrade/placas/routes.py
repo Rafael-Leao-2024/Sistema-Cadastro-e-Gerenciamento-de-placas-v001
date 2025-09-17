@@ -102,9 +102,9 @@ def consulta():
     resultados = []
     form = ConsultarForm()
     if request.method == 'POST':
-        placa = request.form.get('placa')
-        if placa:
-            resultados = Placa.query.filter(Placa.placa.ilike(f"%{placa.upper()}%")).order_by(Placa.date_create.desc()).all()
+        chassi = request.form.get('chassi')
+        if chassi:
+            resultados = Placa.query.filter(Placa.chassi.ilike(f"%{chassi.upper()}%")).order_by(Placa.date_create.desc()).all()
             if not resultados:
                 flash("Placa não encontrada!", "warning")
             else:
@@ -127,6 +127,7 @@ def editar_placa(placa_id):
 
     if request.method == 'POST':
         placa.placa = request.form.get('placa')
+        placa.chassi = request.form.get('chassi')
         placa.renavan = request.form.get('renavan')
         placa.endereco_placa = request.form.get('endereco_placa')
         placa.crlv = request.form.get('crlv')
@@ -141,37 +142,42 @@ def editar_placa(placa_id):
 def solicitar_placas():
     if request.method == 'GET':
         endereco = Endereco.query.filter_by(id_user=current_user.id).order_by(Endereco.id.desc()).first()
+        placa = Placa.query.filter_by(id_user=current_user.id).order_by(Placa.id.desc()).first()
         try:
             endereco = endereco.endereco.title()
+            placa = placa.placa.title()
         except:
             endereco = Endereco.endereco.default.arg
+            placa = Placa.placa.default.arg
     
     if request.method == 'POST':
-        placas = request.form.getlist('placa') 
+        chassis = request.form.getlist('chassi')
+        placas = request.form.getlist('placa')
         enderecos = request.form.getlist('endereco_placa') 
         crlvs = request.form.getlist('crlv')
         renavams = request.form.getlist('renavam')
 
         lista_placas = []
-        for placa, endereco, crlv, renavam in zip(placas, enderecos, crlvs, renavams):
+        for chassi, placa, endereco, crlv, renavam in zip(chassis, placas, enderecos, crlvs, renavams):
             nova_placa = Placa(
                 placa=placa.upper(),
+                chassi=chassi.upper(),
                 endereco_placa=endereco, 
                 crlv=crlv, renavan=renavam,
                 id_user=current_user.id
                 )
             db.session.add(nova_placa)
-            lista_placas.append(nova_placa)        
+            lista_placas.append(nova_placa)      
         db.session.commit()
         
         if len(lista_placas) > 0:
             enviar_email_confirmacao_placa(current_user, lista_placas)
-            flash('Placas solicitadas com sucesso e e-mail enviado!', 'success')
+            flash('Solicitaçao enviada com sucesso e e-mail enviado!', 'success')
             return redirect(url_for('placas.minhas_placas'))
         else:
             flash('Voce não preencheu os campos com os dados!', 'info')
             return redirect(url_for('placas.solicitar_placas'))     
-    return render_template('placas/solicitar_placas.html', titulo='solicitar varias placas', endereco=endereco)
+    return render_template('placas/solicitar_placas.html', titulo='solicitar varias placas', endereco=endereco, placa=placa)
 
 @placas.route("/gerenciamento-pedidos")
 @login_required

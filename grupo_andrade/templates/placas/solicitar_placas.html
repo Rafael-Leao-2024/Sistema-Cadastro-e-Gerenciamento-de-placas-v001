@@ -49,22 +49,48 @@ block content %}
         <div
           class="grid grid-cols-1 md:grid-cols-4 gap-4 placa-item group relative"
         >
+        <div class="form-group">
+            <label class="form-label">Chassi</label>
+            <input
+              type="text"
+              name="chassi"
+              class="form-control uppercase"
+              value="{{ chassi }}"
+              placeholder="Exemplo : 9BWZZZ377VT004251"
+              required
+            />
+          </div>
+          
+
           <div class="form-group">
             <label class="form-label">Placa</label>
             <input
               type="text"
               name="placa"
               class="form-control uppercase"
+              value="{{ placa }}"
+              placeholder="ABC1B34"
               required
             />
           </div>
+          
           <div class="form-group">
             <label class="form-label">Renavan</label>
-            <input type="text" name="renavam" class="form-control" />
+            <input 
+            type="text" 
+            name="renavam" 
+            class="form-control"
+            value="00000000000"
+            />
           </div>
           <div class="form-group">
             <label class="form-label">CRLV</label>
-            <input type="text" name="crlv" class="form-control" />
+            <input 
+            type="text" 
+            name="crlv" 
+            class="form-control" 
+            value="000000000" 
+            />
           </div>
           <div class="form-group">
             <label class="form-label">Endereço (opcional)</label>

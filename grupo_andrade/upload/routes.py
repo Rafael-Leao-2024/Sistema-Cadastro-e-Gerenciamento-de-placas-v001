@@ -47,7 +47,26 @@ def upload_file_anexo(id_placa):
     return render_template('upload/muitos_file.html', title="muitos uploads", placa=placa)
 
 @documentos_bp.route('/download/<id_placa>')
+@login_required
 def download_anexos(id_placa):
     placa = Placa.query.filter(Placa.id == id_placa).first()
     files = UploadFile.query.filter(UploadFile.id_placa == id_placa).all()
     return render_template('upload/download.html', files=files, title="todos Downloads", placa=placa)
+
+
+@documentos_bp.route('/upload/<id_file>/delete', methods=['GET', 'POST'])
+@login_required
+def delete_file(id_file):
+    file = UploadFile.query.filter(UploadFile.id == id_file).first()
+    placa = Placa.query.filter(Placa.id == file.id_placa).first()
+    if request.method == 'POST':
+        file_record = UploadFile.query.get(id_file)
+        if file_record:
+            file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], file_record.filename)
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            db.session.delete(file_record)
+        db.session.commit()
+        flash(f'Arquivo {file_record.filename} deletado com sucesso', category='success')
+        return redirect(url_for('documentos.download_anexos', id_placa=placa.id))
+    return render_template('upload/delete.html', file=file, title="Confirmar Exclusão", placa=placa)

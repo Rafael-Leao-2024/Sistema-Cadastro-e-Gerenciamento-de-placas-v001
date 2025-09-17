@@ -23,7 +23,7 @@ def create_app():
     app = Flask(__name__)
     
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///meu_banco.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
     app.config['MAIL_PORT'] = 587

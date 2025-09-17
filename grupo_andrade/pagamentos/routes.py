@@ -39,7 +39,7 @@ def relatorio_resultados(mes, ano, id_usuario=current_user):
         total, init_point = criar_preferencia(placas=placas)
     except:
         init_point, total = '/', 0
-
+    print(total, init_point)
     flash(category='success', message="relatorios automatizados com sucesso!")
     return render_template("pagamentos/relatorio_resultados.html", 
                          placas=placas, mes=mes, ano=ano, 

@@ -3,7 +3,7 @@ block content %}
 <div class="animate-fadeIn">
   <div class="flex justify-between items-center mb-8">
     <h2 class="text-2xl font-bold">
-      <i class="fas fa-search mr-2"></i> Consultar Placa
+      <i class="fas fa-search mr-2"></i> Consultar Veículo pelo Chassi
     </h2>
     <a href="{{ url_for('placas.todas') }}" class="btn btn-outline">
       <i class="fas fa-arrow-left mr-2"></i> Voltar
@@ -16,10 +16,10 @@ block content %}
         {{ form.hidden_tag() }}
 
         <div class="flex-grow">
-          {{ form.placa.label(class="form-label") }}
+          {{ form.chassi.label(class="form-label") }}
           <div class="relative">
-            {{ form.placa(class="form-control pl-10 uppercase",
-            placeholder="AAA1B23") }}
+            {{ form.chassi(class="form-control pl-10 capitalize",
+            placeholder="Consulte pelos 6 ultimos numeros") }}
             <div
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
             >
@@ -47,7 +47,7 @@ block content %}
         <thead>
           <tr>
             <th>Placa</th>
-            <th>Usuário</th>
+            <th>Chassi</th>
             <th>Data</th>
             <th>Status</th>
             <th>Ações</th>
@@ -57,7 +57,7 @@ block content %}
           {% for placa in resultados %}
           <tr>
             <td class="font-mono">{{ placa.placa }}</td>
-            <td>{{ placa.author.username }}</td>
+            <td>{{ placa.chassi.upper() }}</td>
             <td>{{ placa.date_create.strftime('%d/%m/%Y') }}</td>
             <td>
               {% if placa.received %}
@@ -89,7 +89,7 @@ block content %}
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const placaInput = document.querySelector('.uppercase');
+    const placaInput = document.querySelector('.capitalize');
     if (placaInput) {
       placaInput.addEventListener('input', function () {
         this.value = this.value.toUpperCase();

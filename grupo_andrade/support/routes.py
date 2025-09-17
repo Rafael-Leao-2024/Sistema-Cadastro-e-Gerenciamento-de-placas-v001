@@ -15,15 +15,15 @@ support = Blueprint('support', __name__, url_prefix='/support')
 retriever, chain = initialize_chatbot()
 chain_memoria = conversa_memoria()
 
-def memoria_session():
-    message_history = SQLChatMessageHistory(session_id=current_user.id, connection_string="sqlite:///memory_llm.db")
+def memoria_session(banco_dados):
+    message_history = SQLChatMessageHistory(session_id=current_user.id, connection_string=banco_dados)
     memory = ConversationBufferMemory(chat_memory=message_history, memory_key="chat_history", return_messages=True)
     return memory
 
 @support.route('/chat')
 @login_required
 def chat():
-    memory = memoria_session()
+    memory = memoria_session(banco_dados="sqlite:///memory_llm.db")
     historicos = memory.buffer_as_messages
     mensagens = [("User", historico) if isinstance(historico, HumanMessage) else ("AI", historico) for historico in historicos]
     if not len(mensagens) > 1:
@@ -48,7 +48,7 @@ def agent_ferramenta(memory):
 @support.route('/question', methods=['POST'])
 @login_required
 def ask_question():
-    memory = memoria_session()
+    memory = memoria_session(banco_dados="sqlite:///memory_agent.db")
     agente = agent_ferramenta(memory)
 
     data = request.get_json()

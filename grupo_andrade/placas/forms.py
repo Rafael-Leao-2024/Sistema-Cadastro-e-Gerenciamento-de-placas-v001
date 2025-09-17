@@ -18,7 +18,7 @@ class EmplacamentoForm(FlaskForm):
     submit = SubmitField('Solicitar')
 
 class ConsultarForm(FlaskForm):
-    placa = StringField('Placa', 
+    chassi = StringField('Chassi', 
                        validators=[DataRequired(), Length(min=7, max=7)])
     submit = SubmitField('Consultar')
 
