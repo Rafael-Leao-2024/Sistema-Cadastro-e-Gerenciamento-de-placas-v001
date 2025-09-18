@@ -21,6 +21,7 @@ class User(db.Model, UserMixin):
     pagamentos = db.relationship('Pagamento', backref='user', lazy=True)
     is_admin = db.Column(db.Boolean, default=False)
     data_criacao = db.Column(db.DateTime)
+    despachante = db.Column(db.Integer, default=0)
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'])

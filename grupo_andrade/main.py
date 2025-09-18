@@ -10,6 +10,7 @@ import os
 load_dotenv()
 
 
+
 db = SQLAlchemy()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
@@ -49,6 +50,7 @@ def create_app():
     from grupo_andrade.pagamentos.routes import pagamentos
     from grupo_andrade.support.routes import support
     from grupo_andrade.upload.routes import documentos_bp
+    from grupo_andrade.despachante.routes import despachante
     
     
     app.register_blueprint(auth)
@@ -58,5 +60,6 @@ def create_app():
     app.register_blueprint(pagamentos)
     app.register_blueprint(support)
     app.register_blueprint(documentos_bp)
+    app.register_blueprint(despachante)
     
     return app

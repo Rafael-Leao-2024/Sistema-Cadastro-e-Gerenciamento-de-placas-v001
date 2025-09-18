@@ -5,6 +5,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
@@ -25,9 +26,10 @@ Pergunta: {question}
 """
 
 def initialize_chatbot():
-    # Carrega o PDF
-    caminho_pdf = r"C:\Users\rafae\Documents\Sistema-Cadastro-e-Gerenciamento-de-placas-v001\grupo_andrade\support\servicos_de_veiculos.pdf"
-    loader = PyPDFLoader(caminho_pdf)
+    caminho_pdf = os.path.abspath(__file__)
+    caminho_diretorio = os.path.dirname(caminho_pdf)
+    caminho_completo = os.path.join(caminho_diretorio, "servicos_de_veiculos.pdf")
+    loader = PyPDFLoader(caminho_completo)
     documentos_pages = loader.load()
     
     # Split dos documentos

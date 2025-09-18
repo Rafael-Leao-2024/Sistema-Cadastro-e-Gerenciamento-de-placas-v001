@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block title %}Despachante - Grupo Andrade{% endblock %}
+
+{% block content %}
+<div class="container mx-auto mt-10 px-4">
+    <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-6">Escolher um despachante</h2>
+
+    <form method="POST" class="bg-white dark:bg-gray-800 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <div class="mb-4">
+            <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2" for="despachante_id">
+                Selecione o despachante:
+            </label>
+            <select name="despachante_id" id="despachante_id"
+                class="block w-full px-4 py-2 mt-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:text-white">
+                {% for despachante in despachantes %}
+                    {% if despachante.is_admin %}
+                    <option id="{{ despachante.id }}" value="{{ despachante.id }}">{{ despachante.username }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="flex items-center justify-between">
+            <button type="submit"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Escolher
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
