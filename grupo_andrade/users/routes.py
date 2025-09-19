@@ -32,7 +32,7 @@ def endereco():
 
 @users.route('/usuarios')
 def listar_usuarios():
-    usuarios = User.query.order_by(User.id.desc())
+    usuarios = User.query.order_by(User.data_criacao.desc())
     usuarios_clientes = usuarios.filter(User.despachante == current_user.id).all()
     return render_template('users/listar_usuarios.html', usuarios=usuarios_clientes)
 

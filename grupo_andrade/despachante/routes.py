@@ -8,7 +8,7 @@ despachante = Blueprint("despachante", __name__, url_prefix="/despachante")
 @despachante.route("/escolher", methods=["POST", "GET"])
 @login_required
 def selecionar_despachante():
-    despachantes = User.query.all()
+    despachantes = User.query.filter_by(is_admin=True).all()
     if request.method == "POST":
         selected_id = request.form.get("despachante_id")
         selected_despachante = User.query.get(selected_id)

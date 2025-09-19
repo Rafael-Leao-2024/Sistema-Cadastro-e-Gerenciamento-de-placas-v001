@@ -15,8 +15,8 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@login_required
 @documentos_bp.route("/upload/<name>")
+@login_required
 def download_file(name):
     return send_from_directory(current_app.config['UPLOAD_FOLDER'], name, as_attachment=True)
 
