@@ -65,3 +65,10 @@ def account():
         form.email.data = current_user.email
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('users/account.html', title='Account', form=form, image_file=image_file)
+
+
+@users.route("/usuario/<int:user_id>", methods=['GET', 'POST'])
+@login_required
+def info_user(user_id):
+    user = User.query.filter(User.id == user_id).first()
+    return render_template('users/info_user.html', user=user)

@@ -142,6 +142,11 @@ def editar_placa(placa_id):
 @placas.route('/solicitar_placas', methods=['GET', 'POST'])
 @login_required
 def solicitar_placas():
+    despachante = "Sem despachante"
+    if current_user.despachante:
+        despachante_user = User.query.filter_by(id=current_user.despachante).first()
+        if despachante_user:
+            despachante = despachante_user.username.title()
     if request.method == 'GET':
         endereco = Endereco.query.filter_by(id_user=current_user.id).order_by(Endereco.id.desc()).first()
         placa = Placa.query.filter_by(id_user=current_user.id).order_by(Placa.id.desc()).first()
@@ -183,7 +188,7 @@ def solicitar_placas():
         else:
             flash('Voce não preencheu os campos com os dados!', 'info')
             return redirect(url_for('placas.solicitar_placas'))     
-    return render_template('placas/solicitar_placas.html', titulo='solicitar varias placas', endereco=endereco, placa=placa)
+    return render_template('placas/solicitar_placas.html', titulo='solicitar varias placas', endereco=endereco, placa=placa, despachante=despachante)
 
 @placas.route("/gerenciamento-pedidos")
 @login_required

@@ -3,7 +3,7 @@ block content %}
 <div class="animate-fadeIn">
   <div class="flex justify-between items-center mb-8">
     <h2 class="text-2xl font-bold">
-      <i class="fas fa-users mr-2"></i> Usuários Cadastrados
+      <i class="fas fa-users mr-2"></i> Clientes Cadastrados
     </h2>
     <a href="{{ url_for('placas.homepage') }}" class="btn btn-outline">
       <i class="fas fa-arrow-left mr-2"></i> Voltar
@@ -19,7 +19,7 @@ block content %}
             <th>Nome</th>
             <th>Email</th>
             <th>Data Cadastro</th>
-            <th>Ações</th>
+            <th>Informaçoes</th>
           </tr>
         </thead>
         <tbody>
@@ -31,7 +31,7 @@ block content %}
             <td>{{ usuario.data_criacao }}</td>
             <td>
               <a
-                href="{{ url_for('users.account', user_id=usuario.id) }}"
+                href="{{ url_for('users.info_user', user_id=usuario.id) }}"
                 class="btn btn-sm btn-outline"
               >
                 <i class="fas fa-eye"></i>

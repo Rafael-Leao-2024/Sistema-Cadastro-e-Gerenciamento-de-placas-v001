@@ -3,7 +3,7 @@ block content %}
 <div class="animate-fadeIn">
   <div class="flex justify-between items-center mb-8">
     <h2 class="text-2xl font-bold">
-      <i class="fas fa-plus-circle mr-2"></i> Solicitar Placas
+      <i class="fas fa-plus-circle mr-2"></i> Solicitaçoes
     </h2>
     <a href="{{ url_for('placas.minhas_placas') }}" class="btn btn-outline">
       <i class="fas fa-arrow-left mr-2"></i> Voltar
@@ -13,7 +13,7 @@ block content %}
   <div class="card mb-6">
     <div class="card-header">
       <h3 class="text-xl font-semibold">
-        <i class="fas fa-info-circle mr-2"></i> Informações do Cliente
+        <i class="fas fa-info-circle mr-2"></i> Minhas informaçoes 
       </h3>
     </div>
     <div class="card-body">
@@ -27,9 +27,15 @@ block content %}
           <p class="text-lg">{{ current_user.email }}</p>
         </div>
       </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <p class="text-sm text-secondary">Endereço para Entrega</p>
         <p class="text-lg">{{ endereco }}</p>
+      </div>
+      <div>
+        <p class="text-sm text-secondary">Meu Despachante</p>
+        <p class="text-lg">{{ despachante }}</p>
+      </div>
       </div>
     </div>
   </div>
@@ -38,10 +44,10 @@ block content %}
     <div class="card mb-4">
       <div class="card-header flex justify-between items-center">
         <h3 class="text-xl font-semibold">
-          <i class="fas fa-car mr-2"></i> Dados das Placas
+          <i class="fas fa-car mr-2"></i> Dados das solicitaçao
         </h3>
         <button type="button" id="add-placa" class="btn btn-sm btn-primary">
-          <i class="fas fa-plus mr-2"></i> Adicionar Placa
+          <i class="fas fa-plus mr-2"></i> Adicionar solicitaçao
         </button>
       </div>
       <div class="card-body space-y-4" id="placas-container">

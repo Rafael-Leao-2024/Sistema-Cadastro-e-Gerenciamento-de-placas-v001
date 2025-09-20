@@ -4,19 +4,18 @@
 <div class="container py-8 animate-fadeIn">
   <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
     <h2 class="text-2xl font-bold mb-6 text-center text-secondary">
-      Documentos Disponíveis placa: {{ placa.placa }}
+      <i class="fas fa-file-download mr-2"></i> Documentos para Placa {{ placa.placa }}
     </h2>
 
     {% if files %}
     <div class="space-y-3">
       {% for file in files %}
       <div class="flex items-center justify-between p-3 bg-gray-100 rounded-md">
-        <span class="text-gray-700">{{ file.id }}</span>
-        <span class="text-gray-700">{{ file.id_placa }}</span>
+        <span class="text-gray-700 font-medium">ID: {{ file.id }}</span>
         <a href="{{ url_for('documentos.delete_file', id_file=file.id) }}" class="text-red-600 hover:text-red-800 underline">
           <span class="text-gray-700">{{ file.filename }}</span>
         </a>
-        <span class="text-gray-700">{{ file.date_create.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+        <span class="text-gray-700 text-sm">{{ file.date_create.strftime('%d/%m/%Y %H:%M') }}</span>
         <a
           href="{{ url_for('documentos.download_file', name=file.filename) }}"
           class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded-md text-sm transition duration-200"
@@ -29,7 +28,8 @@
     </div>
     {% else %}
     <div class="text-center py-8 text-gray-500">
-      Nenhum documento disponível para download.
+      <i class="fas fa-file-alt fa-3x mb-4"></i>
+      <p class="text-lg">Nenhum documento disponível para esta placa.</p>
     </div>
     {% endif %}
 
@@ -38,7 +38,7 @@
         href="{{ url_for('documentos.upload_file_anexo', id_placa=placa.id) }}"
         class="text-blue-600 hover:text-blue-800 underline"
       >
-        Voltar para Upload
+        Adicionar Novo Documento
       </a>
     </div>
   </div>

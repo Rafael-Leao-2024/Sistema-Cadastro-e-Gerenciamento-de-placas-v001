@@ -2,7 +2,8 @@
 
 <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
   <h2 class="text-2xl font-bold mb-6 text-center text-secondary">
-    Anexos Documentos: {{ placa.placa.upper() }}</h2>
+    <i class="fas fa-file-upload mr-2"></i> Upload de Vários Arquivos para Placa {{ placa.placa }}  
+  </h2>
 
   <form
     id="upload-container"
@@ -29,7 +30,7 @@
       type="submit"
       class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition duration-200"
     >
-      Enviar Arquivos
+      Iniciar Upload
     </button>
     <div id="progress"></div>
   </form>
@@ -38,7 +39,7 @@
       href="{{ url_for('documentos.download_anexos', id_placa=placa.id) }}"
       class="text-blue-600 hover:text-blue-800 underline"
     >
-      Ir para os Downloads
+      Download dos Documentos Anexados
     </a>
   </div>
   {% with messages = get_flashed_messages(with_categories=true) %} {% if

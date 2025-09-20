@@ -45,7 +45,7 @@ class Placa(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     placa = db.Column(db.String(10), nullable=False, default="ABC1234")
-    chassi = db.Column(db.String(30), nullable=True)
+    chassi = db.Column(db.String(30), nullable=True, default=000000)
     renavan = db.Column(db.String(20))
     endereco_placa = db.Column(db.String(100), nullable=False)
     crlv = db.Column(db.String(20))

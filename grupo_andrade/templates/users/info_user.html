@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block title %}Info Usuário{% endblock %}
+{% block content %}
+
+<div class="animate-fadeIn">
+  <div class="flex justify-between items-center mb-8">
+    <h2 class="text-2xl font-bold">
+      <i class="fas fa-user mr-2"></i> Detalhes do cliente
+    </h2>
+    <a href="{{ url_for('users.listar_usuarios') }}" class="btn btn-outline">
+      <i class="fas fa-arrow-left mr-2"></i> Voltar
+    </a>
+  </div>
+
+  <div class="card p-6">
+    <h3 class="text-xl font-semibold mb-4">Informações do cliente</h3>
+    <p><strong>ID:</strong> {{ user.id }}</p>
+    <p><strong>Nome de Usuário:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Data de Criação:</strong> {{ user.data_criacao }}</p>
+    <p><strong>Admin:</strong> {{ 'Sim' if user.is_admin else 'Não' }}</p>
+  </div>
+</div>
+{% endblock content %}
