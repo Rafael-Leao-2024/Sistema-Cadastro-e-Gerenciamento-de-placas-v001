@@ -18,7 +18,7 @@ def allowed_file(filename):
 @documentos_bp.route("/upload/<name>")
 @login_required
 def download_file(name):
-    return send_from_directory(current_app.config['UPLOAD_FOLDER'], name, as_attachment=True)
+    return send_from_directory(current_app.config['UPLOAD_FOLDER'], name, as_attachment=False)
 
 
 @documentos_bp.route('/upload-anexo/<id_placa>', methods=['GET', 'POST'])

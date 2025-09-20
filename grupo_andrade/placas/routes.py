@@ -171,6 +171,10 @@ def solicitar_placas():
             db.session.add(nova_placa)
             lista_placas.append(nova_placa)      
         db.session.commit()
+
+        if len(lista_placas) == 1:
+            flash('Solicitaçao enviada com sucesso!', 'success')
+            return redirect(url_for('documentos.upload_file_anexo', id_placa=lista_placas[0].id))
         
         if len(lista_placas) > 0:
             enviar_email_confirmacao_placa(current_user, lista_placas)
