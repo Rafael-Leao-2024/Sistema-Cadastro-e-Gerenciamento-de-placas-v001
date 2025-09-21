@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Office Space - {% block title %}{% endblock %}</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
     <link
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
@@ -43,6 +46,39 @@
           <a href="{{ url_for('users.account') }}" class="btn btn-outline">
             <i class="fas fa-user-circle mr-2"></i> Minha Conta
           </a>
+
+          <!-- Botão de Notificações -->
+            <div class="relative">
+                <button id="notificacaoBtn" class="relative p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                    </svg>
+                    {% if notificacoes_nao_lidas %}
+                      {% if notificacoes_nao_lidas > 0 %}
+                      <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
+                          {{ notificacoes_nao_lidas }}
+                      </span>
+                      {% endif %}
+                    {% endif %}
+                </button>
+                
+                <!-- Dropdown de Notificações -->
+                <div id="notificacaoDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg z-50">
+                    <div class="p-4 border-b">
+                        <h3 class="font-semibold text-gray-800">Notificações</h3>
+                    </div>
+                    <div id="notificacoesLista" class="max-h-64 overflow-y-auto">
+                        <!-- Notificações serão carregadas via JavaScript -->
+                    </div>
+                    <div class="p-2 border-t">
+                        <button id="marcarTodasLidas" class="text-blue-600 text-sm hover:text-blue-800">
+                            Marcar todas como lidas
+                        </button>
+                    </div>
+                </div>
+            </div>
+
           <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">
             <i class="fas fa-sign-out-alt mr-2"></i> Sair
           </a>
@@ -77,6 +113,10 @@
       src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
       defer
     ></script>
-    {% block scripts %}{% endblock %}
+    
+    <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    {% block scripts %}       
+    {% endblock %}
   </body>
 </html>

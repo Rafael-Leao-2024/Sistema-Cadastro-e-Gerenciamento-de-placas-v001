@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import login_required, current_user
 from datetime import datetime, timedelta
 from sqlalchemy.orm import joinedload
@@ -6,13 +6,25 @@ from sqlalchemy import desc
 
 from grupo_andrade.placas.forms import EmplacamentoForm, ConsultarForm, PlacaStatusForm, EmplacamentoUpdateForm
 from grupo_andrade.utils.email_utils import enviar_email_confirmacao_placa
-from grupo_andrade.models import Placa, Endereco, User
+from grupo_andrade.models import Placa, Endereco, User, Notificacao
 from grupo_andrade.main import db
+from flask import current_app, g
+from grupo_andrade.models import Notificacao
 
 
 
 placas = Blueprint('placas', __name__)
 
+
+    
+
+@placas.context_processor
+@login_required
+def inject_notificacao():
+    g.notificacoes_nao_lidas = 0
+    if current_user.is_authenticated and current_user.is_admin:
+        g.notificacoes_nao_lidas = Notificacao.query.filter_by(id_usuario=current_user.despachante ,lida=False).count()
+    return (dict(notificacoes_nao_lidas=g.notificacoes_nao_lidas))
 
 @placas.route("/")
 def homepage():
@@ -174,7 +186,17 @@ def solicitar_placas():
                 id_user=current_user.id
                 )
             db.session.add(nova_placa)
-            lista_placas.append(nova_placa)      
+            lista_placas.append(nova_placa)    
+        db.session.commit()
+        db.session.refresh(nova_placa)
+
+        notificacao = Notificacao(
+            mensagem=f"O usuário {current_user.username} fez uma nova solicitação.{len(lista_placas)} data e hora {nova_placa.date_create}",
+            id_solicitacao=nova_placa.id,
+            id_usuario=current_user.despachante if current_user.despachante else current_user.id,
+        )
+
+        db.session.add(notificacao)
         db.session.commit()
 
         if len(lista_placas) == 1:
@@ -189,6 +211,54 @@ def solicitar_placas():
             flash('Voce não preencheu os campos com os dados!', 'info')
             return redirect(url_for('placas.solicitar_placas'))     
     return render_template('placas/solicitar_placas.html', titulo='solicitar varias placas', endereco=endereco, placa=placa, despachante=despachante)
+
+@placas.route('/notificacoes')
+@login_required
+def pegar_notificacoes():
+    # pegar todas minhas notificacoes
+    minhas_notificacoes = Notificacao.query.filter_by(id_usuario=current_user.id, lida=False).order_by(desc(Notificacao.data_criacao)).all()
+    # transformar em lista de dicionarios pra enviar pro js
+    notificacoes = []
+
+    for notif in minhas_notificacoes:
+        notificacoes.append({
+        'id': notif.id,
+        'mensagem': notif.mensagem,
+        'data_criacao': notif.data_criacao.strftime('%d/%m/%Y %H:%M'),
+        'lida': notif.lida,
+        
+        })
+    
+    return jsonify(notificacoes)
+
+# Rota para marcar notificação como lida
+@placas.route('/marcar-lida/<int:notificacao_id>', methods=['POST'])
+@login_required
+def marcar_como_lida(notificacao_id):
+    notificacao = Notificacao.query.get_or_404(notificacao_id)
+    notificacao.lida = True
+    db.session.commit()
+    flash('Notificação marcada como lida.', 'success')
+    return jsonify({'success': True})
+
+
+# Rota para marcar todas como lidas
+@placas.route('/marcar-todas-lidas', methods=['POST'])
+@login_required
+def marcar_todas_lidas():
+    # todas minhas notificacoes pra marcar como lida
+    minhas_notificacoes = Notificacao.query.filter_by(id_usuario=current_user.id, lida=False).all()
+    if not minhas_notificacoes:
+        return jsonify({'success': False, 'message': 'Nenhuma notificação não lida encontrada.'})   
+    for notif in minhas_notificacoes:
+        notif.lida = True
+
+    db.session.commit()
+    flash('Todas as notificações marcadas como lidas.', 'success')
+    # retorne para mesma pagina atual
+    return jsonify({'success': True})
+
+
 
 @placas.route("/gerenciamento-pedidos")
 @login_required

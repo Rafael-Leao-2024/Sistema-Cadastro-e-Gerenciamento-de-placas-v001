@@ -94,3 +94,15 @@ class UploadFile(db.Model):
     id_usuario = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     id_placa = db.Column(db.Integer, db.ForeignKey('placas.id'), nullable=False)
     
+class Notificacao(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    mensagem = db.Column(db.String(200), nullable=False)
+    lida = db.Column(db.Boolean, default=False)
+    data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
+    id_solicitacao = db.Column(db.Integer, db.ForeignKey('placas.id'), nullable=False)
+    id_usuario = db.Column(db.Integer, db.ForeignKey('users.despachante'), nullable=False)
+
+    solicitacao = db.relationship('Placa', backref='notificacoes', lazy=True)
+
+    def __repr__(self):
+        return f"Notificacao(mensagem='{self.mensagem}', lida={self.lida})"
