@@ -27,6 +27,7 @@ def inject_notificacao():
     return (dict(notificacoes_nao_lidas=g.notificacoes_nao_lidas))
 
 @placas.route("/")
+@login_required
 def homepage():
     flash(message="Pagina Principal", category="success")
     return render_template('homepage.html', titulo='homepage')
@@ -190,10 +191,11 @@ def solicitar_placas():
         db.session.commit()
         db.session.refresh(nova_placa)
 
+        
         notificacao = Notificacao(
             mensagem=f"O usuário {current_user.username} fez uma nova solicitação.{len(lista_placas)} data e hora {nova_placa.date_create}",
             id_solicitacao=nova_placa.id,
-            id_usuario=current_user.despachante if current_user.despachante else current_user.id,
+            id_usuario=current_user.despachante,
         )
 
         db.session.add(notificacao)

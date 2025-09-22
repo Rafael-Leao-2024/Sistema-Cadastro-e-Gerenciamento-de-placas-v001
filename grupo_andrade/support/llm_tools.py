@@ -49,8 +49,10 @@ def meu_debito(mes):
     html = relatorio_resultados(mes=mes, ano=2025)
     soup = BeautifulSoup(html, 'html.parser')
     informacao = soup.body.main.get_text()
+    link_pagameno = soup.body.main.find_all('a')[-2].get('href')
+    informacao += f"\n Link para pagamento: {link_pagameno}"
     informacao_txt = informacao.replace('\n', '').replace('  ', '')
-    return informacao_txt
+    return informacao_txt + f"\n Link para pagamento: {link_pagameno}"
 
 
 @tool

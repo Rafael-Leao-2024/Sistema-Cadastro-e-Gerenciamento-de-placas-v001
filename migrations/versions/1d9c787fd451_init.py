@@ -1,8 +1,8 @@
-"""notificao
+"""init
 
-Revision ID: d3582a3cb2f2
+Revision ID: 1d9c787fd451
 Revises: 
-Create Date: 2025-09-20 21:33:10.911252
+Create Date: 2025-09-22 00:31:12.366592
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd3582a3cb2f2'
+revision = '1d9c787fd451'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -73,7 +73,7 @@ def upgrade():
     sa.Column('id_solicitacao', sa.Integer(), nullable=False),
     sa.Column('id_usuario', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['id_solicitacao'], ['placas.id'], ),
-    sa.ForeignKeyConstraint(['id_usuario'], ['users.id'], ),
+    sa.ForeignKeyConstraint(['id_usuario'], ['users.despachante'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('upload_file',
