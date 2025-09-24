@@ -1,18 +1,21 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
-from datetime import datetime
 from sqlalchemy import extract
-import mercadopago
-import os
 from grupo_andrade.models import Placa, Pagamento
 from grupo_andrade.main import db
 from grupo_andrade.utils.pagamento_utils import verificar_status_pagamento, criar_preferencia
 from dotenv import load_dotenv
+from grupo_andrade.placas.routes import injetar_notificacao
 
 load_dotenv()
 
 
 pagamentos = Blueprint('pagamentos', __name__)
+
+@pagamentos.context_processor
+def inject_notificacoes_pagamentos():
+    return injetar_notificacao()
+
 
 @pagamentos.route("/relatorio", methods=["GET", "POST"])
 @login_required

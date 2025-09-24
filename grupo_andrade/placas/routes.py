@@ -12,22 +12,24 @@ from flask import current_app, g
 from grupo_andrade.models import Notificacao
 
 
-
 placas = Blueprint('placas', __name__)
 
 
-    
-
-@placas.context_processor
-@login_required
-def inject_notificacao():
+def injetar_notificacao():
     g.notificacoes_nao_lidas = 0
     if current_user.is_authenticated and current_user.is_admin:
         g.notificacoes_nao_lidas = Notificacao.query.filter_by(id_usuario=current_user.despachante ,lida=False).count()
     return (dict(notificacoes_nao_lidas=g.notificacoes_nao_lidas))
 
+
+
+@placas.context_processor
+def inject_notificacoes_placas():
+    return injetar_notificacao()
+
+
+
 @placas.route("/")
-@login_required
 def homepage():
     flash(message="Pagina Principal", category="success")
     return render_template('homepage.html', titulo='homepage')
@@ -191,6 +193,9 @@ def solicitar_placas():
         db.session.commit()
         db.session.refresh(nova_placa)
 
+        if not current_user.despachante:
+            flash('Selecione um despachante antes!', 'info')
+            return redirect(url_for('placas.solicitar_placas'))
         
         notificacao = Notificacao(
             mensagem=f"O usuário {current_user.username} fez uma nova solicitação.{len(lista_placas)} data e hora {nova_placa.date_create}",

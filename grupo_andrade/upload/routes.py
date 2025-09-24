@@ -5,9 +5,15 @@ import os
 from grupo_andrade.models import UploadFile, Placa
 from grupo_andrade.main import db
 from flask_login import login_required, current_user
+from grupo_andrade.placas.routes import injetar_notificacao
 
 
 documentos_bp  = Blueprint('documentos', __name__, template_folder='templates')
+
+@documentos_bp.context_processor
+def inject_notificacoes_documentos():
+    return injetar_notificacao()
+
 
 ALLOWED_EXTENSIONS = {'pdf', 'docx', 'txt'}
 

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, current_app
 from grupo_andrade.support.llm_memory import conversa_memoria
 from grupo_andrade.support.llm import initialize_chatbot
 from langchain_community.chat_message_histories import SQLChatMessageHistory
@@ -8,9 +8,17 @@ from langchain_core.messages import HumanMessage
 from langchain.agents import initialize_agent, AgentType
 from langchain_openai import ChatOpenAI
 from grupo_andrade.support.llm_tools import ferramentas
+from grupo_andrade.placas.routes import injetar_notificacao
+
 
 
 support = Blueprint('support', __name__, url_prefix='/support')
+
+
+@support.context_processor
+def inject_notificacoes_support():
+    return injetar_notificacao()
+
 
 retriever, chain = initialize_chatbot()
 chain_memoria = conversa_memoria()
