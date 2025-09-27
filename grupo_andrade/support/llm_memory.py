@@ -3,8 +3,8 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables import RunnablePassthrough, RunnableWithMessageHistory
 from langchain_core.output_parsers import StrOutputParser  
 from langchain_community.chat_message_histories import SQLChatMessageHistory  
-
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
@@ -32,7 +32,7 @@ prompt = ChatPromptTemplate.from_messages([("system", sistema),
 
 # persistir todas as conversas baseadas em sessão do usuário em um banco de dados SQL  
 def get_session_history_db(session_id):  
-    return SQLChatMessageHistory(session_id, connection="sqlite:///memory_llm.db")
+    return SQLChatMessageHistory(session_id, connection=os.getenv("DATABASE_URL_MEMORY"))
 
 # crie uma função de janela de buffer de memória para retornar as últimas K conversas  
 def memory_window(messages, k=30):  

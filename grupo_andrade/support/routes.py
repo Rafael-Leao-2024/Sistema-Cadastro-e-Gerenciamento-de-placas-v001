@@ -9,7 +9,10 @@ from langchain.agents import initialize_agent, AgentType
 from langchain_openai import ChatOpenAI
 from grupo_andrade.support.llm_tools import ferramentas
 from grupo_andrade.placas.routes import injetar_notificacao
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 
 support = Blueprint('support', __name__, url_prefix='/support')
@@ -31,7 +34,7 @@ def memoria_session(banco_dados):
 @support.route('/chat')
 @login_required
 def chat():
-    memory = memoria_session(banco_dados="sqlite:///memory_llm.db")
+    memory = memoria_session(banco_dados=os.getenv("DATABASE_URL_AGENT"))
     historicos = memory.buffer_as_messages
     mensagens = [("User", historico) if isinstance(historico, HumanMessage) else ("AI", historico) for historico in historicos]
     if not len(mensagens) > 1:

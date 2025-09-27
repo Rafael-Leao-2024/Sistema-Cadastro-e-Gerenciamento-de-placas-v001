@@ -1,9 +1,14 @@
 from flask import Blueprint, render_template, url_for, redirect, request, flash
 from flask_login import login_required, current_user
 from grupo_andrade.models import User, db
- 
+from grupo_andrade.placas.routes import injetar_notificacao
+
 
 despachante = Blueprint("despachante", __name__, url_prefix="/despachante")
+
+@despachante.context_processor
+def inject_notifications():
+    return injetar_notificacao()
 
 @despachante.route("/escolher", methods=["POST", "GET"])
 @login_required

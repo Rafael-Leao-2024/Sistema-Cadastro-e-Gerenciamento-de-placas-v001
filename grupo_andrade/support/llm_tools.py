@@ -1,5 +1,3 @@
-
-# <<<<<<< HEAD
 from langchain.tools import tool
 from bs4 import BeautifulSoup
 import requests

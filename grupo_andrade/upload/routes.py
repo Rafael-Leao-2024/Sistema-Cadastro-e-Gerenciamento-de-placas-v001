@@ -6,7 +6,11 @@ from grupo_andrade.models import UploadFile, Placa
 from grupo_andrade.main import db
 from flask_login import login_required, current_user
 from grupo_andrade.placas.routes import injetar_notificacao
+from grupo_andrade.upload.funcoes_aws import enviar_arquivo_s3, ver_arquivo
+from botocore.exceptions import NoCredentialsError
+from dotenv import load_dotenv
 
+load_dotenv()
 
 documentos_bp  = Blueprint('documentos', __name__, template_folder='templates')
 
@@ -24,7 +28,7 @@ def allowed_file(filename):
 @documentos_bp.route("/upload/<name>")
 @login_required
 def download_file(name):
-    return send_from_directory(current_app.config['UPLOAD_FOLDER'], name, as_attachment=False)
+    return ver_arquivo(filename=name)
 
 
 @documentos_bp.route('/upload-anexo/<id_placa>', methods=['GET', 'POST'])
@@ -38,15 +42,29 @@ def upload_file_anexo(id_placa):
         files = request.files.getlist('file')
         if files[0].filename == '':
             flash('Selecione um ou mais arquivos', category='info')
-            return redirect(request.url)   
+            return redirect(url_for('documentos.upload-file_anexo', id_placa=placa.id))   
         for file in files:
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
+                # armazenamento AWS
+                try:
+                    enviar_arquivo_s3(file=file, filename=filename)
+                    flash(f'Arquivo {filename} enviado com sucesso ')
+                except NoCredentialsError:
+                    flash('Credenciais invalidas', 'info')
+                    return redirect(url_for('documentos.upload-file_anexo', id_placa=placa.id))
+                except Exception as e:
+                    flash(f'Erro no upload {str(e)}', 'info')
+                    return redirect(url_for('documentos.upload-file_anexo', id_placa=placa.id))
+                
                 file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
                 
                 file_db = UploadFile(filename=filename, id_usuario=current_user.id, id_placa=placa.id)
                 db.session.add(file_db)
-                db.session.commit()                
+                db.session.commit()
+            else:
+                flash('apenas arquivos PDFs sao permitidos', 'info')
+                return redirect(url_for('documentos.upload-file_anexo', id_placa=placa.id))
                 
         flash(message="arquivos armazenados com sucesso", category='success')
         return redirect(url_for('documentos.download_anexos', id_placa=id_placa))           
@@ -56,6 +74,10 @@ def upload_file_anexo(id_placa):
 @login_required
 def download_anexos(id_placa):
     placa = Placa.query.filter(Placa.id == id_placa).first()
+    if current_user.id != placa.id_user and not current_user.is_admin:
+        flash('Você não tem permissão para acessar esses arquivos.', 'danger')
+        return redirect(url_for('placas.gerenciamento_pedidos'))
+
     files = UploadFile.query.filter(UploadFile.id_placa == id_placa).all()
     return render_template('upload/download.html', files=files, title="todos Downloads", placa=placa)
 
