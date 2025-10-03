@@ -56,9 +56,7 @@ def upload_file_anexo(id_placa):
                 except Exception as e:
                     flash(f'Erro no upload {str(e)}', 'info')
                     return redirect(url_for('documentos.upload-file_anexo', id_placa=placa.id))
-                
-                file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
-                
+                                
                 file_db = UploadFile(filename=filename, id_usuario=current_user.id, id_placa=placa.id)
                 db.session.add(file_db)
                 db.session.commit()

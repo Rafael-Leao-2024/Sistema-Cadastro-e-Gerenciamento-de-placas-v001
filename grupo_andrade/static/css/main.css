@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+
 :root {
   /* Cores base */
   --color-primary-900: #0a1128;
@@ -450,3 +451,735 @@ h2 {
 .table tr:hover td {
   background: rgba(63, 81, 181, 0.1);
 }
+
+/* Efeito de vidro avançado */
+.glass-effect-advanced {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+/* Campos de input futuristas */
+.futuristic-input {
+    width: 100%;
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: 0.75rem;
+    padding: 1rem 1rem 1rem 3rem;
+    color: rgb(178, 245, 255);
+    transition: all 0.3s;
+}
+
+.futuristic-input:focus {
+    outline: none;
+    border-color: rgb(6, 182, 212);
+    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+}
+
+.futuristic-input::placeholder {
+    color: rgba(178, 245, 255, 0.5);
+}
+
+/* Botão futurista */
+.futuristic-btn {
+    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    color: white;
+    transition: all 0.3s;
+    transform: scale(1);
+}
+
+.futuristic-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 2rem rgba(6, 182, 212, 0.25);
+}
+
+.futuristic-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.futuristic-btn:hover::before {
+    left: 100%;
+}
+
+/* Checkbox customizado */
+.futuristic-checkbox:checked + .checkbox-indicator {
+    background: rgba(6, 182, 212, 0.2);
+    border-color: rgb(6, 182, 212);
+}
+
+.futuristic-checkbox:checked + .checkbox-indicator i {
+    opacity: 1;
+}
+
+
+/* Efeito de vidro avançado */
+.glass-effect-advanced {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+/* Campos de input futuristas */
+.futuristic-input {
+    width: 100%;
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: 0.75rem;
+    padding: 1rem 1rem 1rem 3rem;
+    color: rgb(178, 245, 255);
+    transition: all 0.3s;
+}
+
+.futuristic-input:focus {
+    outline: none;
+    border-color: rgb(6, 182, 212);
+    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+}
+
+.futuristic-input::placeholder {
+    color: rgba(178, 245, 255, 0.5);
+}
+
+/* Botão futurista */
+.futuristic-btn {
+    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    transform: scale(1);
+}
+
+.futuristic-btn:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 2rem rgba(6, 182, 212, 0.25);
+}
+
+.futuristic-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.futuristic-btn:hover::before {
+    left: 100%;
+}
+
+/* Checkbox customizado */
+.checkbox-indicator {
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid rgba(6, 182, 212, 0.5);
+    border-radius: 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.futuristic-checkbox:checked + .checkbox-indicator {
+    background: rgba(6, 182, 212, 0.2);
+    border-color: rgb(6, 182, 212);
+}
+
+.futuristic-checkbox:checked + .checkbox-indicator i {
+    opacity: 1;
+}
+
+/* Botões de navegação futuristas */
+.futuristic-nav-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.75rem;
+    color: rgb(178, 245, 255);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    background: rgba(15, 23, 42, 0.5);
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+}
+
+.futuristic-nav-btn:hover {
+    background: rgba(6, 182, 212, 0.1);
+    border-color: rgba(6, 182, 212, 0.5);
+    color: rgb(178, 245, 255);
+}
+
+.futuristic-nav-btn-primary {
+    padding: 0.5rem 1rem;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    transform: scale(1);
+}
+
+.futuristic-nav-btn-primary:hover {
+    transform: scale(1.05);
+}
+
+/* Alertas futuristas */
+.alert-futuristic {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(6, 182, 212, 0.2);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    color: rgb(178, 245, 255);
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.1);
+}
+
+/* Animações personalizadas */
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+
+.animate-fadeIn {
+    animation: fadeIn 0.5s ease-out;
+}
+
+
+/* Cards futuristas para a homepage */
+.futuristic-card {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(6, 182, 212, 0.2);
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.futuristic-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.1), transparent);
+    transition: left 0.6s;
+}
+
+.futuristic-card:hover::before {
+    left: 100%;
+}
+
+.futuristic-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(6, 182, 212, 0.4);
+    box-shadow: 0 20px 40px rgba(6, 182, 212, 0.15);
+}
+
+/* Ícones dos cards */
+.futuristic-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(6, 182, 212, 0.3);
+    transition: all 0.3s ease;
+}
+
+.futuristic-card:hover .futuristic-icon {
+    transform: scale(1.1);
+    box-shadow: 0 12px 25px rgba(6, 182, 212, 0.4);
+}
+
+/* Botões da homepage */
+.futuristic-nav-btn {
+    padding: 1rem 2.5rem;
+    border-radius: 0.75rem;
+    color: rgb(178, 245, 255);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    background: rgba(15, 23, 42, 0.5);
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.futuristic-nav-btn:hover {
+    background: rgba(6, 182, 212, 0.1);
+    border-color: rgba(6, 182, 212, 0.5);
+    color: rgb(178, 245, 255);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(6, 182, 212, 0.2);
+}
+
+/* Input de arquivo estilizado */
+.futuristic-file-input {
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: rgb(178, 245, 255);
+    transition: all 0.3s;
+    width: 100%;
+}
+
+.futuristic-file-input:focus {
+    outline: none;
+    border-color: rgb(6, 182, 212);
+    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+}
+
+.futuristic-file-input::file-selector-button {
+    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    border: none;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    margin-right: 1rem;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.futuristic-file-input::file-selector-button:hover {
+    transform: scale(1.05);
+}
+
+/* Botão pequeno futurista */
+.futuristic-btn-sm {
+    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.futuristic-btn-sm:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 1rem rgba(6, 182, 212, 0.3);
+}
+
+/* Select futurista */
+.futuristic-select {
+    width: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: 0.75rem;
+    padding: 1rem 3rem 1rem 3rem;
+    color: rgb(178, 245, 255);
+    transition: all 0.3s;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.futuristic-select:focus {
+    outline: none;
+    border-color: rgb(6, 182, 212);
+    box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+    background: rgba(15, 23, 42, 0.8);
+}
+
+.futuristic-select option {
+    background: rgb(15, 23, 42);
+    color: rgb(178, 245, 255);
+    padding: 0.5rem;
+}
+
+/* Botão grande futurista */
+.futuristic-btn-lg {
+    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    padding: 1rem 3rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    transform: scale(1);
+    font-size: 1.1rem;
+    min-width: 200px;
+}
+
+.futuristic-btn-lg:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 2rem rgba(6, 182, 212, 0.4);
+}
+
+.futuristic-btn-lg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s;
+}
+
+.futuristic-btn-lg:hover::before {
+    left: 100%;
+}
+
+/* Efeitos especiais para a área admin */
+.admin-stat-card {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+}
+
+.admin-stat-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(6, 182, 212, 0.3);
+    box-shadow: 0 10px 30px rgba(6, 182, 212, 0.15);
+}
+
+/* Badge de status admin */
+.admin-badge {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Efeito de brilho para itens da tabela */
+.table-glow:hover {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.1);
+}
+
+/* Efeitos especiais para a tabela de placas */
+.placa-status-received {
+    background: linear-gradient(135deg, #10b98120 0%, #05966920 100%);
+    border: 1px solid #10b98140;
+}
+
+.placa-status-shipping {
+    background: linear-gradient(135deg, #f59e0b20 0%, #d9770620 100%);
+    border: 1px solid #f59e0b40;
+}
+
+.placa-status-made {
+    background: linear-gradient(135deg, #3b82f620 0%, #1d4ed820 100%);
+    border: 1px solid #3b82f640;
+}
+
+.placa-status-pending {
+    background: linear-gradient(135deg, #6b728020 0%, #4b556320 100%);
+    border: 1px solid #6b728040;
+}
+
+/* Efeito de brilho para as linhas */
+.table-row-glow:hover {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.1);
+    position: relative;
+}
+
+/* Badges modernas */
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+
+/* Cards de informação estilizados */
+.futuristic-info-card {
+    background: rgba(15, 23, 42, 0.3);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    border: 1px solid rgba(6, 182, 212, 0.1);
+    transition: all 0.3s ease;
+}
+
+.futuristic-info-card:hover {
+    border-color: rgba(6, 182, 212, 0.3);
+    background: rgba(15, 23, 42, 0.5);
+}
+
+/* Timeline vertical */
+.timeline-connector {
+    position: relative;
+}
+
+.timeline-connector::after {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 40px;
+    bottom: -40px;
+    width: 2px;
+    background: rgba(6, 182, 212, 0.3);
+    z-index: 1;
+}
+
+.timeline-item:last-child .timeline-connector::after {
+    display: none;
+}
+
+/* Checkbox customizado */
+.futuristic-checkbox:checked + .checkbox-indicator {
+    background: rgba(6, 182, 212, 0.2);
+    border-color: rgb(6, 182, 212);
+}
+
+.futuristic-checkbox:checked + .checkbox-indicator i {
+    opacity: 1;
+}
+
+/* Status badges */
+.status-completed {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.status-pending {
+    background: rgba(6, 182, 212, 0.2);
+    color: rgb(178, 245, 255);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+/* Botão de perigo estilizado */
+.futuristic-btn-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    transform: scale(1);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.futuristic-btn-danger:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 2rem rgba(239, 68, 68, 0.4);
+}
+
+.futuristic-btn-danger::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s;
+}
+
+.futuristic-btn-danger:hover::before {
+    left: 100%;
+}
+
+/* Efeitos de validação */
+.validation-error {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Checkbox customizado minimalista */
+.futuristic-checkbox:checked + div {
+    border-color: rgb(6, 182, 212);
+    background: rgba(6, 182, 212, 0.2);
+}
+
+.futuristic-checkbox:checked + div i {
+    opacity: 1;
+}
+
+/* Badges de status */
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Efeitos especiais para a tabela */
+.table-glow:hover {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.1);
+}
+
+/* Animações para os status */
+.status-pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Cards de estatísticas com hover */
+.stat-card {
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(6, 182, 212, 0.15);
+}
+
+/* Efeitos especiais para a página de consulta */
+.search-highlight {
+    background: linear-gradient(135deg, #06b6d420 0%, #3b82f620 100%);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.search-pulse {
+    animation: searchPulse 2s ease-in-out infinite;
+}
+
+@keyframes searchPulse {
+    0%, 100% { 
+        box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.4);
+    }
+    50% { 
+        box-shadow: 0 0 0 10px rgba(6, 182, 212, 0);
+    }
+}
+
+/* Loading animation */
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Efeito de entrada para resultados */
+.result-item {
+    animation: slideInRight 0.5s ease-out forwards;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+
+/* Botões pequenos estilizados */
+.futuristic-btn-sm {
+    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.futuristic-btn-sm:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 1rem rgba(6, 182, 212, 0.3);
+}
+
+.futuristic-btn-danger-sm {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.futuristic-btn-danger-sm:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 1rem rgba(239, 68, 68, 0.3);
+}
+
+/* Efeitos de hover para cards */
+.file-card-hover {
+    transition: all 0.3s ease;
+}
+
+.file-card-hover:hover {
+    border-color: rgba(6, 182, 212, 0.4);
+    background: rgba(6, 182, 212, 0.08);
+}
+

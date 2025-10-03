@@ -2,29 +2,100 @@
 {% block title %}Despachante - Grupo Andrade{% endblock %}
 
 {% block content %}
-<div class="container mx-auto mt-10 px-4">
-    <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-6">Escolher um despachante</h2>
+<div class="min-h-[70vh] flex items-center justify-center px-4 animate-fadeIn">
+    <div class="w-full max-w-2xl">
+        <!-- Card Principal -->
+        <div class="glass-effect-advanced rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-hidden">
+            <!-- Header com Gradiente -->
+            <div class="bg-gradient-to-r from-cyan-900/40 to-blue-900/40 border-b border-cyan-500/20 py-8 px-8">
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
+                        <i class="fas fa-user-tie text-white text-2xl"></i>
+                    </div>
+                    <h2 class="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                        Escolha seu Despachante
+                    </h2>
+                    <p class="text-cyan-300/80 mt-3">Selecione um profissional de confiança para cuidar do seu emplacamento</p>
+                </div>
+            </div>
 
-    <form method="POST" class="bg-white dark:bg-gray-800 shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        <div class="mb-4">
-            <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2" for="despachante_id">
-                Selecione o despachante:
-            </label>
-            <select name="despachante_id" id="despachante_id"
-                class="block w-full px-4 py-2 mt-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:text-white">
-                <option value="" disabled selected>-- Selecione um despachante --</option>
+            <!-- Formulário -->
+            <div class="p-8">
+                <form method="POST">
+                    <div class="mb-8">
+                        <label class="block text-cyan-300 font-semibold text-lg mb-4 flex items-center">
+                            <i class="fas fa-list-ul mr-3"></i>
+                            Selecione o despachante:
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-chevron-down text-cyan-400/80"></i>
+                            </div>
+                            <select 
+                                name="despachante_id" 
+                                id="despachante_id"
+                                class="futuristic-select pl-12 appearance-none cursor-pointer"
+                                required
+                            >
+                                <option value="" disabled selected class="text-cyan-300/50">-- Selecione um despachante --</option>
+                                {% for despachante in despachantes %}
+                                <option id="{{ despachante.id }}" value="{{ despachante.id }}" class="text-cyan-900">
+                                    {{ despachante.username }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                                <i class="fas fa-user-tie text-cyan-400/60"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botão de Escolher -->
+                    <div class="text-center">
+                        <button 
+                            type="submit" 
+                            class="futuristic-btn-lg group relative overflow-hidden"
+                        >
+                            <span class="relative z-10 flex items-center justify-center">
+                                <i class="fas fa-check-circle mr-3 group-hover:scale-110 transition-transform duration-200"></i>
+                                Confirmar Escolha
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Footer Informativo -->
+            <div class="border-t border-cyan-500/20 px-8 py-6 bg-cyan-900/10">
+                <div class="flex items-center justify-center text-center text-cyan-300/70">
+                    <i class="fas fa-shield-alt mr-2 text-cyan-400"></i>
+                    <span class="text-sm">Profissionais verificados e qualificados</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cards dos Despachantes (Opcional - Visual Extra) -->
+        {% if despachantes %}
+        <div class="mt-8">
+            <h3 class="text-xl font-semibold text-cyan-100 mb-6 text-center flex items-center justify-center">
+                <i class="fas fa-star mr-3 text-yellow-400"></i>
+                Nossa Equipe de Despachantes
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {% for despachante in despachantes %}
-                <option id="{{ despachante.id }}" value="{{ despachante.id }}">{{ despachante.username }}</option>
+                <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-4 text-center hover:border-cyan-400/40 transition-all duration-300 group">
+                    <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg group-hover:shadow-cyan-500/25 transition-shadow duration-300">
+                        <i class="fas fa-user-tie text-white text-lg"></i>
+                    </div>
+                    <h4 class="text-cyan-100 font-semibold group-hover:text-white transition-colors duration-300">
+                        {{ despachante.username }}
+                    </h4>
+                    <p class="text-cyan-400 text-sm mt-1">Despachante Profissional</p>
+                </div>
                 {% endfor %}
-            </select>
+            </div>
         </div>
-
-        <div class="flex items-center justify-between">
-            <button type="submit"
-                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                Escolher
-            </button>
-        </div>
-    </form>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

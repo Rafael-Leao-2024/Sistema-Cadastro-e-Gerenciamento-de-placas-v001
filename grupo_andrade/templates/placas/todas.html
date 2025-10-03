@@ -1,69 +1,176 @@
-{% extends "layout.html" %} {% block title %}Todas as Placas{% endblock %} {%
-block content %}
+{% extends "layout.html" %}
+{% block title %}Todas as Placas{% endblock %}
+
+{% block content %}
 <div class="animate-fadeIn">
+  <!-- Header -->
   <div class="flex justify-between items-center mb-8">
-    <h2 class="text-2xl font-bold">
-      <i class="fas fa-list-alt mr-2"></i> Solicitaçoes dos Clientes
-    </h2>
-    <div class="flex space-x-2">
-      <a href="{{ url_for('placas.consulta') }}" class="btn btn-outline">
-        <i class="fas fa-search mr-2"></i> Consultar
+    <div class="flex items-center space-x-4">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
+        <i class="fas fa-list-alt text-white text-lg"></i>
+      </div>
+      <div>
+        <h2 class="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+          Solicitações dos Clientes
+        </h2>
+        <p class="text-cyan-300/70 text-sm mt-1">Visão geral de todas as solicitações do sistema</p>
+      </div>
+    </div>
+    <div class="flex space-x-3">
+      <a href="{{ url_for('placas.consulta') }}" class="futuristic-nav-btn group">
+        <i class="fas fa-search mr-2 group-hover:scale-110 transition-transform duration-200"></i>
+        Consultar
       </a>
       {% if current_user.is_authenticated %}
       <a
         href="{{ url_for('placas.solicitar_placas') }}"
-        class="btn btn-primary"
+        class="futuristic-btn group"
       >
-        <i class="fas fa-plus mr-2"></i> Nova Solicitação
+        <i class="fas fa-plus mr-2 group-hover:scale-110 transition-transform duration-200"></i>
+        Nova Solicitação
       </a>
       {% endif %}
     </div>
   </div>
 
-  <div class="card">
+  <!-- Cards de Estatísticas -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-6 text-center">
+      <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-cyan-500/20 flex items-center justify-center">
+        <i class="fas fa-layer-group text-cyan-400 text-xl"></i>
+      </div>
+      <p class="text-cyan-300 text-sm mb-1">Total</p>
+      <p class="text-2xl font-bold text-cyan-100">{{ placas.total }}</p>
+    </div>
+    
+    <div class="glass-effect-advanced rounded-xl border border-green-500/20 p-6 text-center">
+      <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-green-500/20 flex items-center justify-center">
+        <i class="fas fa-check-circle text-green-400 text-xl"></i>
+      </div>
+      <p class="text-green-300 text-sm mb-1">Recebidas</p>
+      <p class="text-2xl font-bold text-green-100">{{ placas.items|selectattr('received')|list|length }}</p>
+    </div>
+    
+    <div class="glass-effect-advanced rounded-xl border border-yellow-500/20 p-6 text-center">
+      <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-yellow-500/20 flex items-center justify-center">
+        <i class="fas fa-truck text-yellow-400 text-xl"></i>
+      </div>
+      <p class="text-yellow-300 text-sm mb-1">A Caminho</p>
+      <p class="text-2xl font-bold text-yellow-100">{{ placas.items|selectattr('placa_a_caminho')|list|length }}</p>
+    </div>
+    
+    <div class="glass-effect-advanced rounded-xl border border-blue-500/20 p-6 text-center">
+      <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-blue-500/20 flex items-center justify-center">
+        <i class="fas fa-hammer text-blue-400 text-xl"></i>
+      </div>
+      <p class="text-blue-300 text-sm mb-1">Confeccionadas</p>
+      <p class="text-2xl font-bold text-blue-100">{{ placas.items|selectattr('placa_confeccionada')|list|length }}</p>
+    </div>
+  </div>
+
+  <!-- Tabela de Solicitações -->
+  <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-hidden">
+    <div class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-b border-cyan-500/20 px-6 py-4">
+      <div class="flex justify-between items-center">
+        <h3 class="text-xl font-semibold text-cyan-100 flex items-center">
+          <i class="fas fa-table mr-3"></i>
+          Lista de Solicitações
+        </h3>
+        <div class="text-cyan-300 text-sm">
+          {{ placas.items|length }} de {{ placas.total }} registros
+        </div>
+      </div>
+    </div>
+    
     <div class="overflow-x-auto">
-      <table class="table w-full">
+      <table class="w-full">
         <thead>
-          <tr>
-            <th>Chassi</th>
-            <th>Clientes</th>
-            <th>Data</th>
-            <th>Status</th>
+          <tr class="border-b border-cyan-500/20">
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Chassi</th>
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Cliente</th>
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Data</th>
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Status</th>
             {% if current_user.is_admin %}
-            <th>Ações</th>
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Ações</th>
             {% endif %}
           </tr>
         </thead>
         <tbody>
           {% for placa in placas.items %}
-          <tr>
-            {% if placa.chassi %}
-            <td class="font-mono">{{ placa.chassi }}</td>
-            {% else %}
-            <td class="text-gray-400 italic">Não informado</td>
-            {% endif %}
-            <td>{{ placa.author.username }}</td>
-            <td>{{ placa.date_create.strftime('%d/%m/%Y') }}</td>
-            <td>
-              {% if placa.received %}
-              <span class="badge text-green-500">Recebida</span>
-              {% elif placa.placa_a_caminho %}
-              <span class="badge text-yellow-500">A caminho</span>
-              {% elif placa.placa_confeccionada %}
-              <span class="badge text-blue-500">Confeccionada</span>
+          <tr class="border-b border-cyan-500/10 hover:bg-cyan-500/5 transition-all duration-200 group">
+            <!-- Chassi -->
+            <td class="px-6 py-4">
+              {% if placa.chassi %}
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center">
+                  <i class="fas fa-fingerprint text-cyan-400 text-xs"></i>
+                </div>
+                <span class="font-mono text-cyan-100 text-sm">{{ placa.chassi.upper() }}</span>
+              </div>
               {% else %}
-              <span class="badge text-gray-500">Pendente</span>
+              <div class="flex items-center space-x-3 text-cyan-400/60">
+                <div class="w-8 h-8 rounded-full bg-cyan-500/10 flex items-center justify-center">
+                  <i class="fas fa-times text-cyan-400/40 text-xs"></i>
+                </div>
+                <span class="italic text-sm">Não informado</span>
+              </div>
               {% endif %}
             </td>
+            
+            <!-- Cliente -->
+            <td class="px-6 py-4">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center">
+                  <i class="fas fa-user text-white text-xs"></i>
+                </div>
+                <div>
+                  <div class="text-cyan-100 font-medium">{{ placa.author.username }}</div>
+                  <div class="text-cyan-400 text-xs">{{ placa.author.email }}</div>
+                </div>
+              </div>
+            </td>
+            
+            <!-- Data -->
+            <td class="px-6 py-4">
+              <div class="text-cyan-100">{{ placa.date_create.strftime('%d/%m/%Y') }}</div>
+              <div class="text-cyan-400 text-xs">{{ placa.date_create.strftime('%H:%M') }}</div>
+            </td>
+            
+            <!-- Status -->
+            <td class="px-6 py-4">
+              {% if placa.received %}
+              <div class="flex items-center space-x-2 text-green-400">
+                <div class="w-3 h-3 rounded-full bg-green-400 animate-pulse"></div>
+                <span class="font-medium">Recebida</span>
+              </div>
+              {% elif placa.placa_a_caminho %}
+              <div class="flex items-center space-x-2 text-yellow-400">
+                <div class="w-3 h-3 rounded-full bg-yellow-400 animate-pulse"></div>
+                <span class="font-medium">A caminho</span>
+              </div>
+              {% elif placa.placa_confeccionada %}
+              <div class="flex items-center space-x-2 text-blue-400">
+                <div class="w-3 h-3 rounded-full bg-blue-400"></div>
+                <span class="font-medium">Confeccionada</span>
+              </div>
+              {% else %}
+              <div class="flex items-center space-x-2 text-cyan-400">
+                <div class="w-3 h-3 rounded-full bg-cyan-400"></div>
+                <span>Pendente</span>
+              </div>
+              {% endif %}
+            </td>
+            
+            <!-- Ações (Admin) -->
             {% if current_user.is_admin %}
-            <td>
+            <td class="px-6 py-4">
               <a
                 href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}"
-                class="btn btn-sm btn-outline"
+                class="inline-flex items-center px-4 py-2 rounded-lg border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/10 hover:border-cyan-400/50 transition-all duration-200 group/btn"
+                title="Ver detalhes"
               >
-                <i
-                  class="fas fa-eye {% if placa.received %} text-green-600 {% endif %}"
-                ></i>
+                <i class="fas fa-eye mr-2 {% if placa.received %}text-green-400{% endif %} group-hover/btn:scale-110 transition-transform duration-200"></i>
+                Detalhes
               </a>
             </td>
             {% endif %}
@@ -72,45 +179,61 @@ block content %}
         </tbody>
       </table>
     </div>
+
+    <!-- Footer da Tabela -->
+    <div class="border-t border-cyan-500/20 px-6 py-4 bg-cyan-900/10">
+      <div class="flex justify-between items-center text-sm">
+        <span class="text-cyan-300/70">
+          Página {{ placas.page }} de {{ placas.pages }}
+        </span>
+        <div class="flex items-center space-x-4 text-cyan-300/70">
+          <span class="flex items-center">
+            <i class="fas fa-circle text-green-400 mr-1 text-xs"></i>
+            {{ placas.items|selectattr('received')|list|length }} recebidas
+          </span>
+          <span class="flex items-center">
+            <i class="fas fa-circle text-yellow-400 mr-1 text-xs"></i>
+            {{ placas.items|selectattr('placa_a_caminho')|list|length }} a caminho
+          </span>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Paginação -->
   <div class="flex justify-center mt-8">
     <nav aria-label="Paginação">
-      <ul class="flex items-center space-x-1">
-        {% for page_num in placas.iter_pages(left_edge=1, right_edge=1,
-        left_current=2, right_current=3) %} {% if page_num %} {% if placas.page
-        == page_num %}
-        <!-- Página Ativa -->
-        <li>
-          <a
-            href="{{ url_for('placas.todas', page=page_num) }}"
-            class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-primary-600 to-primary-800 text-white font-semibold shadow-md transition-all transform hover:scale-105"
-          >
-            {{ page_num }}
-          </a>
-        </li>
-        {% else %}
-        <!-- Página Normal -->
-        <li>
-          <a
-            href="{{ url_for('placas.todas', page=page_num) }}"
-            class="flex items-center justify-center w-10 h-10 rounded-full bg-gray-800 text-gray-300 font-medium hover:bg-gray-700 hover:text-white transition-all border border-gray-700 shadow-sm"
-          >
-            {{ page_num }}
-          </a>
-        </li>
-        {% endif %} {% else %}
-        <!-- Separador -->
-        <li class="px-2 py-1 text-gray-500">
-          <span class="flex items-center justify-center w-6">...</span>
-        </li>
-        {% endif %} {% endfor %}
-
-        <!-- Contador de Páginas (Opcional) -->
-        <li class="ml-4 text-sm text-gray-400 hidden md:block">
-          Página {{ placas.page }} de {{ placas.pages }}
-        </li>
+      <ul class="flex items-center space-x-2">
+        {% for page_num in placas.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=3) %}
+          {% if page_num %}
+            {% if placas.page == page_num %}
+              <!-- Página Ativa -->
+              <li>
+                <a
+                  href="{{ url_for('placas.todas', page=page_num) }}"
+                  class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 text-white font-semibold shadow-lg shadow-cyan-500/25 transition-all transform hover:scale-105"
+                >
+                  {{ page_num }}
+                </a>
+              </li>
+            {% else %}
+              <!-- Página Normal -->
+              <li>
+                <a
+                  href="{{ url_for('placas.todas', page=page_num) }}"
+                  class="flex items-center justify-center w-10 h-10 rounded-full bg-cyan-500/10 text-cyan-300 font-medium hover:bg-cyan-500/20 hover:text-cyan-100 transition-all border border-cyan-500/20 shadow-sm"
+                >
+                  {{ page_num }}
+                </a>
+              </li>
+            {% endif %}
+          {% else %}
+            <!-- Separador -->
+            <li class="px-2 py-1 text-cyan-400/50">
+              <span class="flex items-center justify-center w-6">...</span>
+            </li>
+          {% endif %}
+        {% endfor %}
       </ul>
     </nav>
   </div>

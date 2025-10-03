@@ -1,79 +1,81 @@
-{% extends "layout.html" %} {% block title %}Solicitar Placas{% endblock %} {%
-block content %}
+{% extends "layout.html" %}
+
+{% block title %}Solicitar Placas{% endblock %}
+
+{% block content %}
 <div class="animate-fadeIn">
   <div class="flex justify-between items-center mb-8">
-    <h2 class="text-2xl font-bold">
-      <i class="fas fa-plus-circle mr-2"></i> Solicitaçoes
+    <h2 class="text-2xl font-bold text-cyan-100">
+      <i class="fas fa-plus-circle mr-3"></i>Solicitações
     </h2>
-    <a href="{{ url_for('placas.minhas_placas') }}" class="btn btn-outline">
+    <a href="{{ url_for('placas.minhas_placas') }}" class="futuristic-nav-btn">
       <i class="fas fa-arrow-left mr-2"></i> Voltar
     </a>
   </div>
 
-  <div class="card mb-6">
-    <div class="card-header">
-      <h3 class="text-xl font-semibold">
-        <i class="fas fa-info-circle mr-2"></i> Minhas informaçoes 
+  <!-- Card de Informações do Usuário -->
+  <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 mb-6 overflow-hidden">
+    <div class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-b border-cyan-500/20 px-6 py-4">
+      <h3 class="text-xl font-semibold text-cyan-100 flex items-center">
+        <i class="fas fa-info-circle mr-3"></i> Minhas Informações
       </h3>
     </div>
-    <div class="card-body">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+    <div class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
         <div>
-          <p class="text-sm text-secondary">Nome</p>
-          <p class="text-lg">{{ current_user.username }}</p>
+          <p class="text-sm text-cyan-300 font-medium">Nome</p>
+          <p class="text-lg text-cyan-100">{{ current_user.username }}</p>
         </div>
         <div>
-          <p class="text-sm text-secondary">Email</p>
-          <p class="text-lg">{{ current_user.email }}</p>
+          <p class="text-sm text-cyan-300 font-medium">Email</p>
+          <p class="text-lg text-cyan-100">{{ current_user.email }}</p>
         </div>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <p class="text-sm text-secondary">Endereço para Entrega</p>
-        <p class="text-lg">{{ endereco }}</p>
-      </div>
-      <div>
-        <p class="text-sm text-secondary">Meu Despachante</p>
-        <p class="text-lg">{{ despachante }}</p>
-      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <p class="text-sm text-cyan-300 font-medium">Endereço para Entrega</p>
+          <p class="text-lg text-cyan-100">{{ endereco }}</p>
+        </div>
+        <div>
+          <p class="text-sm text-cyan-300 font-medium">Meu Despachante</p>
+          <p class="text-lg text-cyan-100">{{ despachante }}</p>
+        </div>
       </div>
     </div>
   </div>
 
   <form method="POST">
-    <div class="card mb-4">
-      <div class="card-header flex justify-between items-center">
-        <h3 class="text-xl font-semibold">
-          <i class="fas fa-car mr-2"></i> Dados das solicitaçao
+    <!-- Card de Dados da Solicitação -->
+    <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 mb-6 overflow-hidden">
+      <div class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-b border-cyan-500/20 px-6 py-4 flex justify-between items-center">
+        <h3 class="text-xl font-semibold text-cyan-100 flex items-center">
+          <i class="fas fa-car mr-3"></i> Dados da Solicitação
         </h3>
-        <button type="button" id="add-placa" class="btn btn-sm btn-primary">
-          <i class="fas fa-plus mr-2"></i> Adicionar solicitaçao
+        <button type="button" id="add-placa" class="futuristic-btn-sm group">
+          <i class="fas fa-plus mr-2 group-hover:scale-110 transition-transform duration-200"></i> Adicionar Solicitação
         </button>
       </div>
-      <div class="card-body space-y-4" id="placas-container">
+      <div class="p-6 space-y-6" id="placas-container">
         <!-- Primeira Placa -->
-        <div
-          class="grid grid-cols-1 md:grid-cols-4 gap-4 placa-item group relative"
-        >
-        <div class="form-group">
-            <label class="form-label">Chassi</label>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 placa-item group relative p-4 bg-cyan-500/5 rounded-lg border border-cyan-500/10">
+          <div class="form-group">
+            <label class="block text-cyan-300 font-medium mb-2">Chassi</label>
             <input
               type="text"
               name="chassi"
-              class="form-control uppercase"
+              class="futuristic-input uppercase"
               value="{{ chassi }}"
-              placeholder="Exemplo : 9BWZZZ377VT004251"
+              placeholder="Exemplo: 9BWZZZ377VT004251"
               required
             />
           </div>
-          
 
           <div class="form-group">
-            <label class="form-label">Placa</label>
+            <label class="block text-cyan-300 font-medium mb-2">Placa</label>
             <input
               type="text"
               name="placa"
-              class="form-control uppercase"
+              class="futuristic-input uppercase"
               value="{{ placa }}"
               placeholder="ABC1B34"
               required
@@ -81,36 +83,39 @@ block content %}
           </div>
           
           <div class="form-group">
-            <label class="form-label">Renavan</label>
+            <label class="block text-cyan-300 font-medium mb-2">Renavan</label>
             <input 
-            type="text" 
-            name="renavam" 
-            class="form-control"
-            value="00000000000"
+              type="text" 
+              name="renavam" 
+              class="futuristic-input"
+              value="00000000000"
             />
           </div>
+
           <div class="form-group">
-            <label class="form-label">CRLV</label>
+            <label class="block text-cyan-300 font-medium mb-2">CRLV</label>
             <input 
-            type="text" 
-            name="crlv" 
-            class="form-control" 
-            value="000000000" 
+              type="text" 
+              name="crlv" 
+              class="futuristic-input" 
+              value="000000000" 
             />
           </div>
-          <div class="form-group">
-            <label class="form-label">Endereço (opcional)</label>
+
+          <div class="form-group md:col-span-2">
+            <label class="block text-cyan-300 font-medium mb-2">Endereço (opcional)</label>
             <input
               type="text"
               name="endereco_placa"
-              class="form-control"
+              class="futuristic-input"
               value="{{ endereco }}"
             />
           </div>
+
           <!-- Botão de Remover (só aparece em blocos adicionais) -->
           <button
             type="button"
-            class="remove-placa-btn absolute -top-3 -right-3 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md hover:bg-red-600"
+            class="remove-placa-btn absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 shadow-md hover:bg-red-600 hover:scale-110"
             title="Remover placa"
           >
             <i class="fas fa-times text-xs"></i>
@@ -120,8 +125,8 @@ block content %}
     </div>
 
     <div class="text-right">
-      <button type="submit" class="btn btn-primary px-8 py-3">
-        <i class="fas fa-paper-plane mr-2"></i> Enviar Solicitação
+      <button type="submit" class="futuristic-btn px-8 py-3 group">
+        <i class="fas fa-paper-plane mr-3 group-hover:translate-x-1 transition-transform duration-200"></i> Enviar Solicitação
       </button>
     </div>
   </form>

@@ -1,143 +1,138 @@
-{% extends "layout.html" %} {% block title %}Homepage{% endblock %} {% block
-content %}
+{% extends "layout.html" %}
+
+{% block title %}Homepage{% endblock %}
+
+{% block content %}
 <div class="animate-fadeIn">
   <!-- Hero Section -->
-  <section
-    class="flex flex-col items-center justify-center text-center py-12 mb-8"
-  >
-    <h1 class="text-4xl md:text-5xl font-bold mb-6">
-      Sistema de Emplacamento Veicular
-    </h1>
-    <p class="text-lg text-secondary max-w-3xl mx-auto mb-8">
-      Soluções completas para emplacamento de veículos com agilidade e segurança
-    </p>
+  <section class="flex flex-col items-center justify-center text-center py-16 mb-12">
+    <div class="glass-effect-advanced rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 p-12 max-w-4xl mx-auto">
+      <h1 class="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+        Sistema de Emplacamento Veicular
+      </h1>
+      <p class="text-xl text-cyan-300/80 max-w-3xl mx-auto mb-10">
+        Soluções completas para emplacamento de veículos com agilidade e segurança
+      </p>
 
-    {% if not current_user.is_authenticated %}
-    <div class="flex space-x-4">
-      <a
-        href="{{ url_for('auth.register') }}"
-        class="btn btn-primary px-8 py-3"
-      >
-        <i class="fas fa-user-plus mr-2"></i> Criar Conta
-      </a>
-      <a href="{{ url_for('auth.login') }}" class="btn btn-outline px-8 py-3">
-        <i class="fas fa-sign-in-alt mr-2"></i> Acessar Sistema
-      </a>
+      {% if not current_user.is_authenticated %}
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="{{ url_for('auth.register') }}" class="futuristic-btn px-10 py-4 text-lg group">
+          <i class="fas fa-user-plus mr-3 group-hover:scale-110 transition-transform duration-200"></i>
+          Criar Conta
+        </a>
+        <a href="{{ url_for('auth.login') }}" class="futuristic-nav-btn px-10 py-4 text-lg group">
+          <i class="fas fa-sign-in-alt mr-3 group-hover:scale-110 transition-transform duration-200"></i>
+          Acessar Sistema
+        </a>
+      </div>
+      {% else %}
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="{{ url_for('placas.solicitar_placas') }}" class="futuristic-btn px-10 py-4 text-lg group">
+          <i class="fas fa-plus-circle mr-3 group-hover:scale-110 transition-transform duration-200"></i>
+          Nova Solicitação
+        </a>
+        <a href="{{ url_for('placas.minhas_placas') }}" class="futuristic-nav-btn px-10 py-4 text-lg group">
+          <i class="fas fa-list-ol mr-3 group-hover:scale-110 transition-transform duration-200"></i>
+          Ver Minhas Solicitações
+        </a>
+      </div>
+      {% endif %}
     </div>
-    {% else %}
-    <div class="flex space-x-4">
-      <a
-        href="{{ url_for('placas.solicitar_placas') }}"
-        class="btn btn-primary px-8 py-3"
-      >
-        <i class="fas fa-plus-circle mr-2"></i> Nova Solicitação
-      </a>
-      <a
-        href="{{ url_for('placas.minhas_placas') }}"
-        class="btn btn-outline px-8 py-3"
-      >
-        <i class="fas fa-list-ol mr-2"></i> Ver Minhas Solicitações
-      </a>
-    </div>
-    {% endif %}
   </section>
 
   <!-- Features Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+    <!-- Comunidade -->
     <a href="{{ url_for('users.listar_usuarios') }}">
-      <div class="card hover-scale">
-        <div class="text-center p-6">
-          <div class="text-primary-400 text-4xl mb-4">
-            <i class="fas fa-bolt"></i>
+      <div class="futuristic-card group">
+        <div class="text-center p-8">
+          <div class="futuristic-icon mb-6">
+            <i class="fas fa-users text-white text-2xl"></i>
           </div>
-          <h3 class="text-xl font-semibold mb-3">Comunidade</h3>
-          <p class="text-secondary">
+          <h3 class="text-xl font-semibold mb-4 text-cyan-100 group-hover:text-white transition-colors duration-300">Comunidade</h3>
+          <p class="text-cyan-300/80 group-hover:text-cyan-200 transition-colors duration-300">
             ✨ Junte-se à Nossa Community! Aqui, você faz parte de algo maior!
             Nossa community é um espaço onde pessoas como você se conectam,
-            compartilham ideias e crescem juntas. Seja para trocar experiências,
-            aprender coisas novas ou colaborar em projetos incríveis, você é
-            bem-vindo(a).
+            compartilham ideias e crescem juntas.
           </p>
         </div>
       </div>
     </a>
 
-    <!-- Feature 1 -->
-    <div class="card hover-scale">
-       <a href="">
-        <div class="text-center p-6">
-          <div class="text-primary-400 text-4xl mb-4">
-            <i class="fas fa-bolt"></i>
+    <!-- Solicitação Rápida -->
+    <a href="">
+      <div class="futuristic-card group">
+        <div class="text-center p-8">
+          <div class="futuristic-icon mb-6">
+            <i class="fas fa-bolt text-white text-2xl"></i>
           </div>
-          <h3 class="text-xl font-semibold mb-3">Solicite com Rapidez</h3>
-          <p class="text-secondary">
+          <h3 class="text-xl font-semibold mb-4 text-cyan-100 group-hover:text-white transition-colors duration-300">Solicite com Rapidez</h3>
+          <p class="text-cyan-300/80 group-hover:text-cyan-200 transition-colors duration-300">
             Processos ágeis e eficientes para você não perder tempo
           </p>
         </div>
-      </a>
-    </div>
-
-    <!-- Feature 2 -->
-    <div class="card hover-scale">
-      <a href="{{ url_for('despachante.selecionar_despachante') }}">
-      <div class="text-center p-6">
-        <div class="text-primary-400 text-4xl mb-4">
-          <i class="fas fa-shield-alt"></i>
-        </div>
-        <h3 class="text-xl font-semibold mb-3">Despachante</h3>
-        <p class="text-secondary">
-          Escolha seu despachante de confiança para facilitar todo o processo
-          de emplacamento do seu veículo.
-        </p>
       </div>
-      </a>
-    </div>
+    </a>
 
-    <div class="card hover-scale">
-      <a href="{{ url_for('pagamentos.relatorio') }}">
-        <div class="text-center p-6">
-          <div class="text-primary-400 text-4xl mb-4">
-            <i class="fa-brands fa-cc-apple-pay"></i>
+    <!-- Despachante -->
+    <a href="{{ url_for('despachante.selecionar_despachante') }}">
+      <div class="futuristic-card group">
+        <div class="text-center p-8">
+          <div class="futuristic-icon mb-6">
+            <i class="fas fa-shield-alt text-white text-2xl"></i>
           </div>
-          <h3 class="text-xl font-semibold mb-3">FastPay</h3>
-          <p class="text-secondary">
-            ⚡ Pagamento Rápido e Seguro! com FastPay – a solução prática para
-            suas transações. Sem complicação, só velocidade e segurança! 💳
-            Instantâneo | Fácil | Confiável 👉 Experimente agora!
-          </p>
-        </div>
-      </a>
-    </div>
-
-    <a href="{{ url_for('support.chat') }}">
-      <div class="card hover-scale">
-        <div class="text-center p-6">
-          <div class="text-primary-400 text-4xl mb-4">
-            <i class="fas fa-headset"></i>
-          </div>
-          <h3 class="text-xl font-semibold mb-3">AI Suporte</h3>
-          <p class="text-secondary">
-            🛠️ Suporte Rápido e Eficiente! Precisa de ajuda? Nosso suporte
-            especializado está aqui para resolver suas dúvidas e problemas de
-            forma ágil. 📞 Atendimento Personalizado | Respostas Rápidas |
-            Soluções Práticas
+          <h3 class="text-xl font-semibold mb-4 text-cyan-100 group-hover:text-white transition-colors duration-300">Despachante</h3>
+          <p class="text-cyan-300/80 group-hover:text-cyan-200 transition-colors duration-300">
+            Escolha seu despachante de confiança para facilitar todo o processo
+            de emplacamento do seu veículo.
           </p>
         </div>
       </div>
     </a>
 
-    <!-- Feature 3 -->
-    <a href="{{ url_for('placas.gerenciamento_pedidos') }}">
-      <div class="card hover-scale">
-        <div class="text-center p-6">
-          <div class="text-primary-400 text-4xl mb-4">
-            <i class="fa-solid fa-list-check"></i>
+    <!-- FastPay -->
+    <a href="{{ url_for('pagamentos.relatorio') }}">
+      <div class="futuristic-card group">
+        <div class="text-center p-8">
+          <div class="futuristic-icon mb-6">
+            <i class="fa-brands fa-cc-apple-pay text-white text-2xl"></i>
           </div>
-          <h3 class="text-xl font-semibold mb-3">management</h3>
-          <p class="text-secondary">
+          <h3 class="text-xl font-semibold mb-4 text-cyan-100 group-hover:text-white transition-colors duration-300">FastPay</h3>
+          <p class="text-cyan-300/80 group-hover:text-cyan-200 transition-colors duration-300">
+            ⚡ Pagamento Rápido e Seguro! com FastPay – a solução prática para
+            suas transações. Sem complicação, só velocidade e segurança!
+          </p>
+        </div>
+      </div>
+    </a>
+
+    <!-- AI Suporte -->
+    <a href="{{ url_for('support.chat') }}">
+      <div class="futuristic-card group">
+        <div class="text-center p-8">
+          <div class="futuristic-icon mb-6">
+            <i class="fas fa-headset text-white text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-4 text-cyan-100 group-hover:text-white transition-colors duration-300">AI Suporte</h3>
+          <p class="text-cyan-300/80 group-hover:text-cyan-200 transition-colors duration-300">
+            🛠️ Suporte Rápido e Eficiente! Precisa de ajuda? Nosso suporte
+            especializado está aqui para resolver suas dúvidas e problemas.
+          </p>
+        </div>
+      </div>
+    </a>
+
+    <!-- Management -->
+    <a href="{{ url_for('placas.gerenciamento_pedidos') }}">
+      <div class="futuristic-card group">
+        <div class="text-center p-8">
+          <div class="futuristic-icon mb-6">
+            <i class="fa-solid fa-list-check text-white text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold mb-4 text-cyan-100 group-hover:text-white transition-colors duration-300">Management</h3>
+          <p class="text-cyan-300/80 group-hover:text-cyan-200 transition-colors duration-300">
             🔧 Admin de Placas Controle total das suas placas! Gerenciamento
-            simples, rápido e eficiente para aprovações, cadastros e
-            atualizações. ✅ Fácil | Organizado | Seguro
+            simples, rápido e eficiente para aprovações e cadastros.
           </p>
         </div>
       </div>

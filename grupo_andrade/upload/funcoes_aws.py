@@ -31,7 +31,7 @@ def ver_arquivo(filename):
     try:
         resposta = s3_client.get_object(
             Bucket=os.getenv('S3_BUCKET'),
-            key=filename
+            Key=filename
         )
         return send_file(
             io.BytesIO(resposta['Body'].read()),

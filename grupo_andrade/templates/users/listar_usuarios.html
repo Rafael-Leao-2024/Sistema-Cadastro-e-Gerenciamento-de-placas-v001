@@ -1,40 +1,44 @@
-{% extends "layout.html" %} {% block title %}Lista de Usuários{% endblock %} {%
-block content %}
+{% extends "layout.html" %}
+
+{% block title %}Lista de Usuários{% endblock %}
+
+{% block content %}
 <div class="animate-fadeIn">
   <div class="flex justify-between items-center mb-8">
-    <h2 class="text-2xl font-bold">
-      <i class="fas fa-users mr-2"></i> Clientes Cadastrados
+    <h2 class="text-2xl font-bold text-cyan-100">
+      <i class="fas fa-users mr-3"></i>Clientes Cadastrados
     </h2>
-    <a href="{{ url_for('placas.homepage') }}" class="btn btn-outline">
+    <a href="{{ url_for('placas.homepage') }}" class="futuristic-nav-btn">
       <i class="fas fa-arrow-left mr-2"></i> Voltar
     </a>
   </div>
 
-  <div class="card">
+  <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-lg shadow-cyan-500/5 overflow-hidden">
     <div class="overflow-x-auto">
-      <table class="table w-full">
+      <table class="w-full">
         <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Data Cadastro</th>
-            <th>Informaçoes</th>
+          <tr class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-b border-cyan-500/20">
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">ID</th>
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Nome</th>
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Email</th>
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Data Cadastro</th>
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Informações</th>
           </tr>
         </thead>
         <tbody>
           {% for usuario in usuarios %}
-          <tr>
-            <td class="font-mono">{{ usuario.id }}</td>
-            <td>{{ usuario.username }}</td>
-            <td>{{ usuario.email }}</td>
-            <td>{{ usuario.data_criacao }}</td>
-            <td>
+          <tr class="border-b border-cyan-500/10 hover:bg-cyan-500/5 transition-colors duration-200">
+            <td class="px-6 py-4 text-cyan-200 font-mono text-sm">{{ usuario.id }}</td>
+            <td class="px-6 py-4 text-cyan-100">{{ usuario.username }}</td>
+            <td class="px-6 py-4 text-cyan-200">{{ usuario.email }}</td>
+            <td class="px-6 py-4 text-cyan-300 text-sm">{{ usuario.data_criacao }}</td>
+            <td class="px-6 py-4">
               <a
                 href="{{ url_for('users.info_user', user_id=usuario.id) }}"
-                class="btn btn-sm btn-outline"
+                class="inline-flex items-center px-3 py-2 rounded-lg border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/10 hover:border-cyan-400/50 transition-all duration-200"
               >
-                <i class="fas fa-eye"></i>
+                <i class="fas fa-eye mr-2 text-sm"></i>
+                Ver
               </a>
             </td>
           </tr>

@@ -4,21 +4,159 @@
 
 <div class="animate-fadeIn">
   <div class="flex justify-between items-center mb-8">
-    <h2 class="text-2xl font-bold">
-      <i class="fas fa-user mr-2"></i> Detalhes do cliente
+    <h2 class="text-2xl font-bold text-cyan-100">
+      <i class="fas fa-user mr-3"></i>Detalhes do Cliente
     </h2>
-    <a href="{{ url_for('users.listar_usuarios') }}" class="btn btn-outline">
+    <a href="{{ url_for('users.listar_usuarios') }}" class="futuristic-nav-btn">
       <i class="fas fa-arrow-left mr-2"></i> Voltar
     </a>
   </div>
 
-  <div class="card p-6">
-    <h3 class="text-xl font-semibold mb-4">Informações do cliente</h3>
-    <p><strong>ID:</strong> {{ user.id }}</p>
-    <p><strong>Nome de Usuário:</strong> {{ user.username }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>Data de Criação:</strong> {{ user.data_criacao }}</p>
-    <p><strong>Admin:</strong> {{ 'Sim' if user.is_admin else 'Não' }}</p>
+  <!-- Informações Principais do Usuário -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <!-- Card de Informações Básicas -->
+    <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-6">
+      <h3 class="text-lg font-semibold text-cyan-100 mb-4 flex items-center">
+        <i class="fas fa-id-card mr-2"></i> Informações do Cliente
+      </h3>
+      <div class="space-y-3">
+        <div class="flex justify-between items-center py-2 border-b border-cyan-500/10">
+          <span class="text-cyan-300 font-medium">ID:</span>
+          <span class="text-cyan-100 font-mono">{{ user.id }}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-cyan-500/10">
+          <span class="text-cyan-300 font-medium">Nome:</span>
+          <span class="text-cyan-100">{{ user.username }}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-cyan-500/10">
+          <span class="text-cyan-300 font-medium">Email:</span>
+          <span class="text-cyan-100">{{ user.email }}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-cyan-500/10">
+          <span class="text-cyan-300 font-medium">Data de Cadastro:</span>
+          <span class="text-cyan-100">{{ user.data_criacao.strftime('%d/%m/%Y %H:%M') if user.data_criacao else 'N/A' }}</span>
+        </div>
+        <div class="flex justify-between items-center py-2">
+          <span class="text-cyan-300 font-medium">Tipo de Conta:</span>
+          <span class="{% if user.is_admin %}text-green-400{% else %}text-cyan-100{% endif %} font-semibold">
+            {{ 'Administrador' if user.is_admin else 'Cliente' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card de Estatísticas -->
+    <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-6">
+      <h3 class="text-lg font-semibold text-cyan-100 mb-4 flex items-center">
+        <i class="fas fa-chart-bar mr-2"></i> Estatísticas
+      </h3>
+      <div class="space-y-4">
+        <div class="flex justify-between items-center p-3 bg-cyan-500/10 rounded-lg">
+          <span class="text-cyan-300">Total de Placas:</span>
+          <span class="text-cyan-100 font-bold">{{ user.placas|length }}</span>
+        </div>
+        <div class="flex justify-between items-center p-3 bg-cyan-500/10 rounded-lg">
+          <span class="text-cyan-300">Endereços Cadastrados:</span>
+          <span class="text-cyan-100 font-bold">{{ user.enderecos|length }}</span>
+        </div>
+        <div class="flex justify-between items-center p-3 bg-cyan-500/10 rounded-lg">
+          <span class="text-cyan-300">Pagamentos Realizados:</span>
+          <span class="text-cyan-100 font-bold">{{ user.pagamentos|length }}</span>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- Endereços do Usuário -->
+  {% if user.enderecos %}
+  <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-6 mb-8">
+    <h3 class="text-lg font-semibold text-cyan-100 mb-4 flex items-center">
+      <i class="fas fa-map-marker-alt mr-2"></i> Endereços Cadastrados
+    </h3>
+    <div class="space-y-3">
+      {% for endereco in user.enderecos %}
+      <div class="p-4 bg-cyan-500/5 rounded-lg border border-cyan-500/10">
+        <p class="text-cyan-100">{{ endereco.endereco }}</p>
+        <p class="text-cyan-400 text-sm mt-1">
+          Cadastrado em: {{ endereco.data_criacao.strftime('%d/%m/%Y') if endereco.data_criacao else 'N/A' }}
+        </p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Últimas Placas -->
+  {% if user.placas %}
+  <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-6 mb-8">
+    <h3 class="text-lg font-semibold text-cyan-100 mb-4 flex items-center">
+      <i class="fas fa-car mr-2"></i> Últimas Solicitações de Placas
+    </h3>
+    <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+          <tr class="border-b border-cyan-500/20">
+            <th class="text-left py-3 text-cyan-300 font-semibold">Placa</th>
+            <th class="text-left py-3 text-cyan-300 font-semibold">Chassi</th>
+            <th class="text-left py-3 text-cyan-300 font-semibold">Data</th>
+            <th class="text-left py-3 text-cyan-300 font-semibold">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for placa in user.placas[:5] %}
+          <tr class="border-b border-cyan-500/10 hover:bg-cyan-500/5 transition-colors duration-200">
+            <td class="py-3 text-cyan-100 font-mono">{{ placa.placa }}</td>
+            <td class="py-3 text-cyan-200 text-sm">{{ placa.chassi or 'N/A' }}</td>
+            <td class="py-3 text-cyan-300 text-sm">{{ placa.date_create.strftime('%d/%m/%Y') if placa.date_create else 'N/A' }}</td>
+            <td class="py-3">
+              {% if placa.placa_confeccionada %}
+                <span class="px-2 py-1 bg-green-500/20 text-green-400 rounded-full text-xs font-medium">Confeccionada</span>
+              {% elif placa.placa_a_caminho %}
+                <span class="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-full text-xs font-medium">A Caminho</span>
+              {% elif placa.received %}
+                <span class="px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded-full text-xs font-medium">Recebida</span>
+              {% else %}
+                <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-medium">Pendente</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if user.placas|length > 5 %}
+    <div class="mt-4 text-center">
+      <span class="text-cyan-400 text-sm">+ {{ user.placas|length - 5 }} outras solicitações</span>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <!-- Últimos Pagamentos -->
+  {% if user.pagamentos %}
+  <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-6">
+    <h3 class="text-lg font-semibold text-cyan-100 mb-4 flex items-center">
+      <i class="fas fa-credit-card mr-2"></i> Histórico de Pagamentos
+    </h3>
+    <div class="space-y-3">
+      {% for pagamento in user.pagamentos[:3] %}
+      <div class="flex justify-between items-center p-4 bg-cyan-500/5 rounded-lg border border-cyan-500/10">
+        <div>
+          <p class="text-cyan-100 font-medium">ID: {{ pagamento.id_pagamento }}</p>
+          <p class="text-cyan-400 text-sm">{{ pagamento.data_pagamento.strftime('%d/%m/%Y %H:%M') if pagamento.data_pagamento else 'N/A' }}</p>
+        </div>
+        <div class="text-right">
+          <p class="text-cyan-100 font-bold">
+            R$ {{ "%.2f"|format(pagamento.valor_transacao) if pagamento.valor_transacao else '0,00' }}
+          </p>
+          <span class="{% if pagamento.status_pagamento == 'approved' %}text-green-400{% else %}text-yellow-400{% endif %} text-sm font-medium">
+            {{ pagamento.status_pagamento|title }}
+          </span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
 </div>
 {% endblock content %}

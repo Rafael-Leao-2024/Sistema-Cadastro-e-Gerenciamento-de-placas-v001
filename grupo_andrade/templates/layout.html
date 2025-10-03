@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br" class="bg-dark">
+<html lang="pt-br" class="bg-slate-900">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -22,72 +22,83 @@
     />
     {% block head %}{% endblock %}
   </head>
-  <body class="bg-dark">
-    <nav class="navbar glass-effect shadow-lg">
-      <div class="container flex justify-between items-center">
-        <a href="{{ url_for('placas.homepage') }}" class="navbar-brand">
-          <i class="fas fa-car-alt mr-2"></i> OfficeSpace {% if
-          current_user.is_admin %}
-          <span class="text-sm text-primary-300 hover:underline">verified</span>
-          <i
-            class="fas fa-check-circle"
-            style="color: #1db954; font-size: 1.2em"
-          ></i>
-          {% endif %}
-        </a>
-        <div class="flex space-x-4">
-          {% if current_user.is_authenticated %}
-          <a
-            href="{{ url_for('placas.minhas_placas') }}"
-            class="btn btn-outline"
-          >
-            <i class="fas fa-list mr-2"></i> Minhas Solicitaçoes
-          </a>
-          <a href="{{ url_for('users.account') }}" class="btn btn-outline">
-            <i class="fas fa-user-circle mr-2"></i> Minha Conta
-          </a>
-
-          <!-- Botão de Notificações -->
-            <div class="relative">
-                <button id="notificacaoBtn" class="relative p-2">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                    </svg>
-                    {% if notificacoes_nao_lidas %}
-                      {% if notificacoes_nao_lidas > 0 %}
-                      <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
-                          {{ notificacoes_nao_lidas }}
-                      </span>
-                      {% endif %}
-                    {% endif %}
-                </button>
-                
-                <!-- Dropdown de Notificações -->
-                <div id="notificacaoDropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-md shadow-lg z-50">
-                    <div class="p-4 border-b">
-                        <h3 class="font-semibold text-gray-800">Notificações</h3>
-                    </div>
-                    <div id="notificacoesLista" class="max-h-64 overflow-y-auto">
-                        <!-- Notificações serão carregadas via JavaScript -->
-                    </div>
-                    <div class="p-2 border-t">
-                        <button id="marcarTodasLidas" class="text-blue-600 text-sm hover:text-blue-800">
-                            Marcar todas como lidas
-                        </button>
-                    </div>
-                </div>
+  <body class="bg-slate-900">
+    <!-- Navbar com efeito glassmorphism futurista -->
+    <nav class="navbar glass-effect-advanced border-b border-cyan-500/20 shadow-2xl shadow-cyan-500/10 sticky top-0 z-50">
+      <div class="container flex justify-between items-center py-4">
+        <a href="{{ url_for('placas.homepage') }}" class="navbar-brand group">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25 group-hover:shadow-cyan-500/40 transition-all duration-300">
+              <i class="fas fa-car-alt text-white text-lg"></i>
             </div>
+            <span class="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+              OfficeSpace
+            </span>
+            {% if current_user.is_admin %}
+            <div class="flex items-center space-x-1">
+              <span class="text-xs bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded-full border border-cyan-500/30">verified</span>
+              <i class="fas fa-check-circle text-cyan-400"></i>
+            </div>
+            {% endif %}
+          </div>
+        </a>
+        
+        <div class="flex items-center space-x-3">
+          {% if current_user.is_authenticated %}
+          <a href="{{ url_for('placas.minhas_placas') }}" class="futuristic-nav-btn group">
+            <i class="fas fa-list mr-2 group-hover:scale-110 transition-transform duration-200"></i>
+            <span>Minhas Solicitações</span>
+          </a>
+          
+          <a href="{{ url_for('users.account') }}" class="futuristic-nav-btn group">
+            <i class="fas fa-user-circle mr-2 group-hover:scale-110 transition-transform duration-200"></i>
+            <span>Minha Conta</span>
+          </a>
 
-          <a href="{{ url_for('auth.logout') }}" class="btn btn-primary">
-            <i class="fas fa-sign-out-alt mr-2"></i> Sair
+          <!-- Botão de Notificações Futurista -->
+          <div class="relative">
+            <button id="notificacaoBtn" class="relative p-3 rounded-xl bg-slate-800/50 border border-cyan-500/20 hover:border-cyan-400/40 transition-all duration-300 group">
+              <svg class="w-5 h-5 text-cyan-400 group-hover:text-cyan-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+              </svg>
+              {% if notificacoes_nao_lidas %}
+                {% if notificacoes_nao_lidas > 0 %}
+                <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center animate-pulse">
+                  {{ notificacoes_nao_lidas }}
+                </span>
+                {% endif %}
+              {% endif %}
+            </button>
+            
+            <!-- Dropdown de Notificações Futurista -->
+            <div id="notificacaoDropdown" class="hidden absolute right-0 mt-2 w-80 glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 z-50 overflow-hidden">
+              <div class="p-4 border-b border-cyan-500/20 bg-gradient-to-r from-cyan-900/30 to-blue-900/30">
+                <h3 class="font-semibold text-cyan-100">Notificações</h3>
+              </div>
+              <div id="notificacoesLista" class="max-h-64 overflow-y-auto bg-slate-900/50">
+                <!-- Notificações serão carregadas via JavaScript -->
+              </div>
+              <div class="p-3 border-t border-cyan-500/20 bg-slate-900/50">
+                <button id="marcarTodasLidas" class="text-cyan-400 text-sm hover:text-cyan-300 transition-colors duration-200">
+                  Marcar todas como lidas
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <a href="{{ url_for('auth.logout') }}" class="futuristic-nav-btn-primary group">
+            <i class="fas fa-sign-out-alt mr-2 group-hover:translate-x-1 transition-transform duration-200"></i>
+            <span>Sair</span>
           </a>
           {% else %}
-          <a href="{{ url_for('auth.login') }}" class="btn btn-outline">
-            <i class="fas fa-sign-in-alt mr-2"></i> Entrar
+          <a href="{{ url_for('auth.login') }}" class="futuristic-nav-btn group">
+            <i class="fas fa-sign-in-alt mr-2 group-hover:scale-110 transition-transform duration-200"></i>
+            <span>Entrar</span>
           </a>
-          <a href="{{ url_for('auth.register') }}" class="btn btn-primary">
-            <i class="fas fa-user-plus mr-2"></i> Registrar
+          <a href="{{ url_for('auth.register') }}" class="futuristic-nav-btn-primary group">
+            <i class="fas fa-user-plus mr-2 group-hover:scale-110 transition-transform duration-200"></i>
+            <span>Registrar</span>
           </a>
           {% endif %}
         </div>
@@ -95,19 +106,36 @@
     </nav>
 
     <main class="container py-8">
-      {% with messages = get_flashed_messages(with_categories=true) %} {% if
-      messages %} {% for category, message in messages %}
-      <div class="alert alert-{{ category }} mb-6 animate-fadeIn">
-        {{ message }}
-      </div>
-      {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+          <div class="alert-futuristic alert-{{ category }} mb-6 animate-fadeIn">
+            <div class="flex items-center space-x-3">
+              <i class="fas fa-info-circle text-cyan-400"></i>
+              <span>{{ message }}</span>
+            </div>
+          </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      
+      {% block content %}{% endblock %}
     </main>
 
-    <footer class="bg-darker py-6 mt-12">
-      <div class="container text-center text-secondary">
-        <p>&copy; 2023 Grupo Andrade. Todos os direitos reservados.</p>
+    <footer class="bg-gradient-to-r from-slate-800 to-slate-900 border-t border-cyan-500/20 py-8 mt-16">
+      <div class="container text-center">
+        <div class="flex items-center justify-center space-x-2 mb-4">
+          <div class="w-6 h-6 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center">
+            <i class="fas fa-car-alt text-white text-xs"></i>
+          </div>
+          <span class="text-lg font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+            OfficeSpace
+          </span>
+        </div>
+        <p class="text-cyan-300/70">&copy; 2025 Grupo Andrade. Todos os direitos reservados.</p>
       </div>
     </footer>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"

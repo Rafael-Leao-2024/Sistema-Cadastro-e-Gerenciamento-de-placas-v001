@@ -1,75 +1,99 @@
-{% extends "layout.html" %} {% block title %}Login{% endblock %} {% block
-content %}
-<div class="max-w-md mx-auto animate-fadeIn">
-  <div class="card">
-    <div class="card-header text-center">
-      <h2 class="text-2xl font-bold">
-        <i class="fas fa-sign-in-alt mr-2"></i> Acessar Sistema
-      </h2>
-    </div>
-    <div class="card-body">
-      <form method="POST" action="{{ url_for('auth.login') }}">
-        {{ form.hidden_tag() }}
+{% extends "layout.html" %}
 
-        <div class="form-group mb-4">
-          {{ form.email.label(class="form-label") }}
-          <div class="relative">
-            {{ form.email(class="form-control pl-10",
-            placeholder="seu@email.com") }}
-            <div
-              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-            >
-              <i class="fas fa-envelope text-primary-400"></i>
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="min-h-[80vh] flex items-center justify-center p-4 animate-fadeIn">
+    <div class="w-full max-w-md">
+        <!-- Card principal com vidro e neon -->
+        <div class="glass-effect-advanced rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-hidden">
+            <!-- Header com gradiente sutil -->
+            <div class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-b border-cyan-500/20 py-6">
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
+                        <i class="fas fa-sign-in-alt text-white text-xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                        Acessar Sistema
+                    </h2>
+                    <p class="text-cyan-300/70 text-sm mt-2">Bem-vindo de volta</p>
+                </div>
             </div>
-          </div>
-          {% if form.email.errors %} {% for error in form.email.errors %}
-          <p class="text-red-400 text-sm mt-1">{{ error }}</p>
-          {% endfor %} {% endif %}
-        </div>
 
-        <div class="form-group mb-4">
-          {{ form.password.label(class="form-label") }}
-          <div class="relative">
-            {{ form.password(class="form-control pl-10", placeholder="••••••••")
-            }}
-            <div
-              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-            >
-              <i class="fas fa-lock text-primary-400"></i>
+            <div class="p-8">
+                <form method="POST" action="{{ url_for('auth.login') }}">
+                    {{ form.hidden_tag() }}
+
+                    <!-- Campo Email -->
+                    <div class="form-group mb-6">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-envelope text-cyan-400/80"></i>
+                            </div>
+                            {{ form.email(class="futuristic-input pl-12", placeholder="seu@email.com") }}
+                        </div>
+                        {% if form.email.errors %}
+                            {% for error in form.email.errors %}
+                            <p class="text-red-400 text-sm mt-2 flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
+                            </p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Campo Senha -->
+                    <div class="form-group mb-6">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-cyan-400/80"></i>
+                            </div>
+                            {{ form.password(class="futuristic-input pl-12", placeholder="••••••••") }}
+                        </div>
+                        {% if form.password.errors %}
+                            {% for error in form.password.errors %}
+                            <p class="text-red-400 text-sm mt-2 flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
+                            </p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Lembrar e Esqueci a Senha -->
+                    <div class="flex items-center justify-between mb-8">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <div class="relative">
+                                {{ form.remember(class="futuristic-checkbox hidden") }}
+                                <div class="w-4 h-4 border border-cyan-400/50 rounded-sm flex items-center justify-center transition-all duration-200 checkbox-indicator">
+                                    <i class="fas fa-check text-cyan-400 text-xs opacity-0"></i>
+                                </div>
+                            </div>
+                            <span class="text-cyan-300/80 text-sm">{{ form.remember.label.text }}</span>
+                        </label>
+                        <a href="{{ url_for('auth.reset_request') }}" class="text-cyan-400 hover:text-cyan-300 text-sm transition-colors duration-200 hover:underline">
+                            Esqueceu a senha?
+                        </a>
+                    </div>
+
+                    <!-- Botão de Entrar -->
+                    <button type="submit" class="futuristic-btn w-full py-4 group">
+                        <span class="relative z-10 flex items-center justify-center">
+                            <i class="fas fa-sign-in-alt mr-3 group-hover:translate-x-1 transition-transform duration-200"></i>
+                            Entrar no Sistema
+                        </span>
+                    </button>
+                </form>
             </div>
-          </div>
-          {% if form.password.errors %} {% for error in form.password.errors %}
-          <p class="text-red-400 text-sm mt-1">{{ error }}</p>
-          {% endfor %} {% endif %}
-        </div>
 
-        <div class="flex items-center justify-between mb-6">
-          <div class="form-check">
-            {{ form.remember(class="form-check-input") }} {{
-            form.remember.label(class="form-check-label text-sm") }}
-          </div>
-          <a
-            href="{{ url_for('auth.reset_request') }}"
-            class="text-sm text-primary-300 hover:underline"
-          >
-            Esqueceu a senha?
-          </a>
+            <!-- Footer -->
+            <div class="border-t border-cyan-500/20 px-8 py-6 bg-cyan-900/10">
+                <div class="text-center text-sm">
+                    <span class="text-cyan-300/70">Não tem uma conta?</span>
+                    <a href="{{ url_for('auth.register') }}" class="text-cyan-400 hover:text-cyan-300 ml-2 font-semibold transition-colors duration-200 hover:underline">
+                        Registre-se aqui
+                    </a>
+                </div>
+            </div>
         </div>
-
-        <button type="submit" class="btn btn-primary w-full py-3">
-          <i class="fas fa-sign-in-alt mr-2"></i> Entrar
-        </button>
-      </form>
     </div>
-    <div class="card-footer text-center text-sm pt-4 border-t border-gray-700">
-      Não tem uma conta?
-      <a
-        href="{{ url_for('auth.register') }}"
-        class="text-primary-300 hover:underline"
-      >
-        Registre-se aqui
-      </a>
-    </div>
-  </div>
 </div>
 {% endblock %}

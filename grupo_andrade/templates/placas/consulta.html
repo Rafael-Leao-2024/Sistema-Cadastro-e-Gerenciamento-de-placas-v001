@@ -1,81 +1,163 @@
-{% extends "layout.html" %} {% block title %}Consultar Placa{% endblock %} {%
-block content %}
+{% extends "layout.html" %}
+{% block title %}Consultar Placa{% endblock %}
+
+{% block content %}
 <div class="animate-fadeIn">
+  <!-- Header -->
   <div class="flex justify-between items-center mb-8">
-    <h2 class="text-2xl font-bold">
-      <i class="fas fa-search mr-2"></i> Consultar Veículo pelo Chassi
-    </h2>
-    <a href="{{ url_for('placas.todas') }}" class="btn btn-outline">
-      <i class="fas fa-arrow-left mr-2"></i> Voltar
+    <div class="flex items-center space-x-4">
+      <div class="w-12 h-12 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
+        <i class="fas fa-search text-white text-lg"></i>
+      </div>
+      <div>
+        <h2 class="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+          Consultar Veículo
+        </h2>
+        <p class="text-cyan-300/70 text-sm mt-1">Busque solicitações pelo número do chassi</p>
+      </div>
+    </div>
+    <a href="{{ url_for('placas.todas') }}" class="futuristic-nav-btn group">
+      <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform duration-200"></i>
+      Voltar
     </a>
   </div>
 
-  <div class="card mb-8">
-    <div class="card-body">
-      <form method="POST" class="flex items-end gap-4">
+  <!-- Card de Busca -->
+  <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 mb-8 overflow-hidden">
+    <div class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-b border-cyan-500/20 px-6 py-4">
+      <h3 class="text-xl font-semibold text-cyan-100 flex items-center">
+        <i class="fas fa-filter mr-3"></i>
+        Critérios de Busca
+      </h3>
+    </div>
+    <div class="p-6">
+      <form method="POST" class="flex flex-col md:flex-row items-end gap-6">
         {{ form.hidden_tag() }}
 
         <div class="flex-grow">
-          {{ form.chassi.label(class="form-label") }}
+          <label class="block text-cyan-300 font-medium mb-3 flex items-center">
+            <i class="fas fa-fingerprint mr-2 text-cyan-400"></i>
+            Número do Chassi
+          </label>
           <div class="relative">
-            {{ form.chassi(class="form-control pl-10 capitalize",
-            placeholder="Consulte pelos 6 ultimos numeros") }}
-            <div
-              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-            >
-              <i class="fas fa-car text-primary-400"></i>
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <i class="fas fa-car text-cyan-400/80"></i>
             </div>
+            {{ form.chassi(class="futuristic-input uppercase pl-12", placeholder="Digite os 6 últimos dígitos do chassi...") }}
           </div>
+          <p class="text-cyan-400/60 text-sm mt-2 flex items-center">
+            <i class="fas fa-info-circle mr-1"></i>
+            Busque pelos últimos 6 caracteres do chassi
+          </p>
         </div>
 
-        <button type="submit" class="btn btn-primary h-[42px]">
-          <i class="fas fa-search mr-2"></i> Buscar
+        <button type="submit" class="futuristic-btn group min-w-[140px]">
+          <i class="fas fa-search mr-3 group-hover:scale-110 transition-transform duration-200"></i>
+          Buscar
         </button>
       </form>
     </div>
   </div>
 
   {% if resultados %}
-  <div class="card">
-    <div class="card-header">
-      <h3 class="text-xl font-semibold">
-        Resultados ({{ resultados|length }})
-      </h3>
+  <!-- Resultados da Busca -->
+  <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-hidden">
+    <div class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-b border-cyan-500/20 px-6 py-4">
+      <div class="flex justify-between items-center">
+        <h3 class="text-xl font-semibold text-cyan-100 flex items-center">
+          <i class="fas fa-list-ul mr-3"></i>
+          Resultados da Busca
+        </h3>
+        <div class="flex items-center space-x-2">
+          <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm font-medium border border-cyan-500/30">
+            {{ resultados|length }} encontrado(s)
+          </span>
+        </div>
+      </div>
     </div>
+    
     <div class="overflow-x-auto">
-      <table class="table w-full">
+      <table class="w-full">
         <thead>
-          <tr>
-            <th>Placa</th>
-            <th>Chassi</th>
-            <th>Data</th>
-            <th>Status</th>
-            <th>Ações</th>
+          <tr class="border-b border-cyan-500/20">
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Placa</th>
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Chassi</th>
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Cliente</th>
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Data</th>
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Status</th>
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Ações</th>
           </tr>
         </thead>
         <tbody>
           {% for placa in resultados %}
-          <tr>
-            <td class="font-mono">{{ placa.placa }}</td>
-            <td>{{ placa.chassi.upper() }}</td>
-            <td>{{ placa.date_create.strftime('%d/%m/%Y') }}</td>
-            <td>
+          <tr class="border-b border-cyan-500/10 hover:bg-cyan-500/5 transition-all duration-200 group">
+            <!-- Placa -->
+            <td class="px-6 py-4">
+              <span class="font-mono text-cyan-100 text-lg bg-cyan-500/10 px-3 py-2 rounded-lg border border-cyan-500/20">
+                {{ placa.placa }}
+              </span>
+            </td>
+            
+            <!-- Chassi -->
+            <td class="px-6 py-4">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-full bg-cyan-500/20 flex items-center justify-center">
+                  <i class="fas fa-fingerprint text-cyan-400 text-xs"></i>
+                </div>
+                <span class="font-mono text-cyan-200 text-sm">{{ placa.chassi.upper() }}</span>
+              </div>
+            </td>
+            
+            <!-- Cliente -->
+            <td class="px-6 py-4">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center">
+                  <i class="fas fa-user text-white text-xs"></i>
+                </div>
+                <span class="text-cyan-100">{{ placa.author.username }}</span>
+              </div>
+            </td>
+            
+            <!-- Data -->
+            <td class="px-6 py-4">
+              <div class="text-cyan-100">{{ placa.date_create.strftime('%d/%m/%Y') }}</div>
+              <div class="text-cyan-400 text-xs">{{ placa.date_create.strftime('%H:%M') }}</div>
+            </td>
+            
+            <!-- Status -->
+            <td class="px-6 py-4">
               {% if placa.received %}
-              <span class="badge text-green-500">Recebida</span>
+              <div class="flex items-center space-x-2 text-green-400">
+                <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                <span class="font-medium">Recebida</span>
+              </div>
               {% elif placa.placa_a_caminho %}
-              <span class="badge text-yellow-500">A caminho</span>
+              <div class="flex items-center space-x-2 text-yellow-400">
+                <div class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></div>
+                <span class="font-medium">A caminho</span>
+              </div>
               {% elif placa.placa_confeccionada %}
-              <span class="badge text-blue-500">Confeccionada</span>
+              <div class="flex items-center space-x-2 text-blue-400">
+                <div class="w-2 h-2 rounded-full bg-blue-400"></div>
+                <span class="font-medium">Confeccionada</span>
+              </div>
               {% else %}
-              <span class="badge text-gray-500">Pendente</span>
+              <div class="flex items-center space-x-2 text-cyan-400">
+                <div class="w-2 h-2 rounded-full bg-cyan-400"></div>
+                <span>Pendente</span>
+              </div>
               {% endif %}
             </td>
-            <td>
+            
+            <!-- Ações -->
+            <td class="px-6 py-4">
               <a
                 href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}"
-                class="btn btn-sm btn-outline"
+                class="inline-flex items-center px-4 py-2 rounded-lg border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/10 hover:border-cyan-400/50 transition-all duration-200 group/btn"
+                title="Ver detalhes completos"
               >
-                <i class="fas fa-eye"></i>
+                <i class="fas fa-eye mr-2 group-hover/btn:scale-110 transition-transform duration-200"></i>
+                Detalhes
               </a>
             </td>
           </tr>
@@ -83,18 +165,105 @@ block content %}
         </tbody>
       </table>
     </div>
+
+    <!-- Footer dos Resultados -->
+    <div class="border-t border-cyan-500/20 px-6 py-4 bg-cyan-900/10">
+      <div class="flex justify-between items-center text-sm">
+        <span class="text-cyan-300/70">
+          Busca realizada com sucesso
+        </span>
+        <div class="flex items-center space-x-4">
+          <span class="text-cyan-300/70 flex items-center">
+            <i class="fas fa-clock mr-1"></i>
+            {{ now.strftime('%d/%m/%Y %H:%M') if now else '' }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% elif request.method == 'POST' %}
+  <!-- Estado de Nenhum Resultado -->
+  <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-12 text-center">
+    <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-cyan-500/20 flex items-center justify-center">
+      <i class="fas fa-search text-cyan-400 text-2xl"></i>
+    </div>
+    <h3 class="text-xl font-semibold text-cyan-100 mb-3">Nenhum resultado encontrado</h3>
+    <p class="text-cyan-300/70 max-w-md mx-auto mb-6">
+      Não foram encontradas solicitações correspondentes ao chassi informado. 
+      Verifique o número e tente novamente.
+    </p>
+    <div class="flex justify-center space-x-3">
+      <button onclick="history.back()" class="futuristic-nav-btn group">
+        <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform duration-200"></i>
+        Voltar
+      </button>
+      <button onclick="document.querySelector('form').reset(); document.querySelector('input').focus();" 
+              class="futuristic-btn group">
+        <i class="fas fa-redo mr-2 group-hover:rotate-180 transition-transform duration-200"></i>
+        Nova Busca
+      </button>
+    </div>
   </div>
   {% endif %}
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    const placaInput = document.querySelector('.capitalize');
-    if (placaInput) {
-      placaInput.addEventListener('input', function () {
+    // Converter para maiúsculas
+    const chassiInput = document.querySelector('.uppercase');
+    if (chassiInput) {
+      chassiInput.addEventListener('input', function () {
         this.value = this.value.toUpperCase();
       });
+      
+      // Focar no input ao carregar a página
+      chassiInput.focus();
     }
+
+    // Efeito de busca
+    const searchForm = document.querySelector('form');
+    if (searchForm) {
+      searchForm.addEventListener('submit', function (e) {
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        
+        // Efeito de loading
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Buscando...';
+        submitBtn.disabled = true;
+        
+        // Restaurar após 2 segundos (caso a busca demore)
+        setTimeout(() => {
+          submitBtn.innerHTML = originalText;
+          submitBtn.disabled = false;
+        }, 2000);
+      });
+    }
+
+    // Efeito de destaque nos resultados
+    const results = document.querySelectorAll('tbody tr');
+    results.forEach((row, index) => {
+      // Efeito de entrada escalonada
+      row.style.animationDelay = `${index * 0.1}s`;
+      row.classList.add('animate-fadeIn');
+    });
+    
   });
 </script>
+
+<style>
+  .animate-fadeIn {
+    animation: fadeInUp 0.5s ease-out forwards;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
 {% endblock %}

@@ -1,123 +1,145 @@
-{% extends "layout.html" %} {% block title %}Chat de Suporte{% endblock %} {%
-block content %}
+{% extends "layout.html" %}
+{% block title %}Chat de Suporte{% endblock %}
+
+{% block content %}
 <div class="animate-fadeIn">
-  <div class="flex flex-col md:flex-row gap-6">
+  <div class="flex flex-col lg:flex-row gap-6">
     <!-- Área principal do chat -->
-    <div class="md:w-3/4">
-      <div class="card">
-        <div class="card-header">
-          <h2 class="text-2xl font-bold">
-            <i class="fas fa-robot text-primary-400 mr-2"></i>
-            Jasmine - Assistente Virtual
-          </h2>
-          <p class="text-secondary mt-1">
-            Faça perguntas sobre nossos serviços de emplacamento
-          </p>
+    <div class="lg:w-3/4">
+      <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-hidden">
+        <!-- Header do Chat -->
+        <div class="bg-gradient-to-r from-cyan-900/40 to-blue-900/40 border-b border-cyan-500/20 px-6 py-4">
+          <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
+              <i class="fas fa-robot text-white text-lg"></i>
+            </div>
+            <div>
+              <h2 class="text-2xl font-bold text-cyan-100">
+                Jasmine - Assistente Virtual
+              </h2>
+              <p class="text-cyan-300/80 text-sm mt-1">
+                Faça perguntas sobre nossos serviços de emplacamento
+              </p>
+            </div>
+          </div>
+        </div>
 
-          </div>       
-
-        
-
-        <div class="card-body p-0">
-          <!-- Histórico do chat -->
-          <div id="chat-history" class="h-96 overflow-y-auto p-4 space-y-4">
-            <div class="chat-message bot-message">
-              <div class="flex items-start">
-                <div
-                  class="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3"
-                >
-                  <i class="fas fa-robot"></i>
-                </div>
-                <div class="bg-gray-800 rounded-lg p-3 max-w-3/4">
-                  <p>
-                    Olá! Sou a Jasmine, assistente virtual do Grupo Andrade.
-                    Como posso te ajudar hoje com nossos serviços de
-                    emplacamento?
-                  </p>
-                
-                </div>
+        <!-- Histórico do chat -->
+        <div id="chat-history" class="h-96 overflow-y-auto p-6 space-y-6 bg-gradient-to-b from-slate-900/50 to-slate-900/30">
+          <!-- Mensagem inicial da Jasmine -->
+          <div class="flex items-start space-x-4">
+            <div class="flex-shrink-0">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
+                <i class="fas fa-robot text-white text-sm"></i>
               </div>
             </div>
-          {% for mensagem in mensagens %}
-
-          {% if "User" in mensagem %}
-        
-            <div  class="chat-message bot-message">
-                <div class="flex items-start justify-end">
-                    <div class="bg-gray-700 rounded-lg p-3 max-w-3/4">
-                        <p>{{ mensagem[1].content }}</p>
-                    </div>
-                    <div class="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center ml-3">
-                        <i class="fas fa-user"></i>
-                    </div>
-                </div>
+            <div class="flex-1">
+              <div class="bg-cyan-500/10 border border-cyan-500/20 rounded-2xl rounded-tl-none px-4 py-3">
+                <p class="text-cyan-100">
+                  Olá! Sou a Jasmine, assistente virtual do Grupo Andrade.
+                  Como posso te ajudar hoje com nossos serviços de emplacamento?
+                </p>
+              </div>
             </div>
-            
-          {% else %}
-            <div class="chat-message bot-message">
-              <div class="flex items-start">
-                    <div class="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <div class="bg-gray-800 rounded-lg p-3 max-w-3/4">
-                        <p>{{ mensagem[1].content }}</p>
-                    </div>
-                </div>
-            </div>
-          
-          {% endif %}
-         
-          {% endfor %}
           </div>
-          
 
-          <!-- Área de input -->
-          <div class="border-t border-gray-700 p-4">
-            <form id="chat-form" class="flex gap-2">
+          <!-- Histórico de mensagens do backend -->
+          {% for mensagem in mensagens %}
+            {% if "User" in mensagem %}
+              <!-- Mensagem do Usuário -->
+              <div class="flex items-start space-x-4 justify-end">
+                <div class="flex-1 text-right">
+                  <div class="bg-blue-500/10 border border-blue-500/20 rounded-2xl rounded-tr-none px-4 py-3 inline-block">
+                    <p class="text-blue-100">{{ mensagem[1].content }}</p>
+                  </div>
+                </div>
+                <div class="flex-shrink-0">
+                  <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center shadow-lg shadow-blue-500/25">
+                    <i class="fas fa-user text-white text-sm"></i>
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              <!-- Mensagem da Jasmine -->
+              <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0">
+                  <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
+                    <i class="fas fa-robot text-white text-sm"></i>
+                  </div>
+                </div>
+                <div class="flex-1">
+                  <div class="bg-cyan-500/10 border border-cyan-500/20 rounded-2xl rounded-tl-none px-4 py-3">
+                    <p class="text-cyan-100">{{ mensagem[1].content }}</p>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <!-- Área de input -->
+        <div class="border-t border-cyan-500/20 bg-cyan-900/10 p-6">
+          <form id="chat-form" class="flex gap-3">
+            <div class="flex-grow relative">
               <input
                 type="text"
                 id="user-input"
-                class="form-control flex-grow"
-                placeholder="Digite sua pergunta..."
+                class="futuristic-input pr-12"
+                placeholder="Digite sua pergunta sobre emplacamento..."
                 required
               />
-              <button type="submit" class="btn btn-primary">
-                <i class="fas fa-paper-plane mr-2"></i> Enviar
-              </button>
-            </form>
-          </div>
+              <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <i class="fas fa-comment text-cyan-400/60"></i>
+              </div>
+            </div>
+            <button type="submit" class="futuristic-btn group min-w-[120px]">
+              <i class="fas fa-paper-plane mr-2 group-hover:translate-x-1 transition-transform duration-200"></i>
+              Enviar
+            </button>
+          </form>
         </div>
       </div>
     </div>
 
     <!-- Sidebar de informações -->
-    <div class="md:w-1/4">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="text-xl font-semibold">
-            <i class="fas fa-info-circle mr-2"></i> Informações
-          </h3>
+    <div class="lg:w-1/4">
+      <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-6">
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
+            <i class="fas fa-info-circle text-white text-xl"></i>
+          </div>
+          <h3 class="text-xl font-semibold text-cyan-100">Informações</h3>
+          <p class="text-cyan-300/70 text-sm mt-1">Jasmine pode responder sobre:</p>
         </div>
-        <div class="card-body">
-          <p class="text-secondary mb-4">Jasmine pode responder sobre:</p>
-          <ul class="space-y-2">
-            <li class="flex items-center">
-              <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              Faturamento e Relatorios
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              Informações de Placas
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              Permissao de Admin
-            </li>
-            <li class="flex items-center">
-              <i class="fas fa-check-circle text-green-500 mr-2"></i>
-              Endereços e contatos
-            </li>
-          </ul>
+        
+        <div class="space-y-4">
+          <div class="flex items-center space-x-3 p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/10">
+            <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
+              <i class="fas fa-chart-line text-green-400 text-sm"></i>
+            </div>
+            <span class="text-cyan-100 text-sm font-medium">Faturamento e Relatórios</span>
+          </div>
+          
+          <div class="flex items-center space-x-3 p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/10">
+            <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
+              <i class="fas fa-car text-blue-400 text-sm"></i>
+            </div>
+            <span class="text-cyan-100 text-sm font-medium">Informações de Placas</span>
+          </div>
+          
+          <div class="flex items-center space-x-3 p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/10">
+            <div class="w-8 h-8 rounded-full bg-purple-500/20 flex items-center justify-center">
+              <i class="fas fa-user-shield text-purple-400 text-sm"></i>
+            </div>
+            <span class="text-cyan-100 text-sm font-medium">Permissão de Admin</span>
+          </div>
+          
+          <div class="flex items-center space-x-3 p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/10">
+            <div class="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center">
+              <i class="fas fa-map-marker-alt text-yellow-400 text-sm"></i>
+            </div>
+            <span class="text-cyan-100 text-sm font-medium">Endereços e Contatos</span>
+          </div>
         </div>
       </div>
     </div>
@@ -129,6 +151,9 @@ block content %}
     const chatForm = document.getElementById('chat-form');
     const chatHistory = document.getElementById('chat-history');
     const userInput = document.getElementById('user-input');
+
+    // Focar no input ao carregar
+    userInput.focus();
 
     chatForm.addEventListener('submit', async function (e) {
       e.preventDefault();
@@ -154,7 +179,9 @@ block content %}
         });
 
         // Remove indicador de digitação
-        chatHistory.removeChild(typingIndicator);
+        if (typingIndicator && typingIndicator.parentNode) {
+          chatHistory.removeChild(typingIndicator);
+        }
 
         if (response.ok) {
           const data = await response.json();
@@ -164,36 +191,44 @@ block content %}
           addMessageToChat('bot', `Desculpe, ocorreu um erro: ${error.error}`);
         }
       } catch (error) {
+        const typingIndicator = document.querySelector('.typing-indicator');
+        if (typingIndicator && typingIndicator.parentNode) {
+          chatHistory.removeChild(typingIndicator);
+        }
         addMessageToChat('bot', `Erro de conexão: ${error.message}`);
       }
     });
 
     function addMessageToChat(sender, message) {
       const messageDiv = document.createElement('div');
-      messageDiv.className = `chat-message ${sender}-message mb-4`;
+      messageDiv.className = `flex items-start space-x-4 ${sender === 'user' ? 'justify-end' : ''}`;
 
       if (sender === 'user') {
         messageDiv.innerHTML = `
-                <div class="flex items-start justify-end">
-                    <div class="bg-gray-700 rounded-lg p-3 max-w-3/4">
-                        <p>${message}</p>
-                    </div>
-                    <div class="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center ml-3">
-                        <i class="fas fa-user"></i>
-                    </div>
-                </div>
-            `;
+          <div class="flex-1 text-right">
+            <div class="bg-blue-500/10 border border-blue-500/20 rounded-2xl rounded-tr-none px-4 py-3 inline-block">
+              <p class="text-blue-100">${message}</p>
+            </div>
+          </div>
+          <div class="flex-shrink-0">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center shadow-lg shadow-blue-500/25">
+              <i class="fas fa-user text-white text-sm"></i>
+            </div>
+          </div>
+        `;
       } else {
         messageDiv.innerHTML = `
-                <div class="flex items-start">
-                    <div class="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <div class="bg-gray-800 rounded-lg p-3 max-w-3/4">
-                        <p>${marked.parse(message)}</p>
-                    </div>
-                </div>
-            `;
+          <div class="flex-shrink-0">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
+              <i class="fas fa-robot text-white text-sm"></i>
+            </div>
+          </div>
+          <div class="flex-1">
+            <div class="bg-cyan-500/10 border border-cyan-500/20 rounded-2xl rounded-tl-none px-4 py-3">
+              <p class="text-cyan-100">${marked.parse(message)}</p>
+            </div>
+          </div>
+        `;
       }
 
       chatHistory.appendChild(messageDiv);
@@ -202,21 +237,23 @@ block content %}
 
     function addTypingIndicator() {
       const typingDiv = document.createElement('div');
-      typingDiv.className = 'chat-message bot-message mb-4';
+      typingDiv.className = 'flex items-start space-x-4 typing-indicator';
       typingDiv.innerHTML = `
-            <div class="flex items-start">
-                <div class="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">
-                    <i class="fas fa-robot"></i>
-                </div>
-                <div class="bg-gray-800 rounded-lg p-3 max-w-3/4">
-                    <div class="flex space-x-1">
-                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
-                    </div>
-                </div>
+        <div class="flex-shrink-0">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
+            <i class="fas fa-robot text-white text-sm"></i>
+          </div>
+        </div>
+        <div class="flex-1">
+          <div class="bg-cyan-500/10 border border-cyan-500/20 rounded-2xl rounded-tl-none px-4 py-3">
+            <div class="flex space-x-2">
+              <div class="w-2 h-2 bg-cyan-400 rounded-full animate-bounce"></div>
+              <div class="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+              <div class="w-2 h-2 bg-cyan-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
             </div>
-        `;
+          </div>
+        </div>
+      `;
 
       chatHistory.appendChild(typingDiv);
       chatHistory.scrollTop = chatHistory.scrollHeight;
@@ -226,23 +263,9 @@ block content %}
 </script>
 
 <style>
-  .chat-message {
-    transition: all 0.3s ease;
-  }
-
-  .user-message .bg-gray-700 {
-    background-color: rgba(55, 65, 81, 0.8);
-    border-radius: 1rem 1rem 0 1rem;
-  }
-
-  .bot-message .bg-gray-800 {
-    background-color: rgba(31, 41, 55, 0.8);
-    border-radius: 1rem 1rem 1rem 0;
-  }
-
   #chat-history {
     scrollbar-width: thin;
-    scrollbar-color: #3b82f6 #1f2937;
+    scrollbar-color: rgba(6, 182, 212, 0.5) rgba(15, 23, 42, 0.3);
   }
 
   #chat-history::-webkit-scrollbar {
@@ -250,11 +273,12 @@ block content %}
   }
 
   #chat-history::-webkit-scrollbar-track {
-    background: #1f2937;
+    background: rgba(15, 23, 42, 0.3);
+    border-radius: 3px;
   }
 
   #chat-history::-webkit-scrollbar-thumb {
-    background-color: #3b82f6;
+    background-color: rgba(6, 182, 212, 0.5);
     border-radius: 3px;
   }
 </style>

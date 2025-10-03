@@ -1,46 +1,66 @@
-{% extends "layout.html" %} {% block title %}Resetar Senha{% endblock %} {%
-block content %}
-<div class="max-w-md mx-auto animate-fadeIn">
-  <div class="card">
-    <div class="card-header text-center">
-      <h2 class="text-2xl font-bold">
-        <i class="fas fa-key mr-2"></i> Resetar Senha
-      </h2>
-    </div>
-    <div class="card-body">
-      <form method="POST" action="">
-        {{ form.hidden_tag() }}
+{% extends "layout.html" %}
 
-        <div class="form-group mb-6">
-          {{ form.email.label(class="form-label") }}
-          <div class="relative">
-            {{ form.email(class="form-control pl-10",
-            placeholder="seu@email.com") }}
-            <div
-              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-            >
-              <i class="fas fa-envelope text-primary-400"></i>
+{% block title %}Resetar Senha{% endblock %}
+
+{% block content %}
+<div class="min-h-[80vh] flex items-center justify-center p-4 animate-fadeIn">
+    <div class="w-full max-w-md">
+        <!-- Card principal com vidro e neon -->
+        <div class="glass-effect-advanced rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-hidden">
+            <!-- Header com gradiente sutil -->
+            <div class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-b border-cyan-500/20 py-6">
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
+                        <i class="fas fa-key text-white text-xl"></i>
+                    </div>
+                    <h2 class="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                        Resetar Senha
+                    </h2>
+                    <p class="text-cyan-300/70 text-sm mt-2">Recupere o acesso à sua conta</p>
+                </div>
             </div>
-          </div>
-          {% if form.email.errors %} {% for error in form.email.errors %}
-          <p class="text-red-400 text-sm mt-1">{{ error }}</p>
-          {% endfor %} {% endif %}
-        </div>
 
-        <button type="submit" class="btn btn-primary w-full py-3">
-          <i class="fas fa-paper-plane mr-2"></i> Solicitar Reset
-        </button>
-      </form>
+            <div class="p-8">
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+
+                    <!-- Campo Email -->
+                    <div class="form-group mb-8">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-envelope text-cyan-400/80"></i>
+                            </div>
+                            {{ form.email(class="futuristic-input pl-12", placeholder="seu@email.com") }}
+                        </div>
+                        {% if form.email.errors %}
+                            {% for error in form.email.errors %}
+                            <p class="text-red-400 text-sm mt-2 flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
+                            </p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Botão de Solicitar Reset -->
+                    <button type="submit" class="futuristic-btn w-full py-4 group">
+                        <span class="relative z-10 flex items-center justify-center">
+                            <i class="fas fa-paper-plane mr-3 group-hover:translate-x-1 transition-transform duration-200"></i>
+                            Enviar Link de Recuperação
+                        </span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Footer -->
+            <div class="border-t border-cyan-500/20 px-8 py-6 bg-cyan-900/10">
+                <div class="text-center text-sm">
+                    <span class="text-cyan-300/70">Lembrou sua senha?</span>
+                    <a href="{{ url_for('auth.login') }}" class="text-cyan-400 hover:text-cyan-300 ml-2 font-semibold transition-colors duration-200 hover:underline">
+                        Faça login
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card-footer text-center text-sm pt-4 border-t border-gray-700">
-      Lembrou sua senha?
-      <a
-        href="{{ url_for('auth.login') }}"
-        class="text-primary-300 hover:underline"
-      >
-        Faça login
-      </a>
-    </div>
-  </div>
 </div>
 {% endblock %}
