@@ -1,39 +1,133 @@
-{% extends "layout.html" %} {% block title %}Resultado do Pagamento{% endblock
-%} {% block content %}
-<div class="max-w-lg mx-auto animate-fadeIn">
-  <div class="card text-center">
-    <div class="card-body">
+{% extends "layout.html" %}
+{% block title %}Resultado do Pagamento{% endblock %}
+
+{% block content %}
+<div class="min-h-[80vh] flex items-center justify-center p-4 animate-fadeIn">
+  <div class="w-full max-w-md">
+    <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-hidden">
+      
       {% if status_pagamento == 'approved' %}
-      <div class="text-green-500 text-6xl mb-4">
-        <i class="fas fa-check-circle"></i>
+      <!-- PAGAMENTO APROVADO -->
+      <div class="bg-gradient-to-r from-green-900/40 to-emerald-900/40 border-b border-green-500/20 py-8">
+        <div class="text-center">
+          <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center shadow-lg shadow-green-500/25">
+            <i class="fas fa-check-circle text-white text-2xl"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-green-100">Pagamento Aprovado!</h2>
+          <p class="text-green-300/80 text-sm mt-2">Seu pagamento foi processado com sucesso</p>
+        </div>
       </div>
-      <h2 class="text-2xl font-bold mb-2">Pagamento Aprovado!</h2>
-      <p class="text-lg mb-6">Seu pagamento foi processado com sucesso.</p>
-      <div class="bg-gray-800 rounded-lg p-4 mb-6">
-        <p class="font-mono">ID: {{ pagamento.id_pagamento }}</p>
-        <p class="font-mono">Status: {{ pagamento.status_pagamento }}</p>
-        <p class="font-mono">
-          Data: {{ pagamento.data_pagamento.strftime('%d/%m/%Y %H:%M') }}
-        </p>
+
+      <div class="p-6">
+        <div class="bg-green-500/10 border border-green-500/20 rounded-xl p-4 mb-6">
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between text-green-300">
+              <span>ID do Pagamento:</span>
+              <span class="text-green-100 font-mono">{{ pagamento.id_pagamento }}</span>
+            </div>
+            <div class="flex justify-between text-green-300">
+              <span>Status:</span>
+              <span class="text-green-100 font-medium capitalize">{{ pagamento.status_pagamento }}</span>
+            </div>
+            <div class="flex justify-between text-green-300">
+              <span>Data:</span>
+              <span class="text-green-100">{{ pagamento.data_pagamento.strftime('%d/%m/%Y %H:%M') }}</span>
+            </div>
+          </div>
+        </div>
+
+        <a href="{{ url_for('placas.minhas_placas') }}" class="futuristic-btn-success w-full group">
+          <i class="fas fa-arrow-left mr-3 group-hover:-translate-x-1 transition-transform duration-200"></i>
+          Voltar para Minhas Placas
+        </a>
       </div>
+
       {% elif status_pagamento == 'canceled' %}
-      <div class="text-red-500 text-6xl mb-4">
-        <i class="fa-solid fa-ban"></i>
+      <!-- PAGAMENTO CANCELADO -->
+      <div class="bg-gradient-to-r from-red-900/40 to-orange-900/40 border-b border-red-500/20 py-8">
+        <div class="text-center">
+          <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r from-red-500 to-orange-500 flex items-center justify-center shadow-lg shadow-red-500/25">
+            <i class="fa-solid fa-ban text-white text-2xl"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-red-100">Pagamento Cancelado</h2>
+          <p class="text-red-300/80 text-sm mt-2">Seu pagamento não foi processado</p>
+        </div>
       </div>
-      <h2 class="text-2xl font-bold mb-2">Pagamento Cancelado</h2>
-      <p class="text-lg mb-6">Seu pagamento nao foi processado.</p>
+
+      <div class="p-6">
+        <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mb-6">
+          <p class="text-red-300 text-center">O pagamento foi cancelado ou recusado. Você pode tentar novamente.</p>
+        </div>
+
+        <a href="{{ url_for('placas.minhas_placas') }}" class="futuristic-btn w-full group">
+          <i class="fas fa-arrow-left mr-3 group-hover:-translate-x-1 transition-transform duration-200"></i>
+          Voltar para Minhas Placas
+        </a>
+      </div>
+
       {% else %}
-      <div class="text-yellow-500 text-6xl mb-4">
-        <i class="fas fa-exclamation-circle"></i>
+      <!-- PAGAMENTO PENDENTE -->
+      <div class="bg-gradient-to-r from-yellow-900/40 to-amber-900/40 border-b border-yellow-500/20 py-8">
+        <div class="text-center">
+          <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r from-yellow-500 to-amber-500 flex items-center justify-center shadow-lg shadow-yellow-500/25">
+            <i class="fas fa-clock text-white text-2xl"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-yellow-100">Pagamento Pendente</h2>
+          <p class="text-yellow-300/80 text-sm mt-2">Seu pagamento está sendo processado</p>
+        </div>
       </div>
-      <h2 class="text-2xl font-bold mb-2">Pagamento Pendente</h2>
-      <p class="text-lg mb-6">Seu pagamento está sendo processado.</p>
+
+      <div class="p-6">
+        <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-xl p-4 mb-6">
+          <div class="flex items-center justify-center space-x-3">
+            <div class="flex space-x-1">
+              <div class="w-2 h-2 bg-yellow-400 rounded-full animate-bounce"></div>
+              <div class="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+              <div class="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+            </div>
+            <span class="text-yellow-300 text-sm">Processando transação...</span>
+          </div>
+        </div>
+
+        <a href="{{ url_for('placas.minhas_placas') }}" class="futuristic-nav-btn w-full group text-center">
+          <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform duration-200"></i>
+          Voltar para Minhas Placas
+        </a>
+      </div>
       {% endif %}
 
-      <a href="{{ url_for('placas.minhas_placas') }}" class="btn btn-primary">
-        <i class="fas fa-arrow-left mr-2"></i> Voltar para Minhas Placas
-      </a>
+    </div>
+
+    <!-- Informação Adicional -->
+    <div class="text-center mt-6">
+      <p class="text-cyan-400/60 text-sm flex items-center justify-center gap-2">
+        <i class="fas fa-headset"></i>
+        Em caso de dúvidas, entre em contato com o suporte
+      </p>
     </div>
   </div>
 </div>
+
+<style>
+  .futuristic-btn-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    transform: scale(1);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .futuristic-btn-success:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 2rem rgba(16, 185, 129, 0.4);
+  }
+</style>
 {% endblock %}

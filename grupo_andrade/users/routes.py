@@ -31,6 +31,7 @@ def endereco():
     return render_template('users/endereco.html', form=form, endereco=endereco)
 
 @users.route('/usuarios')
+@login_required
 def listar_usuarios():
     usuarios = User.query.order_by(User.data_criacao.desc())
     usuarios_clientes = usuarios.filter(User.despachante == current_user.id).all()

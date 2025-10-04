@@ -158,6 +158,11 @@ def editar_placa(placa_id):
 @login_required
 def solicitar_placas():
     despachante = "Sem despachante"
+
+    if request.method == "POST" and not current_user.despachante:
+        flash('Selecione um despachante antes!', 'info')
+        return redirect(url_for('placas.solicitar_placas'))
+    
     if current_user.despachante:
         despachante_user = User.query.filter_by(id=current_user.despachante).first()
         if despachante_user:
@@ -192,10 +197,6 @@ def solicitar_placas():
             lista_placas.append(nova_placa)    
         db.session.commit()
         db.session.refresh(nova_placa)
-
-        if not current_user.despachante:
-            flash('Selecione um despachante antes!', 'info')
-            return redirect(url_for('placas.solicitar_placas'))
         
         notificacao = Notificacao(
             mensagem=f"O usuário {current_user.username} fez uma nova solicitação.{len(lista_placas)} data e hora {nova_placa.date_create}",

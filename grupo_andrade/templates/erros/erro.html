@@ -1,30 +1,184 @@
-{% extends "layout.html" %} {% block title %}Acesso Negado{% endblock %} {%
-block content %}
-<div class="max-w-md mx-auto py-12 animate-fadeIn">
-  <div class="card text-center">
-    <div class="card-body p-8">
-      <!-- Ícone de erro -->
-      <div class="text-red-500 text-6xl mb-6">
-        <i class="fas fa-exclamation-triangle"></i>
+{% extends "layout.html" %}
+{% block title %}Acesso Negado{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center p-4 animate-fadeIn">
+  <div class="w-full max-w-lg">
+    <!-- Efeito de Partículas no Fundo -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+      <div class="absolute -top-10 -left-10 w-20 h-20 bg-red-500/10 rounded-full blur-xl"></div>
+      <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-red-500/5 rounded-full blur-2xl"></div>
+      <div class="absolute top-1/4 right-1/4 w-16 h-16 bg-red-500/10 rounded-full blur-lg"></div>
+    </div>
+
+    <!-- Card Principal -->
+    <div class="relative glass-effect-advanced rounded-2xl border border-red-500/30 shadow-2xl shadow-red-500/20 overflow-hidden">
+      <!-- Efeito de Brilho -->
+      <div class="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent pointer-events-none"></div>
+      
+      <!-- Header com Gradiente -->
+      <div class="bg-gradient-to-r from-red-900/50 to-rose-900/50 border-b border-red-500/30 py-12 relative overflow-hidden">
+        <!-- Efeito de Partículas no Header -->
+        <div class="absolute inset-0">
+          <div class="absolute top-4 left-1/4 w-2 h-2 bg-red-400/30 rounded-full animate-pulse"></div>
+          <div class="absolute top-8 right-1/3 w-1 h-1 bg-red-300/40 rounded-full animate-pulse" style="animation-delay: 0.5s"></div>
+          <div class="absolute bottom-6 left-1/3 w-1.5 h-1.5 bg-red-200/20 rounded-full animate-pulse" style="animation-delay: 1s"></div>
+        </div>
+        
+        <div class="relative text-center">
+          <!-- Ícone Animado -->
+          <div class="w-28 h-28 mx-auto mb-6 rounded-full bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center shadow-2xl shadow-red-500/30 animate-pulse">
+            <i class="fas fa-exclamation-triangle text-white text-4xl"></i>
+          </div>
+          
+          <!-- Título com Efeito -->
+          <h2 class="text-4xl font-bold bg-gradient-to-r from-red-400 to-rose-400 bg-clip-text text-transparent mb-3">
+            Acesso Negado
+          </h2>
+          
+          <!-- Subtítulo -->
+          <p class="text-red-300/80 text-lg font-light">
+            Permissão Insuficiente
+          </p>
+        </div>
       </div>
 
-      <!-- Título -->
-      <h2 class="text-3xl font-bold mb-4 text-red-400">Acesso Negado</h2>
+      <!-- Conteúdo -->
+      <div class="p-8 relative">
+        <!-- Mensagem Principal -->
+        <div class="text-center mb-8">
+          <p class="text-red-200/90 text-xl font-light leading-relaxed">
+            Você não tem permissão para acessar<br>
+            <span class="text-white font-medium">esta página ou recurso</span>
+          </p>
+        </div>
 
-      <!-- Mensagem -->
-      <p class="text-lg mb-8 text-gray-300">
-        Você não tem permissão para acessar esta página ou o recurso solicitado.
+        <!-- Código de Erro Estilizado -->
+        <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-6 mb-8 text-center backdrop-blur-sm">
+          <div class="flex items-center justify-center space-x-4 text-red-300/70">
+            <i class="fas fa-shield-exclamation text-lg"></i>
+            <span class="font-mono text-sm">ERRO 403 • ACESSO RESTRITO</span>
+            <i class="fas fa-lock text-lg"></i>
+          </div>
+        </div>
+
+        <!-- Botão de Ação -->
+        <div class="text-center">
+          <a
+            href="{{ url_for('placas.homepage') }}"
+            class="group relative inline-flex items-center px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/25 overflow-hidden"
+          >
+            <!-- Efeito de Brilho no Hover -->
+            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+            
+            <!-- Conteúdo do Botão -->
+            <i class="fas fa-home mr-3 text-lg group-hover:scale-110 transition-transform duration-200"></i>
+            <span class="relative">Voltar à Página Inicial</span>
+          </a>
+        </div>
+
+        <!-- Informações Adicionais -->
+        <div class="mt-8 pt-6 border-t border-red-500/20">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center text-red-400/60 text-sm">
+            <div class="flex items-center justify-center space-x-2">
+              <i class="fas fa-user-shield"></i>
+              <span>Permissões</span>
+            </div>
+            <div class="flex items-center justify-center space-x-2">
+              <i class="fas fa-exclamation-circle"></i>
+              <span>Restrito</span>
+            </div>
+            <div class="flex items-center justify-center space-x-2">
+              <i class="fas fa-info-circle"></i>
+              <span>Contate o Admin</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Decorativo -->
+      <div class="border-t border-red-500/20 bg-red-900/10 py-4">
+        <div class="text-center">
+          <div class="flex items-center justify-center space-x-6 text-red-400/40 text-xs">
+            <span>🔒</span>
+            <span>•</span>
+            <span>Sistema Seguro</span>
+            <span>•</span>
+            <span>🔒</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensagem Flutuante -->
+    <div class="text-center mt-8">
+      <p class="text-red-400/40 text-sm font-light animate-pulse">
+        Se você acredita que isso é um erro, entre em contato com o administrador do sistema
       </p>
-
-      <!-- Botão de ação -->
-      <a
-        href="{{ url_for('placas.homepage') }}"
-        class="btn btn-primary inline-flex items-center px-6 py-3"
-      >
-        <i class="fas fa-home mr-2"></i>
-        Voltar à Página Inicial
-      </a>
     </div>
   </div>
 </div>
+
+<style>
+  .glass-effect-advanced {
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+  }
+
+  /* Animações personalizadas */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  /* Efeito de brilho pulsante */
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(239, 68, 68, 0.5); }
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Adiciona efeito de digitação na mensagem
+    const message = document.querySelector('.text-xl');
+    if (message) {
+      const text = message.innerHTML;
+      message.innerHTML = '';
+      let i = 0;
+      
+      function typeWriter() {
+        if (i < text.length) {
+          message.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(typeWriter, 50);
+        }
+      }
+      
+      setTimeout(typeWriter, 1000);
+    }
+
+    // Efeito de partículas interativas
+    const container = document.querySelector('.absolute.inset-0');
+    for (let i = 0; i < 8; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'absolute w-1 h-1 bg-red-400/20 rounded-full';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.top = Math.random() * 100 + '%';
+      particle.style.animation = `float ${3 + Math.random() * 2}s ease-in-out infinite`;
+      particle.style.animationDelay = Math.random() * 2 + 's';
+      container.appendChild(particle);
+    }
+  });
+</script>
 {% endblock %}
