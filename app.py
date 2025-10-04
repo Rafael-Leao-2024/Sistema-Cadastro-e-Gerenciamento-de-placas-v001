@@ -1,8 +1,8 @@
 from grupo_andrade.main import create_app
 
+app = create_app()
 
 if __name__ == '__main__':
-    app = create_app()
 
     # app/__init__.py ou onde você cria sua aplicação
     
