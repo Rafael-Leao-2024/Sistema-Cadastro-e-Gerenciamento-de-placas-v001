@@ -1,8 +1,8 @@
-"""inicio
+"""inicio banco 
 
-Revision ID: 804a8ec0d1f0
+Revision ID: b694e93ac62c
 Revises: 
-Create Date: 2025-10-04 13:17:46.939603
+Create Date: 2025-10-04 17:14:38.853081
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '804a8ec0d1f0'
+revision = 'b694e93ac62c'
 down_revision = None
 branch_labels = None
 depends_on = None
