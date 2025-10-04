@@ -1,1 +1,1 @@
-web: gunicorn 'main:create_app()' --bind 0.0.0.0:$PORT
+web: gunicorn 'grupo_andrade.main:create_app()' --bind 0.0.0.0:$PORT
