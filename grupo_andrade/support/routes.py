@@ -34,7 +34,7 @@ def memoria_session(banco_dados):
 @support.route('/chat')
 @login_required
 def chat():
-    memory = memoria_session(banco_dados=os.environ.get("DATABASE_URL_AGENT", "sqlite:///memory_agent.db")) + f'?options=-c%20search_path=memory_agent'
+    memory = memoria_session(banco_dados=os.environ.get("DATABASE_URL_AGENT", "sqlite:///memory_agent.db")) + '?options=-c%20search_path=memory_agent'
     historicos = memory.buffer_as_messages
     mensagens = [("User", historico) if isinstance(historico, HumanMessage) else ("AI", historico) for historico in historicos]
     if not len(mensagens) > 1:
@@ -59,7 +59,7 @@ def agent_ferramenta(memory):
 @support.route('/question', methods=['POST'])
 @login_required
 def ask_question():
-    memory = memoria_session(banco_dados=os.environ.get("DATABASE_URL_AGENT", "sqlite:///memory_agent.db")) + f'?options=-c%20search_path=memory_agent'
+    memory = memoria_session(banco_dados=os.environ.get("DATABASE_URL_AGENT", "sqlite:///memory_agent.db")) + '?options=-c%20search_path=memory_agent'
     agente = agent_ferramenta(memory)
 
     data = request.get_json()
