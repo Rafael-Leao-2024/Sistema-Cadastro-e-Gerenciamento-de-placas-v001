@@ -15,9 +15,9 @@ def criar_preferencia(placas):
         for placa in placas
         ],
             "back_urls": {
-            "success": f"https://sistemacbm.com/#/login",
-            "failure": f"https://sistemacbm.com/#/login",
-            "pending": f"https://sistemacbm.com/#/login",
+            "success": f"https://sistema-cadastro-e-gerenciamento-de-placas-v001-officespace.up.railway.app/resultado_pagamento",
+            "failure": f"https://sistema-cadastro-e-gerenciamento-de-placas-v001-officespace.up.railway.app/resultado_pagamento",
+            "pending": f"https://sistema-cadastro-e-gerenciamento-de-placas-v001-officespace.up.railway.app/resultado_pagamento",
         },
         }
     corpo_js = json.dumps(corpo)

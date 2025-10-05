@@ -53,8 +53,7 @@ def relatorio_resultados(mes, ano, id_usuario=current_user):
 @pagamentos.route('/resultado_pagamento')
 @login_required
 def resultado_pagamento():
-    valor_pagamento = 1000
-    id_pagamento = 21151222#request.args.get('payment_id')
+    id_pagamento = request.args.get('payment_id')
     if id_pagamento == 'null' or id_pagamento == None:
         flash('Voce desistiu do pagamento caso queira falar com suporte chame no zap', 'warning')
         return redirect(url_for('pagamentos.relatorio'))        
