@@ -41,7 +41,8 @@ def create_app():
     bcrypt.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
-    migrate = Migrate(app, db=db)
+    migrate = Migrate()
+    migrate.init_app(app, db)
     
     from grupo_andrade.auth.routes import auth
     from grupo_andrade.users.routes import users
