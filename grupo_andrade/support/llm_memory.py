@@ -55,6 +55,5 @@ def conversa_memoria():
         history_messages_key="history",
         )
 
-
     return conv_chain
 

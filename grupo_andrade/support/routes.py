@@ -26,20 +26,25 @@ def inject_notificacoes_support():
 retriever, chain = initialize_chatbot()
 chain_memoria = conversa_memoria()
 
-def memoria_session(banco_dados):
-    message_history = SQLChatMessageHistory(session_id=current_user.id, connection_string=banco_dados)
+
+
+def memoria_session(banco_dados, nome_tabela):
+    message_history = SQLChatMessageHistory(session_id=str(current_user.id), connection_string=banco_dados, table_name=nome_tabela)
     memory = ConversationBufferMemory(chat_memory=message_history, memory_key="chat_history", return_messages=True)
     return memory
+
+
 
 @support.route('/chat')
 @login_required
 def chat():
-    memory = memoria_session(banco_dados=os.environ.get("DATABASE_URL"))
+    memory = memoria_session(banco_dados=os.environ.get("DATABASE_URL"), nome_tabela="message_store")
     historicos = memory.buffer_as_messages
     mensagens = [("User", historico) if isinstance(historico, HumanMessage) else ("AI", historico) for historico in historicos]
     if not len(mensagens) > 1:
         mensagens = []
     return render_template('support/chat.html', mensagens=mensagens)
+
 
 
 def agent_ferramenta(memory):
@@ -55,11 +60,10 @@ def agent_ferramenta(memory):
 
 
 
-
 @support.route('/question', methods=['POST'])
 @login_required
 def ask_question():
-    memory = memoria_session(banco_dados=os.environ.get("DATABASE_URL"))
+    memory = memoria_session(banco_dados=os.environ.get("DATABASE_URL"), nome_tabela="message_store_agente")
     agente = agent_ferramenta(memory)
 
     data = request.get_json()
@@ -72,7 +76,7 @@ def ask_question():
             for ctx in contextos
         )
         resposta_agente = agente.invoke(pergunta)
-        resposta_memoria = chain_memoria.invoke(input={"input": resposta_agente.get('input'), "contexto_retriver": contexto_retriver, "contexto_ferramentas":resposta_agente.get('output')}, config={'configurable': { 'session_id': current_user.id}})
+        resposta_memoria = chain_memoria.invoke(input={"input": resposta_agente.get('input'), "contexto_retriver": contexto_retriver, "contexto_ferramentas":resposta_agente.get('output')}, config={'configurable': { 'session_id': str(current_user.id)}})
         
         return jsonify({"response": resposta_memoria})
     except Exception as erro:

@@ -74,6 +74,7 @@ class Endereco(db.Model):
 
 
 class Pagamento(db.Model):
+    
     __tablename__ = 'pagamentos'
     
     id = db.Column(db.Integer, primary_key=True)
