@@ -106,7 +106,7 @@ class Notificacao(db.Model):
     lida = db.Column(db.Boolean, default=False)
     data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
     id_solicitacao = db.Column(db.Integer, db.ForeignKey('placas.id'), nullable=False)
-    id_usuario = db.Column(db.Integer, db.ForeignKey('users.despachante'), nullable=False)
+    id_usuario = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     solicitacao = db.relationship('Placa', backref='notificacoes', lazy=True)
 
