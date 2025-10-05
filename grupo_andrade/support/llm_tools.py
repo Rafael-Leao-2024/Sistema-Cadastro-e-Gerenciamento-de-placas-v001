@@ -14,7 +14,7 @@ load_dotenv()
 @tool
 def informacao_placa(placa):
     """"
-descricao: funcao para pegar informaçao de placa pela PLACA 
+descricao: funcao para pegar informacao de placa pela PLACA 
 caso queiram "consultar" , "saber", "informa" e etc .
 argumentos: placa type(string) Exemplo ABC0A00
 retorno informacoes em TEXTO
@@ -22,7 +22,7 @@ retorno informacoes em TEXTO
     placas = Placa.query.filter(Placa.placa.ilike(f"%{placa}%")).order_by(Placa.date_create.desc()).all()
     informacoes = [
         {
-            "placa":placa.placa, "endereço": placa.endereco_placa,
+            "placa":placa.placa, "endereco": placa.endereco_placa,
             "revavam": placa.renavan, "CRLV": placa.crlv,
             "solicitante": placa.author.username,
             "data solicitada": placa.date_create,
@@ -38,7 +38,7 @@ retorno informacoes em TEXTO
     
 @tool
 def meu_debito(mes):
-    """Descriçao do nome da funcao pode ser chamada de meu 'faturameto' 'minhas_solicitacoes' etc tudo que envolve em querer a relacao de placas para pagamento ou conferencia
+    """Descricao do nome da funcao pode ser chamada de meu 'faturameto' 'minhas_solicitacoes' etc tudo que envolve em querer a relacao de placas para pagamento ou conferencia
     Args:
         mes (inteiro): mes pasado para a funcao calcular o relatorio
     Returns:
@@ -88,7 +88,7 @@ def tirar_permissao_admin(id):
 
 @tool
 def cotaçao_moeda(dinheiro) -> float:
-    """Consulta a cotação atual do dinheiro em reais usando a AwesomeAPI.
+    """Consulta a cotacao atual do dinheiro em reais usando a AwesomeAPI.
     argumento exemplo de moeda BTC"""
     try:
         url = f"https://economia.awesomeapi.com.br/json/last/{dinheiro}-BRL"
@@ -97,7 +97,7 @@ def cotaçao_moeda(dinheiro) -> float:
         cotacao = float(data[f"{dinheiro}BRL"]["bid"])
         return cotacao
     except Exception as e:
-        return f"Erro ao consultar cotação: {e}"
+        return f"Erro ao consultar cotacao: {e}"
 
 
 ferramentas = [cotaçao_moeda, meu_debito, informacao_placa, permissao_admin, tirar_permissao_admin]

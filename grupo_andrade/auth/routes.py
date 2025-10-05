@@ -59,7 +59,7 @@ def reset_request():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         enviar_email_reset_senha(user)
-        flash('Um e-mail foi enviado com instruções para redefinir sua senha.', 'info')
+        flash('Um e-mail foi enviado com instrucoes para redefinir sua senha.', 'info')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_request.html', title='Reset Password', form=form)
 
@@ -76,6 +76,6 @@ def reset_token(token):
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
         user.password = hashed_password
         db.session.commit()
-        flash('Sua senha foi atualizada! Agora você pode fazer login', 'success')
+        flash('Sua senha foi atualizada! Agora voce pode fazer login', 'success')
         return redirect(url_for('auth.login'))
     return render_template('auth/reset_token.html', title='Reset Password', form=form)

@@ -1,6 +1,5 @@
 import os
 import boto3
-from werkzeug.utils import secure_filename
 from flask import flash, redirect, url_for, send_file
 from dotenv import load_dotenv
 import io

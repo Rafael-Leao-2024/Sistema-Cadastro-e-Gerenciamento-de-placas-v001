@@ -10,7 +10,7 @@ class EmplacamentoForm(FlaskForm):
                        validators=[DataRequired(), Length(min=7, max=7)])
     renavan = StringField('Renavan', 
                          validators=[DataRequired(), Length(min=9, max=11)])
-    endereco_placa = StringField('Endereço da Placa', 
+    endereco_placa = StringField('Endereco da Placa', 
                                 validators=[DataRequired(), Length(min=5, max=100)],
                                 widget=TextArea())
     crlv = StringField('CRLV', 
@@ -34,7 +34,7 @@ class EmplacamentoUpdateForm(FlaskForm):
                        validators=[DataRequired(), Length(min=7, max=7)])
     renavan = StringField('Renavan', 
                          validators=[DataRequired(), Length(min=9, max=11)])
-    endereco_placa = StringField('Endereço da Placa', 
+    endereco_placa = StringField('Endereco da Placa', 
                                 validators=[DataRequired(), Length(min=5, max=100)],
                                 )
     crlv = StringField('CRLV', 

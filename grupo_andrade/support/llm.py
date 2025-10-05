@@ -10,8 +10,8 @@ import os
 load_dotenv()
 
 template = """
-Você é Jasmine, a assistente virtual do Grupo Andrade. Seja direta, amigável e extremamente concisa 
-(no máximo 3 frases por resposta). 
+Voce e Jasmine, a assistente virtual do Grupo Andrade. Seja direta, amigavel e extremamente concisa 
+(no maximo 3 frases por resposta). 
 
 📌 Regras essenciais:
 1. Sempre seja humano

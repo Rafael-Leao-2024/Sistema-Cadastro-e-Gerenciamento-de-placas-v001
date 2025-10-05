@@ -90,7 +90,7 @@ def placa_detail(placa_id):
                 placa.received_at = None
                 placa.id_user_recebeu = None
             else:
-                flash("Não é possível desmarcar após 10 minutos.", 'info')
+                flash("Nao e possivel desmarcar apos 10 minutos.", 'info')
         db.session.commit()
         return redirect(url_for('placas.placa_detail', placa_id=placa.id))    
     return render_template('placas/placa_detail.html', placa=placa, form=form, titulo='detalhes', usuario=usuario, usuario_solicitante=usuario_solicitante)
@@ -100,12 +100,12 @@ def placa_detail(placa_id):
 def delete(placa_id):
     placa = Placa.query.get_or_404(placa_id)
     if placa.author != current_user and current_user.email != "rafaelampaz6@gmail.com":
-        flash("Você não tem permissão para deletar esta placa.", "warning")
+        flash("Voce nao tem permissão para deletar esta placa.", "warning")
         return redirect(url_for('placas.minhas_placas'))
 
     time_limit = placa.date_create + timedelta(hours=24)
     if datetime.now() > time_limit:
-        flash("Você só pode deletar placas criadas há menos de 24 horas.", "error")
+        flash("Voce so pode deletar placas criadas ha menos de 24 horas.", "error")
         return redirect(url_for('placas.minhas_placas'))
 
     db.session.delete(placa)
@@ -123,7 +123,7 @@ def consulta():
         if chassi:
             resultados = Placa.query.filter(Placa.chassi.ilike(f"%{chassi.upper()}%")).order_by(Placa.date_create.desc()).all()
             if not resultados:
-                flash("Placa não encontrada!", "warning")
+                flash("Placa nao encontrada!", "warning")
             else:
                 flash(f"Resultados Encontrados {len(resultados)}", "success")
     return render_template('placas/consulta.html', resultados=resultados, form=form)
@@ -139,7 +139,7 @@ def editar_placa(placa_id):
 
     if placa.id_user != current_user.id:
         if not current_user.is_admin:
-            flash("Você não tem permissão para editar esta placa.", "danger")
+            flash("Voce nao tem permissao para editar esta placa.", "danger")
             return redirect(url_for('placas.placa_detail', placa_id=placa.id))
 
     if request.method == 'POST':
@@ -199,7 +199,7 @@ def solicitar_placas():
         db.session.refresh(nova_placa)
         
         notificacao = Notificacao(
-            mensagem=f"O usuário {current_user.username} fez uma nova solicitação.{len(lista_placas)} data e hora {nova_placa.date_create}",
+            mensagem=f"O usuario {current_user.username} fez uma nova solicitação.{len(lista_placas)} data e hora {nova_placa.date_create}",
             id_solicitacao=nova_placa.id,
             id_usuario=current_user.despachante,
         )
@@ -216,7 +216,7 @@ def solicitar_placas():
             flash('Solicitaçao enviada com sucesso e e-mail enviado!', 'success')
             return redirect(url_for('placas.minhas_placas'))
         else:
-            flash('Voce não preencheu os campos com os dados!', 'info')
+            flash('Voce nao preencheu os campos com os dados!', 'info')
             return redirect(url_for('placas.solicitar_placas'))     
     return render_template('placas/solicitar_placas.html', titulo='solicitar varias placas', endereco=endereco, placa=placa, despachante=despachante)
 
@@ -246,7 +246,7 @@ def marcar_como_lida(notificacao_id):
     notificacao = Notificacao.query.get_or_404(notificacao_id)
     notificacao.lida = True
     db.session.commit()
-    flash('Notificação marcada como lida.', 'success')
+    flash('Notificacao marcada como lida.', 'success')
     return jsonify({'success': True})
 
 
@@ -257,12 +257,12 @@ def marcar_todas_lidas():
     # todas minhas notificacoes pra marcar como lida
     minhas_notificacoes = Notificacao.query.filter_by(id_usuario=current_user.id, lida=False).all()
     if not minhas_notificacoes:
-        return jsonify({'success': False, 'message': 'Nenhuma notificação não lida encontrada.'})   
+        return jsonify({'success': False, 'message': 'Nenhuma notificacao nao lida encontrada.'})   
     for notif in minhas_notificacoes:
         notif.lida = True
 
     db.session.commit()
-    flash('Todas as notificações marcadas como lidas.', 'success')
+    flash('Todas as notificacoes marcadas como lidas.', 'success')
     # retorne para mesma pagina atual
     return jsonify({'success': True})
 

@@ -9,15 +9,15 @@ import os
 load_dotenv()
 
 sistema = """
-Você é Jasmine, a assistente virtual do Grupo Andrade. Seja direta, amigável e extremamente concisa 
-(no máximo 3 frases por resposta). 
+Voce e Jasmine, a assistente virtual do Grupo Andrade. Seja direta, amigavel e extremamente concisa 
+(no maximo 3 frases por resposta). 
 
 📌 Regras essenciais:
 1. Sempre seja humano
 2. Responda APENAS com o contexto fornecido 
 3. Seja específica sobre prazos, documentos e valores quando perguntado
 4. use emojis nas respostas a cada duas resposta.
-5. use informaçao de  resultados "resposta_do_agente_para_LLM" para melhor esclarecimento de ferramentas 
+5. use informacao de  resultados "resposta_do_agente_para_LLM" para melhor esclarecimento de ferramentas 
 
 contexto de ferramentas:
 {contexto_ferramentas}
@@ -30,16 +30,16 @@ prompt = ChatPromptTemplate.from_messages([("system", sistema),
                                            MessagesPlaceholder(variable_name='history'),
                                             ("human", "{input}")])
 
-# persistir todas as conversas baseadas em sessão do usuário em um banco de dados SQL  
+# persistir todas as conversas baseadas em sessao do usuario em um banco de dados SQL  
 def get_session_history_db(session_id):  
     return SQLChatMessageHistory(session_id, connection=os.environ.get("DATABASE_URL")) 
 
-# crie uma função de janela de buffer de memória para retornar as últimas K conversas  
+# crie uma funcao de janela de buffer de memoria para retornar as ultimas K conversas  
 def memory_window(messages, k=30):  
     return messages[-(k+1):]
 
 def conversa_memoria():
-# crie uma cadeia LLM simples que usa apenas as últimas K conversas  
+# crie uma cadeia LLM simples que usa apenas as ultimas K conversas  
     chatgpt = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
 
     llm_chain = (RunnablePassthrough.assign(history=lambda x: memory_window(x["history"]))  
@@ -47,7 +47,7 @@ def conversa_memoria():
                 | chatgpt  
                 | StrOutputParser()) 
 
-    # crie uma cadeia de conversação para lidar com o histórico baseado em sessão.  
+    # crie uma cadeia de conversacao para lidar com o historico baseado em sessao.  
     conv_chain = RunnableWithMessageHistory(
         llm_chain,
         get_session_history_db,

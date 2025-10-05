@@ -11,15 +11,15 @@ def validar_placa(form, field):
         raise ValidationError('Formato de placa inválido. Use AAA1234 ou AAA1B23')
 
 def validar_renavam(form, field):
-    """Valida número do RENAVAM"""
+    """Valida numero do RENAVAM"""
     renavam = field.data
     if len(renavam) not in (9, 11) or not renavam.isdigit():
-        raise ValidationError('RENAVAM deve ter 9 ou 11 dígitos numéricos')
+        raise ValidationError('RENAVAM deve ter 9 ou 11 dígitos numericos')
 
 def validar_email_dominio(form, field):
-    """Valida se email não é de domínio temporário"""
+    """Valida se email nao e de dominio temporario"""
     dominios_bloqueados = ['mailinator.com', 'tempmail.com', '10minutemail.com']
     dominio = field.data.split('@')[-1]
     if dominio in dominios_bloqueados:
-        raise ValidationError('Este domínio de email não é permitido')
+        raise ValidationError('Este dominio de email nao e permitido')
     

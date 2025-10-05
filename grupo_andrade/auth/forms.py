@@ -17,12 +17,12 @@ class RegistrationForm(FlaskForm):
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user:
-            raise ValidationError('Esse username já está em uso. Por favor escolha outro.')
+            raise ValidationError('Esse username ja esta em uso. Por favor escolha outro.')
 
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user:
-            raise ValidationError('Esse email já está em uso. Por favor escolha outro.')
+            raise ValidationError('Esse email ja esta em uso. Por favor escolha outro.')
 
 class LoginForm(FlaskForm):
     email = StringField('Email',
@@ -40,7 +40,7 @@ class RequestResetForm(FlaskForm):
     def validate_email(self, email):
         user = User.query.filter_by(email=email.data).first()
         if user is None:
-            raise ValidationError('Não existe uma conta com esse email. Você deve registrar primeiro.')
+            raise ValidationError('Nao existe uma conta com esse email. Voce deve registrar primeiro.')
 
 class ResetPasswordForm(FlaskForm):
     password = PasswordField('Password', 

@@ -9,7 +9,7 @@ def gerar_token_reset(user, expires_sec=1800):
     return s.dumps({'user_id': user.id})
 
 def verificar_token_reset(token):
-    """Verifica se o token de reset é válido"""
+    """Verifica se o token de reset e valido"""
     s = Serializer(current_app.config['SECRET_KEY'])
     try:
         user_id = s.loads(token)['user_id']

@@ -18,13 +18,13 @@ class UpdateAccountForm(FlaskForm):
         if username.data != current_user.username:
             user = User.query.filter_by(username=username.data).first()
             if user:
-                raise ValidationError('Esse username já está em uso. Por favor escolha outro.')
+                raise ValidationError('Esse username ja esta em uso. Por favor escolha outro.')
 
     def validate_email(self, email):
         if email.data != current_user.email:
             user = User.query.filter_by(email=email.data).first()
             if user:
-                raise ValidationError('Esse email já está em uso. Por favor escolha outro.')
+                raise ValidationError('Esse email ja esta em uso. Por favor escolha outro.')
 
 class EnderecoForm(FlaskForm):
     endereco = StringField('Endereço Completo',

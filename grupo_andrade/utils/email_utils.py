@@ -10,7 +10,7 @@ def enviar_email_reset_senha(user):
     mensagem = Message('Password Reset Request', sender='noreply@demo.com', recipients=[user.email, app.config['MAIL_DEFAULT_SENDER']])
     mensagem.body = f'''Para redefinir sua senha, visite o seguinte link::
 {url_for('auth.reset_token', token=token, _external=True)}
-Se você não fez esta solicitação, simplesmente ignore este e-mail e nenhuma alteração será feita.
+Se voce nao fez esta solicitacao, simplesmente ignore este e-mail e nenhuma alteração será feita.
 obrigado {user.username}
 '''
     mail.send(mensagem)
@@ -18,7 +18,7 @@ obrigado {user.username}
 
 def enviar_email_confirmacao_placa(user, placas):
     mensagem = Message(
-        subject='Solicitação de Placas',
+        subject='Solicitacao de Placas',
         recipients=[user.email]
     )
     detalhes_placas = ""
@@ -33,7 +33,7 @@ Link para detalhes: {url_for('placas.placa_detail', placa_id=placa.id, _external
 '''
     mensagem.body = f'''
 Olá Grupo Andrade,
-Segue abaixo os detalhes das solicitações de placas:
+Segue abaixo os detalhes das solicitacoes de placas:
 {detalhes_placas}
 
 Atenciosamente,

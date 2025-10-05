@@ -3,7 +3,7 @@ from grupo_andrade.models import Placa
 from sqlalchemy import extract
 
 def formatar_data_completa(data):
-    """Formata data no padrão dd/mm/YYYY HH:MM"""
+    """Formata data no padrao dd/mm/YYYY HH:MM"""
     return data.strftime('%d/%m/%Y %H:%M') if data else ""
 
 def verificar_status_placa(placa):
@@ -17,7 +17,7 @@ def verificar_status_placa(placa):
     return "Pendente"
 
 def contar_placas_por_mes(user_id, mes, ano):
-    """Conta placas de um usuário em determinado mês/ano"""
+    """Conta placas de um usuario em determinado mes/ano"""
     return Placa.query.filter(
         Placa.id_user == user_id,
         extract('month', Placa.date_create) == mes,

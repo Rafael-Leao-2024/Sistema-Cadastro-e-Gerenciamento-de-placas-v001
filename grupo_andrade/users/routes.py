@@ -19,7 +19,7 @@ def endereco():
         novo_endereco = Endereco(endereco=endereco, id_user=current_user.id)
         db.session.add(novo_endereco)
         db.session.commit()
-        flash('Endereço Atualizado com Sucesso!', 'success')
+        flash('Endereco Atualizado com Sucesso!', 'success')
         return redirect(url_for('users.endereco'))
     elif request.method == 'GET':
         endereco = Endereco.query.filter_by(id_user=current_user.id).order_by(Endereco.id.desc()).first()
