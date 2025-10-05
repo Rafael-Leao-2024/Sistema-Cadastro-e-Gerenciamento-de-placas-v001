@@ -42,7 +42,7 @@ def upload_file_anexo(id_placa):
         files = request.files.getlist('file')
         if files[0].filename == '':
             flash('Selecione um ou mais arquivos', category='info')
-            return redirect(url_for('documentos.upload-file_anexo', id_placa=placa.id))   
+            return redirect(url_for('documentos.upload_file_anexo', id_placa=placa.id))   
         for file in files:
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
@@ -52,17 +52,17 @@ def upload_file_anexo(id_placa):
                     flash(f'Arquivo {filename} enviado com sucesso ')
                 except NoCredentialsError:
                     flash('Credenciais invalidas', 'info')
-                    return redirect(url_for('documentos.upload-file_anexo', id_placa=placa.id))
+                    return redirect(url_for('documentos.upload_file_anexo', id_placa=placa.id))
                 except Exception as e:
                     flash(f'Erro no upload {str(e)}', 'info')
-                    return redirect(url_for('documentos.upload-file_anexo', id_placa=placa.id))
+                    return redirect(url_for('documentos.upload_file_anexo', id_placa=placa.id))
                                 
                 file_db = UploadFile(filename=filename, id_usuario=current_user.id, id_placa=placa.id)
                 db.session.add(file_db)
                 db.session.commit()
             else:
                 flash('apenas arquivos PDFs sao permitidos', 'info')
-                return redirect(url_for('documentos.upload-file_anexo', id_placa=placa.id))
+                return redirect(url_for('documentos.upload_file_anexo', id_placa=placa.id))
                 
         flash(message="arquivos armazenados com sucesso", category='success')
         return redirect(url_for('documentos.download_anexos', id_placa=id_placa))           
