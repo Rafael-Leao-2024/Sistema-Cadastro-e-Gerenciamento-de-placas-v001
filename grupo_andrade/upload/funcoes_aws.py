@@ -24,7 +24,7 @@ def enviar_arquivo_s3(file, filename):
             'ACL': 'public-read'  # Tornar o arquivo público
         }
     )
-    return
+    return True
 
 def ver_arquivo(filename):
     try:

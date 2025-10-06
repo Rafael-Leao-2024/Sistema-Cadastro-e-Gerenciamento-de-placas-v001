@@ -93,7 +93,7 @@ class UploadFile(db.Model):
     __tablename__ = 'uploads'
 
     id = db.Column(db.Integer, primary_key=True)
-    filename = db.Column(db.String(20), unique=False, nullable=False)
+    filename = db.Column(db.String(200), unique=False, nullable=False)
     date_create = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     id_usuario = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     id_placa = db.Column(db.Integer, db.ForeignKey('placas.id'), nullable=False)
