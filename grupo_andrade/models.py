@@ -56,9 +56,10 @@ class Placa(db.Model):
     placa_a_caminho = db.Column(db.Boolean, default=False)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     id_user_recebeu = db.Column(db.Integer)
+    id_user_recebeu_nao = db.Column(db.Integer)
 
     uploads = db.relationship('UploadFile', backref='placa', lazy=True, cascade='all, delete-orphan')
-    solicitacao = db.relationship('Placa', backref='notificacoes', lazy=True, cascade='all, delete-orphan')
+    notificacoes = db.relationship('Notificacao', backref='placa', lazy=True, cascade='all, delete-orphan')
 
     def __repr__(self):
         return f"Placa('{self.placa}', '{self.date_create}')"
