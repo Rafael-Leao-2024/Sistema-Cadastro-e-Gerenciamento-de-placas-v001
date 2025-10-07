@@ -98,7 +98,7 @@ def placa_detail(placa_id):
 @placas.route("/minhas-placas/<int:placa_id>/delete", methods=['GET', 'POST'])
 @login_required
 def delete(placa_id):
-    placa = Placa.query.get_or_404(placa_id)
+    placa = Placa.query.get(placa_id)
     if placa.author != current_user and current_user.email != "rafaelampaz6@gmail.com":
         flash("Voce nao tem permissão para deletar esta placa.", "warning")
         return redirect(url_for('placas.minhas_placas'))
