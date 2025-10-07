@@ -56,7 +56,6 @@ class Placa(db.Model):
     placa_a_caminho = db.Column(db.Boolean, default=False)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     id_user_recebeu = db.Column(db.Integer)
-    id_user_recebeu_ = db.Column(db.Integer)
 
     uploads = db.relationship('UploadFile', backref='placa', lazy=True, cascade='all, delete-orphan')
 
@@ -112,7 +111,7 @@ class Notificacao(db.Model):
     id_solicitacao = db.Column(db.Integer, db.ForeignKey('placas.id'), nullable=False)
     id_usuario = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    solicitacao = db.relationship('Placa', backref='notificacoes', lazy=True)
+    solicitacao = db.relationship('Placa', backref='notificacoes', lazy=True, cascade='all, delete-orphan')
 
     def __repr__(self):
         return f"Notificacao(mensagem='{self.mensagem}', lida={self.lida})"
