@@ -16,12 +16,13 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(100), nullable=False)
-    placas = db.relationship('Placa', backref='author', lazy=True, cascade='all, delete-orphan')
-    enderecos = db.relationship('Endereco', backref='user', lazy=True, cascade='all, delete-orphan')
-    pagamentos = db.relationship('Pagamento', backref='user', lazy=True, cascade='all, delete-orphan')
     is_admin = db.Column(db.Boolean, default=False)
     data_criacao = db.Column(db.DateTime)
     despachante = db.Column(db.Integer, default=None)
+
+    placas = db.relationship('Placa', backref='author', lazy=True, cascade='all, delete-orphan')
+    enderecos = db.relationship('Endereco', backref='user', lazy=True, cascade='all, delete-orphan')
+    pagamentos = db.relationship('Pagamento', backref='user', lazy=True, cascade='all, delete-orphan')
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'])
@@ -101,6 +102,8 @@ class UploadFile(db.Model):
     date_create = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     id_usuario = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     id_placa = db.Column(db.Integer, db.ForeignKey('placas.id'), nullable=False)
+
+    
     
 class Notificacao(db.Model):
 

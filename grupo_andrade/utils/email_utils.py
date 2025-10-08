@@ -4,6 +4,9 @@ from grupo_andrade.main import mail
 import requests
 import os
 
+from threading import Thread
+from flask import current_app
+
 
 def enviar_email_reset_senha(user):
     token = user.get_reset_token()
@@ -14,6 +17,13 @@ Se voce nao fez esta solicitacao, simplesmente ignore este e-mail e nenhuma alte
 obrigado {user.username}
 '''
     mail.send(mensagem)
+
+
+
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg)
+
 
 
 def enviar_email_confirmacao_placa(user, placas):
@@ -40,7 +50,12 @@ Atenciosamente,
 {user.username}
 Equipe de Atendimento
 '''
-    mail.send(mensagem)
+    # Envia o email em uma thread
+    app = current_app._get_current_object()
+    thr = Thread(target=send_async_email, args=[app, mensagem])
+    thr.start()
+    return thr
+
 
 
 def verificar_email(email):

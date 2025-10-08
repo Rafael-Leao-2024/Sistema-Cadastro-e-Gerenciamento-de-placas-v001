@@ -73,3 +73,16 @@ def account():
 def info_user(user_id):
     user = User.query.filter(User.id == user_id).first()
     return render_template('users/info_user.html', user=user)
+
+
+@users.route("/usuario/<int:user_id>/delete", methods=['GET', 'POST'])
+@login_required
+def deletar_usuario(user_id):
+    user = User.query.filter(User.id == user_id).first()
+    if not user:
+        flash('Usuario nao encontro ', 'info')
+        return redirect(url_for('users.info_user', user_id=user_id))
+    db.session.delete(user)
+    db.session.commit()
+    flash(f'Usuario {user.username} deletado', 'success')
+    return redirect(url_for('users.info_user', user_id=user_id))
