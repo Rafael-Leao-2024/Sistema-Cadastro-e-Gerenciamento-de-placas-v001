@@ -3,17 +3,20 @@ from flask import  url_for, current_app as app
 from grupo_andrade.main import mail
 import requests
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 def enviar_email_reset_senha(user):
-    token = user.get_reset_token()
-    mensagem = Message('Password Reset Request', sender='noreply@demo.com', recipients=[user.email, app.config['MAIL_DEFAULT_SENDER']])
-    mensagem.body = f'''Para redefinir sua senha, visite o seguinte link::
+    with mail.connect() as conn:
+        token = user.get_reset_token()
+        mensagem = Message('Password Reset Request', sender='noreply@demo.com', recipients=[user.email, app.config['MAIL_DEFAULT_SENDER']])
+        mensagem.body = f'''Para redefinir sua senha, visite o seguinte link::
 {url_for('auth.reset_token', token=token, _external=True)}
 Se voce nao fez esta solicitacao, simplesmente ignore este e-mail e nenhuma alteração será feita.
 obrigado {user.username}
 '''
-    mail.send(mensagem)
+        conn.send(mensagem)
 
 
 def enviar_email_confirmacao_placa(user, placas):
