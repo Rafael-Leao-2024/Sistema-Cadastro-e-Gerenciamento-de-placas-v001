@@ -4,20 +4,42 @@ from grupo_andrade.main import mail
 import requests
 import os
 from dotenv import load_dotenv
+from redmail import EmailSender
 
 
 load_dotenv()
 
+email = EmailSender(
+    host="smtp.gmail.com",
+    port=587,
+    username="rafaelampaz6@gmail.com",
+    password="zlxrjclbmxqbgalb"
+)
 
-def enviar_email_reset_senha(user):
-    token = user.get_reset_token()
-    mensagem = Message('Password Reset Request', sender='noreply@demo.com', recipients=[user.email, app.config['MAIL_DEFAULT_SENDER']])
-    mensagem.body = f'''Para redefinir sua senha, visite o seguinte link::
+
+def enviar_email_reset_senha(usuario):
+    token = usuario.get_reset_token()
+    # Enviar uma mensagem de e-mail simples
+    email.send(
+        subject="Assunto do E-mail",
+        receivers=[usuario.email],
+        text=f'''Para redefinir sua senha, visite o seguinte link::
 {url_for('auth.reset_token', token=token, _external=True)}
 Se voce nao fez esta solicitacao, simplesmente ignore este e-mail e nenhuma alteração será feita.
-obrigado {user.username}
-'''
-    mail.send(mensagem)
+obrigado {usuario.username}'''
+)
+
+
+
+# def enviar_email_reset_senha(user):
+#     token = user.get_reset_token()
+#     mensagem = Message('Password Reset Request', sender='noreply@demo.com', recipients=[user.email, app.config['MAIL_DEFAULT_SENDER']])
+#     mensagem.body = f'''Para redefinir sua senha, visite o seguinte link::
+# {url_for('auth.reset_token', token=token, _external=True)}
+# Se voce nao fez esta solicitacao, simplesmente ignore este e-mail e nenhuma alteração será feita.
+# obrigado {user.username}
+# '''
+#     mail.send(mensagem)
 
 
 def enviar_email_confirmacao_placa(user, placas):
