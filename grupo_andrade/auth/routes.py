@@ -58,9 +58,13 @@ def reset_request():
     form = RequestResetForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        enviar_email_reset_senha(user)
-        flash('Um e-mail foi enviado com instrucoes para redefinir sua senha.', 'info')
-        return redirect(url_for('auth.login'))
+        if user:
+            enviar_email_reset_senha(user)
+            flash('Um e-mail foi enviado com instrucoes para redefinir sua senha.', 'info')
+            return redirect(url_for('auth.login'))
+        else:
+            flash('usuario nao encontrado ', 'info')
+            return redirect(url_for(request.url))
     return render_template('auth/reset_request.html', title='Reset Password', form=form)
 
 @auth.route("/reset_password/<token>", methods=['GET', 'POST'])

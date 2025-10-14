@@ -1,13 +1,15 @@
-from flask import Blueprint, flash, request, redirect, url_for, send_from_directory, render_template
+from flask import Blueprint, flash, request, redirect, url_for, render_template
 from werkzeug.utils import secure_filename
 from flask import current_app
+from flask_login import login_required, current_user
 import os
+
+from botocore.exceptions import NoCredentialsError
+
 from grupo_andrade.models import UploadFile, Placa
 from grupo_andrade.main import db
-from flask_login import login_required, current_user
 from grupo_andrade.placas.routes import injetar_notificacao
 from grupo_andrade.upload.funcoes_aws import enviar_arquivo_s3, ver_arquivo
-from botocore.exceptions import NoCredentialsError
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -72,6 +74,10 @@ def upload_file_anexo(id_placa):
 @login_required
 def download_anexos(id_placa):
     placa = Placa.query.filter(Placa.id == id_placa).first()
+    if not placa:
+        flash(f'Placa nao encontrada com id {id_placa}.', 'info')
+        return redirect(url_for('placas.gerenciamento_pedidos'))
+
     if current_user.id != placa.id_user and not current_user.is_admin:
         flash('Vocw nao tem permissao para acessar esses arquivos.', 'danger')
         return redirect(url_for('placas.gerenciamento_pedidos'))

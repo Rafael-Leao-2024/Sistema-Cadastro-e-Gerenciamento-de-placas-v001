@@ -7,16 +7,48 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
+import requests
+import os
+
 def enviar_email_reset_senha(user):
-    with mail.connect() as conn:
-        token = user.get_reset_token()
-        mensagem = Message('Password Reset Request', sender='noreply@demo.com', recipients=[user.email, app.config['MAIL_DEFAULT_SENDER']])
-        mensagem.body = f'''Para redefinir sua senha, visite o seguinte link::
-{url_for('auth.reset_token', token=token, _external=True)}
-Se voce nao fez esta solicitacao, simplesmente ignore este e-mail e nenhuma alteração será feita.
-obrigado {user.username}
-'''
-        conn.send(mensagem)
+    token = user.get_reset_token()
+    link = f"{url_for('auth.reset_token', token=token, _external=True)}"
+    corpo = f"""
+    Para redefinir sua senha, visite o seguinte link:
+    {link}
+
+    Se você não fez esta solicitação, ignore este e-mail.
+    """
+
+    headers = {
+        "accept": "application/json",
+        "api-key": os.getenv("CHAVE_API_DE_EMAIL_BRAVO"),
+        "content-type": "application/json",
+    }
+
+    data = {
+        "sender": {"name": "Grupo Andrade", "email": "rafaelampaz6@gmail.com"},
+        "to": [{"email": user.email}],
+        "subject": "Redefinição de Senha",
+        "textContent": corpo,
+    }
+
+    response = requests.post("https://api.brevo.com/v3/smtp/email", headers=headers, json=data)
+    if response.status_code != 201:
+        print("Erro ao enviar e-mail:", response.text)
+
+
+# def enviar_email_reset_senha(user):
+#     with mail.connect() as conn:
+#         token = user.get_reset_token()
+#         mensagem = Message('Password Reset Request', sender='noreply@demo.com', recipients=[user.email, app.config['MAIL_DEFAULT_SENDER']])
+#         mensagem.body = f'''Para redefinir sua senha, visite o seguinte link::
+# {url_for('auth.reset_token', token=token, _external=True)}
+# Se voce nao fez esta solicitacao, simplesmente ignore este e-mail e nenhuma alteração será feita.
+# obrigado {user.username}
+# '''
+#         conn.send(mensagem)
 
 
 def enviar_email_confirmacao_placa(user, placas):
