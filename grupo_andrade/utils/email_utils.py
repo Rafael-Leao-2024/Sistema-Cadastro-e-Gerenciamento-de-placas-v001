@@ -11,9 +11,10 @@ load_dotenv()
 
 email = EmailSender(
     host="smtp.gmail.com",
-    port=587,
-    username="rafaelampaz6@gmail.com",
-    password="zlxrjclbmxqbgalb"
+    port=int(os.environ.get('PORT')),
+    username=os.environ.get('MAIL_USERNAME'),
+    password=os.environ.get('MAIL_PASSWORD'),
+    use_starttls=True
 )
 
 
@@ -22,6 +23,7 @@ def enviar_email_reset_senha(usuario):
     # Enviar uma mensagem de e-mail simples
     email.send(
         subject="Assunto do E-mail",
+        sender="rafaelampaz6@gmail.com",
         receivers=[usuario.email],
         text=f'''Para redefinir sua senha, visite o seguinte link::
 {url_for('auth.reset_token', token=token, _external=True)}
