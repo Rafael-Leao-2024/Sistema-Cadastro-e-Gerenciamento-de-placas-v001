@@ -11,7 +11,7 @@ load_dotenv()
 
 email = EmailSender(
     host="smtp.gmail.com",
-    port=int(os.environ.get('MAIL_PORT')),
+    port=int(os.environ.get('PORT')),
     username=os.environ.get('MAIL_USERNAME'),
     password=os.environ.get('MAIL_PASSWORD'),
     use_starttls=True
