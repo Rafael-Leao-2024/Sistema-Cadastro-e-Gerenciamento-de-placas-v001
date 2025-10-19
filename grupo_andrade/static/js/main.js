@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const notificacaoDropdown = document.getElementById('notificacaoDropdown');
     const notificacoesLista = document.getElementById('notificacoesLista');
     const marcarTodasLidas = document.getElementById('marcarTodasLidas');
+    const urlMinhasPlacas = document.getElementById('notificacoesLista').dataset.urlMinhasPlacas;
+
 
     // Alternar dropdown
     notificacaoBtn.addEventListener('click', function() {
@@ -39,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="flex justify-between items-start">
                             <div class="flex-1">
                                 <p class="text-sm ${notif.lida ? 'text-gray-600' : 'text-gray-800 font-medium'}">
-                                    ${notif.mensagem}
+                                    <a href="${urlMinhasPlacas}">${notif.mensagem}</a>
                                 </p>
                                 <p class="text-xs text-gray-500 mt-1">${notif.data_criacao}</p>
                             </div>

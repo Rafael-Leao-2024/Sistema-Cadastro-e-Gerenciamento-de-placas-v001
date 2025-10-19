@@ -79,7 +79,7 @@ def download_anexos(id_placa):
         return redirect(url_for('placas.gerenciamento_pedidos'))
 
     if current_user.id != placa.id_user and not current_user.is_admin:
-        flash('Vocw nao tem permissao para acessar esses arquivos.', 'danger')
+        flash('Voce nao tem permissao para acessar esses arquivos.', 'info')
         return redirect(url_for('placas.gerenciamento_pedidos'))
 
     files = UploadFile.query.filter(UploadFile.id_placa == id_placa).all()

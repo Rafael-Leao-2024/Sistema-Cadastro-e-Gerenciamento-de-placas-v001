@@ -82,9 +82,14 @@
               <div class="p-4 border-b border-cyan-500/20 bg-gradient-to-r from-cyan-900/30 to-blue-900/30">
                 <h3 class="font-semibold text-cyan-100">Notificações</h3>
               </div>
-              <div id="notificacoesLista" class="max-h-64 overflow-y-auto bg-slate-900/50">
-                <!-- Notificações serão carregadas via JavaScript -->
-              </div>
+              
+                <div id="notificacoesLista"
+                class="max-h-64 overflow-y-auto bg-slate-900/50"
+                data-url-minhas-placas="{{ url_for('placas.minhas_placas') }}"
+                >
+                  <!-- Notificações serão carregadas via JavaScript -->
+                </div>
+              
               <div class="p-3 border-t border-cyan-500/20 bg-slate-900/50">
                 <button id="marcarTodasLidas" class="text-cyan-400 text-sm hover:text-cyan-300 transition-colors duration-200">
                   Marcar todas como lidas

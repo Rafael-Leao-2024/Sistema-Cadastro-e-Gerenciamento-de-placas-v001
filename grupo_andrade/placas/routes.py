@@ -5,7 +5,7 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy import desc
 
 from grupo_andrade.placas.forms import EmplacamentoForm, ConsultarForm, PlacaStatusForm, EmplacamentoUpdateForm
-from grupo_andrade.utils.email_utils import enviar_email_confirmacao_placa
+from grupo_andrade.utils.email_utils import enviar_email_confirmacao_servivos
 from grupo_andrade.models import Placa, Endereco, User, Notificacao
 from grupo_andrade.main import db
 from flask import current_app, g
@@ -160,7 +160,7 @@ def solicitar_placas():
     despachante = "Sem despachante"
 
     if request.method == "POST" and not current_user.despachante:
-        flash('Selecione um despachante antes!', 'info')
+        flash('Selecione um despachante antes!', 'dange')
         return redirect(url_for('placas.solicitar_placas'))
     
     if current_user.despachante:
@@ -198,8 +198,12 @@ def solicitar_placas():
         db.session.commit()
         db.session.refresh(nova_placa)
         
+        mensagem = f"{current_user.username.title()} Solicitou.{len(lista_placas)} data e hora {nova_placa.date_create}"
+        if len(lista_placas) > 1:
+            mensagem = F"""{current_user.username.title()} Solicitou varios serviços total {len(lista_placas)} data e hora {nova_placa.date_create}"""
+
         notificacao = Notificacao(
-            mensagem=f"O usuario {current_user.username} fez uma nova solicitação.{len(lista_placas)} data e hora {nova_placa.date_create}",
+            mensagem=mensagem,
             id_solicitacao=nova_placa.id,
             id_usuario=current_user.despachante,
         )
@@ -211,10 +215,11 @@ def solicitar_placas():
             flash('Solicitaçao enviada com sucesso!', 'success')
             return redirect(url_for('documentos.upload_file_anexo', id_placa=lista_placas[0].id))
         
-        if len(lista_placas) > 0:
-            enviar_email_confirmacao_placa(current_user, lista_placas)
+        if len(lista_placas) > 1:
+            enviar_email_confirmacao_servivos(current_user, lista_placas)
             flash('Solicitaçao enviada com sucesso e e-mail enviado!', 'success')
             return redirect(url_for('placas.minhas_placas'))
+        
         else:
             flash('Voce nao preencheu os campos com os dados!', 'info')
             return redirect(url_for('placas.solicitar_placas'))     
