@@ -4,33 +4,42 @@ from grupo_andrade.main import mail
 import requests
 import os
 from dotenv import load_dotenv
-from redmail import EmailSender
-
 
 load_dotenv()
 
-email = EmailSender(
-    host="smtp.gmail.com",
-    port=int(os.environ.get('PORT')),
-    username=os.environ.get('MAIL_USERNAME'),
-    password=os.environ.get('MAIL_PASSWORD'),
-    use_starttls=True
-)
 
 
-def enviar_email_reset_senha(usuario):
-    token = usuario.get_reset_token()
-    # Enviar uma mensagem de e-mail simples
-    email.send(
-        subject="Assunto do E-mail",
-        sender="rafaelampaz6@gmail.com",
-        receivers=[usuario.email],
-        text=f'''Para redefinir sua senha, visite o seguinte link::
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
+
+# Configure sua API Key (use variáveis de ambiente na produção)
+APIKEY_SENDGRID = "APIKEY_SENDGRID"  # Substitua pela sua chave
+
+# Crie o cliente SendGrid
+conta_sendgrid = SendGridAPIClient(APIKEY_SENDGRID)
+
+# Construa o e-mail
+def enviar_email_reset_senha(user):
+    token = user.get_reset_token()
+    email = Mail(
+        from_email="rafaelampaz6@gmail.com",  # Use um e-mail verificado
+        to_emails=user.email,
+        subject="Teste de e-mail via SendGrid",
+        html_content=f"""<p>
+Para redefinir sua senha, visite o seguinte link::
 {url_for('auth.reset_token', token=token, _external=True)}
 Se voce nao fez esta solicitacao, simplesmente ignore este e-mail e nenhuma alteração será feita.
-obrigado {usuario.username}'''
+obrigado {user.username}</p>
+"""
 )
 
+    # Envie o e-mail
+    try:
+        resposta = conta_sendgrid.send(email)
+        print(f"E-mail enviado! Status: {resposta.status_code}")
+        # Status 202 indica sucesso:cite[3]
+    except Exception as erro:
+        print(f"Erro ao enviar e-mail: {erro}")
 
 
 # def enviar_email_reset_senha(user):
