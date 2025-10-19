@@ -4,16 +4,14 @@ from grupo_andrade.main import mail
 import requests
 import os
 from dotenv import load_dotenv
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 load_dotenv()
 
 
-
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
-
 # Configure sua API Key (use variáveis de ambiente na produção)
-APIKEY_SENDGRID = "APIKEY_SENDGRID"  # Substitua pela sua chave
+APIKEY_SENDGRID = os.environ.get("APIKEY_SENDGRID")  # Substitua pela sua chave
 
 # Crie o cliente SendGrid
 conta_sendgrid = SendGridAPIClient(APIKEY_SENDGRID)
