@@ -70,6 +70,7 @@ def upload_file_anexo(id_placa):
         return redirect(url_for('documentos.download_anexos', id_placa=id_placa))           
     return render_template('upload/muitos_file.html', title="muitos uploads", placa=placa)
 
+
 @documentos_bp.route('/download/<id_placa>')
 @login_required
 def download_anexos(id_placa):

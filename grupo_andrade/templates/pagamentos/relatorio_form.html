@@ -14,51 +14,73 @@
                     <h2 class="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
                         Gerar Relatório
                     </h2>
-                    <p class="text-cyan-300/70 text-sm mt-2">Selecione o período desejado</p>
+                    <p class="text-cyan-300/70 text-sm mt-2">Selecione o período e pagador</p>
                 </div>
             </div>
 
             <!-- Formulário -->
             <div class="p-6">
                 <form method="POST" action="{{ url_for('pagamentos.relatorio') }}">
-                    <div class="grid grid-cols-2 gap-4 mb-6">
-                        <!-- Mês -->
-                        <div class="form-group">
-                            <label class="block text-cyan-300 font-medium mb-2">Mês</label>
-                            <div class="relative">
-                                <select name="mes" class="futuristic-select">
-                                    {% for i in range(1, 13) %}
-                                        <option value="{{ i }}" {% if i == current_month %}selected{% endif %}>
-                                            {{ "{:02d}".format(i) }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-calendar text-cyan-400/60"></i>
+                    <div class="space-y-6">
+                        <!-- Período -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Mês -->
+                            <div class="form-group">
+                                <label class="block text-cyan-300 font-medium mb-2">Mês</label>
+                                <div class="relative">
+                                    <select name="mes" class="futuristic-select">
+                                        {% for i in range(1, 13) %}
+                                            <option value="{{ i }}" {% if i == current_month %}selected{% endif %}>
+                                                {{ "{:02d}".format(i) }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-calendar text-cyan-400/60"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Ano -->
+                            <div class="form-group">
+                                <label class="block text-cyan-300 font-medium mb-2">Ano</label>
+                                <div class="relative">
+                                    <select name="ano" class="futuristic-select">
+                                        {% for i in range(current_year, current_year - 5, -1) %}
+                                            <option value="{{ i }}" {% if i == current_year %}selected{% endif %}>
+                                                {{ i }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-calendar-alt text-cyan-400/60"></i>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Ano -->
+
+                        <!-- Pagador -->
                         <div class="form-group">
-                            <label class="block text-cyan-300 font-medium mb-2">Ano</label>
+                            <label class="block text-cyan-300 font-medium mb-2">Pagador</label>
                             <div class="relative">
-                                <select name="ano" class="futuristic-select">
-                                    {% for i in range(current_year, current_year - 5, -1) %}
-                                        <option value="{{ i }}" {% if i == current_year %}selected{% endif %}>
-                                            {{ i }}
+                                <select name="id_usuario_pagador" class="futuristic-select">
+                                    <option value="0">Todos os Pagadores</option>
+                                    {% for pagador in pagadores %}
+                                        <option value="{{ pagador.id }}">
+                                            {{ pagador.username }} - {{ pagador.id }}
                                         </option>
                                     {% endfor %}
                                 </select>
                                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-calendar-alt text-cyan-400/60"></i>
+                                    <i class="fas fa-users text-cyan-400/60"></i>
                                 </div>
                             </div>
+                            <p class="text-cyan-300/50 text-xs mt-2">Selecione um pagador específico ou "Todos" para o relatório completo</p>
                         </div>
                     </div>
                     
                     <!-- Botão -->
-                    <button type="submit" class="futuristic-btn w-full py-3 group">
+                    <button type="submit" class="futuristic-btn w-full py-3 mt-6 group">
                         <i class="fas fa-chart-bar mr-3 group-hover:scale-110 transition-transform duration-200"></i>
                         Gerar Relatório
                     </button>

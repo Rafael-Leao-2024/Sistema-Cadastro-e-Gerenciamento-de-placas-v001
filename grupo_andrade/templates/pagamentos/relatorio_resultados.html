@@ -17,6 +17,11 @@
               <div>
                 <h2 class="text-2xl font-bold text-cyan-100">Relatório de Pagamento</h2>
                 <p class="text-cyan-300/80 text-sm">Período: {{ mes }}/{{ ano }}</p>
+                {% if pagador_selecionado %}
+                <p class="text-cyan-300/80 text-sm">Pagador: {{ pagador_selecionado.username }}</p>
+                {% else %}
+                <p class="text-cyan-300/80 text-sm">Pagador: Todos os Pagadores</p>
+                {% endif %}
               </div>
             </div>
             <div class="text-right">
@@ -29,7 +34,7 @@
       </div>
 
       <!-- Cards de Métricas -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-6 text-center">
           <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-cyan-500/20 flex items-center justify-center">
             <i class="fas fa-layer-group text-cyan-400 text-xl"></i>
@@ -46,6 +51,28 @@
           <p class="text-green-300 text-sm mb-1">Valor Total</p>
           <p class="text-3xl font-bold text-green-100">R$ {{ valor_total }}</p>
           <p class="text-green-400/60 text-xs mt-1">valor a pagar</p>
+        </div>
+
+        <!-- Novo Card do Pagador -->
+        <div class="glass-effect-advanced rounded-xl border border-purple-500/20 p-6 text-center">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-purple-500/20 flex items-center justify-center">
+            <i class="fas fa-user text-purple-400 text-xl"></i>
+          </div>
+          <p class="text-purple-300 text-sm mb-1">Pagador</p>
+          <p class="text-lg font-bold text-purple-100 truncate">
+            {% if pagador_selecionado %}
+              {{ pagador_selecionado.username }}
+            {% else %}
+              Todos
+            {% endif %}
+          </p>
+          <p class="text-purple-400/60 text-xs mt-1">
+            {% if pagador_selecionado %}
+              {{ pagador_selecionado.username }}
+            {% else %}
+              Todos os pagadores
+            {% endif %}
+          </p>
         </div>
       </div>
 
