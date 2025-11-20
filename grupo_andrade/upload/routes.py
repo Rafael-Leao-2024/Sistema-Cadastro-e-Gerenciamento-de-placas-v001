@@ -11,6 +11,8 @@ from grupo_andrade.main import db
 from grupo_andrade.placas.routes import injetar_notificacao
 from grupo_andrade.upload.funcoes_aws import enviar_arquivo_s3, ver_arquivo
 from dotenv import load_dotenv
+from grupo_andrade.upload.funcoesIA import ler_pdf, gerador_saida_estruturada
+
 
 load_dotenv()
 
@@ -40,7 +42,7 @@ def upload_file_anexo(id_placa):
     if request.method == 'POST':
         if 'file' not in request.files:
             flash('Selecione um ou mais arquivos', category='info')
-            return redirect(url_for('documentos.upload_ajax'))        
+            return redirect(url_for('documentos.upload_file_anexo'))
         files = request.files.getlist('file')
         if files[0].filename == '':
             flash('Selecione um ou mais arquivos', category='info')
@@ -48,6 +50,19 @@ def upload_file_anexo(id_placa):
         for file in files:
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
+                
+                try:
+                    saida_texto = ler_pdf(file)
+
+                    if "senatran" in saida_texto.lower():
+                        saida_estruturada = gerador_saida_estruturada(saida_texto)
+                        placa.placa = saida_estruturada.veiculo.placa
+                        placa.chassi = saida_estruturada.veiculo.chassi
+                        placa.renavan = saida_estruturada.veiculo.renavan
+                        placa.crlv = saida_estruturada.veiculo.crlv
+                except:
+                    continue
+                
                 # armazenamento AWS
                 try:
                     enviar_arquivo_s3(file=file, filename=filename)

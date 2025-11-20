@@ -44,7 +44,7 @@ def meu_debito(mes):
     Returns:
         _type_: uma consulta SQL query
     """
-    html = relatorio_resultados(mes=mes, ano=2025)
+    html = relatorio_resultados(mes=mes, ano=2025, id_usuario_pagador=37)
     soup = BeautifulSoup(html, 'html.parser')
     informacao = soup.body.main.get_text()
     link_pagameno = soup.body.main.find_all('a')[-2].get('href')
