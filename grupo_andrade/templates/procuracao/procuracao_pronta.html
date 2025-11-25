@@ -1,0 +1,147 @@
+{% extends "layout.html" %}
+
+{% block title %}procuracao{% endblock %}
+
+
+{% block content %}
+<div class="min-h-screen py-8">
+    <div class="max-w-4xl mx-auto px-4">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="flex justify-center space-x-4 mb-6">
+                <a href="{{ url_for('procuracao.selecionar_modelo') }}" class="futuristic-nav-btn inline-flex items-center space-x-2">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Voltar</span>
+                </a>
+                <button onclick="window.print()" class="futuristic-nav-btn-primary inline-flex items-center space-x-2">
+                    <i class="fas fa-print mr-2"></i>
+                    <span>Imprimir</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Documento da Procuração -->
+        <div class="glass-effect-advanced rounded-2xl p-8 border border-cyan-500/20 print:bg-white print:border-gray-300">
+            <!-- Cabeçalho do Documento -->
+            <div class="text-center mb-8 border-b border-cyan-500/20 pb-6 print:border-gray-300">
+                <h2 class="text-2xl font-bold text-gray-300 print:text-black mb-2">PROCURAÇÃO PARTICULAR</h2>
+                <p class="text-gray-300 print:text-gray-300 text-sm">
+                    (Específica para serviços de Veículos - DETRAN-PE)
+                </p>
+            </div>
+
+            <!-- Seção Outorgante -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-cyan-400 mb-4 print:text-gray-300 border-b border-cyan-500/20 pb-2 print:border-gray-300">
+                    OUTORGANTE (Dados do Proprietário) — <span class="text-red-500 text-sm">*Campos obrigatórios*</span>
+                </h3>
+                <div class="grid md:grid-cols-2 gap-4 text-gray-300 print:text-black">
+                    <div><strong>Nome completo:</strong> {{ dados.destinatario.nome_destinatario }}</div>
+                    <div><strong>CNPJ</strong> {{ dados.destinatario.cnpj_destinatario }}</div>
+                    <div><strong>Endereço:</strong> {{ dados.destinatario.endereco_destinatario }}</div>
+                    <div><strong>Bairro:</strong> {{ dados.destinatario.bairro_destinatario }}</div>
+                    <div><strong>CEP:</strong> {{ dados.destinatario.cep_destinatario }}</div>
+                    <div><strong>Cidade:</strong> {{ dados.destinatario.cidade_destinatario }}</div>
+                    <div><strong>UF:</strong> {{ dados.destinatario.uf_destinatario }}</div>
+                </div>
+            </div>
+
+            <!-- Seção Outorgado -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-cyan-400 mb-4 print:text-gray-300 border-b border-cyan-500/20 pb-2 print:border-gray-300">
+                    OUTORGADO (Procurador Legal) — <span class="text-red-500 text-sm">*Campos obrigatórios*</span>
+                </h3>
+                <div class="grid md:grid-cols-2 gap-4 text-gray-300 print:text-black">
+                    <div><strong>Nome completo:</strong> {{ dados.remetente.nome_remetente }}</div>
+                    <div><strong>CNPJ</strong> {{ dados.remetente.cnpj_remetente }}</div>
+                    <div><strong>Cidade:</strong> {{ dados.remetente.cidade_remetente }}</div>
+                    <div><strong>UF:</strong> {{ dados.remetente.uf_remetente }}</div>
+                </div>
+            </div>
+
+            <!-- Dados do Veículo -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-cyan-400 mb-4 print:text-gray-300 border-b border-cyan-500/20 pb-2 print:border-gray-300">
+                    DADOS DO VEÍCULO — <span class="text-red-500 text-sm">*Campos obrigatórios*</span>
+                </h3>
+                <div class="grid md:grid-cols-2 gap-4 text-gray-300 print:text-black">
+                    <div><strong>Placa:</strong>Novo</div>
+                    <div><strong>Renavan:</strong>Novo</div>
+                    <div><strong>Marca / Modelo:</strong> {{ dados.produto.nome_produto }}</div>
+                    <div><strong>Chassi:</strong> {{ dados.produto.chassi }}</div>
+                    <div><strong>Valor NF:</strong> {{ dados.produto.valor_total_nota }}</div>
+                    <div><strong>Cor Predominante:</strong> {{ dados.produto.cor_produto }}</div>
+                    <div><strong>Num Motor:</strong> {{ dados.produto.numero_motor }}</div>
+                    <div><strong>ano modelo:</strong> {{ dados.produto.ano_modelo }}</div>
+                    <div><strong>ano fabricacao:</strong> {{ dados.produto.ano_fabricacao }}</div>
+                </div>
+            </div>
+
+            <!-- Serviços Autorizados -->
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-cyan-400 mb-4 print:text-gray-300 border-b border-cyan-500/20 pb-2 print:border-gray-300">
+                    SERVIÇOS AUTORIZADOS (Obrigatório especificar)
+                </h3>
+                <div class="text-gray-300 print:text-black">
+                    <strong>Serviços autorizados:</strong> {{ dados.SERVICOS }}
+                </div>
+            </div>
+
+            <!-- Texto da Procuração -->
+            <div class="mb-8 text-gray-300 print:text-black leading-relaxed">
+                <p class="mb-4">
+                    O(a) OUTORGANTE acima identificado(a) concede plenos poderes ao OUTORGADO indicado, para representá-lo(a) perante o DETRAN-PE e/ou CIRETRANs, podendo assinar, requerer, desistir, receber documentos e praticar todos os atos necessários ao cumprimento deste mandato.
+                </p>
+            </div>
+
+            <!-- Assinaturas -->
+            <div class="grid md:grid-cols-2 gap-8 mt-12">
+                <div class="text-center">
+                    <p class="text-gray-600 print:text-gray-300 mb-4">Local e data: ___________________________________________</p>
+                    <p class="text-gray-300 print:text-black font-semibold mb-2">Assinatura do Outorgante:</p>
+                    <div class="border-t border-gray-400 pt-8 mt-4">___________________________________________</div>
+                </div>
+            </div>
+
+            <!-- Rodapé do DETRAN -->
+            <div class="mt-12 pt-6 border-t border-gray-300 text-center text-gray-600 print:text-gray-300 text-sm">
+                <p><strong>DETRAN-PE / Departamento Estadual de Trânsito de Pernambuco</strong></p>
+                <p>Estrada do Barbalho, 889 - Iputinga - Recife/PE - CEP: 50.690-900</p>
+                <p>CNPJ: 09.753.781/0001-60 | Teleatendimento: +55 81 3184.8109 / 3184.8129</p>
+            </div>
+        </div>
+
+        <!-- Ações -->
+        <div class="flex justify-center space-x-4 mt-8 print:hidden">
+            <button onclick="window.print()" class="futuristic-nav-btn-primary inline-flex items-center space-x-2 px-6 py-3">
+                <i class="fas fa-print mr-2"></i>
+                <span>Imprimir Procuração</span>
+            </button>
+            <a href="{{ url_for('procuracao.selecionar_modelo') }}" class="futuristic-nav-btn inline-flex items-center space-x-2 px-6 py-3">
+                <i class="fas fa-plus mr-2"></i>
+                <span>Nova Procuração</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+@media print {
+    .glass-effect-advanced {
+        background: white !important;
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+    }
+    .futuristic-nav-btn, .futuristic-nav-btn-primary {
+        display: none !important;
+    }
+    body {
+        background: white !important;
+        color: black !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% set hide_navbar = True %}
+{% set hide_footer = True %}

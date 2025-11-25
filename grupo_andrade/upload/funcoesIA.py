@@ -16,7 +16,7 @@ class Proprietario(BaseModel):
 
 class Veiculo(BaseModel):
     renavan : str = Field(description="o codigo renavam e a numeraçao antes da numeraçao da placa")
-    placa: str = Field(description="exemplo de placa sao 7 caractere alfanumerico ex: ABC1D23")
+    placa: str 
     crlv: str = Field(description="o crlv sao sempre a sequencia de 12 numeros e comessa com 25...")
     chassi: str = Field(description="o chassi é 17 caractere ex 95BO151R484RGC844 e começa sempre com numero nao confunda com numero de motor pois e parecido")
 

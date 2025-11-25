@@ -1,0 +1,111 @@
+{% extends "layout.html" %}
+
+{% block title %}Selecionar Modelo de Procuração{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-8">
+    <div class="max-w-4xl mx-auto px-4">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-4">
+                Modelos de Procuração
+            </h1>
+            <p class="text-cyan-200/70 text-lg">
+                Selecione o tipo de procuração que deseja gerar
+            </p>
+        </div>
+
+        <!-- Cards de Modelos -->
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Veículos Novos -->
+            <a href="{{ url_for('procuracao.veiculos_novos') }}" 
+               class="glass-effect-advanced rounded-2xl p-8 border border-cyan-500/20 hover:border-cyan-400/40 transition-all duration-300 group cursor-pointer block">
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-car text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-cyan-100 mb-4">Veículos Novos</h3>
+                    <p class="text-cyan-200/70 mb-6">
+                        Procuração específica para serviços relacionados a veículos novos no DETRAN-PE
+                    </p>
+                    <div class="flex justify-center items-center space-x-2 text-cyan-400 group-hover:text-cyan-300 transition-colors">
+                        <span>Selecionar</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Transferência -->
+            <a href="{{ url_for('procuracao.transferencia') }}" 
+               class="glass-effect-advanced rounded-2xl p-8 border border-cyan-500/20 hover:border-cyan-400/40 transition-all duration-300 group cursor-pointer block">
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-exchange-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-cyan-100 mb-4">Transferência</h3>
+                    <p class="text-cyan-200/70 mb-6">
+                        Procuração para transferência de propriedade de veículos no DETRAN-PE
+                    </p>
+                    <div class="flex justify-center items-center space-x-2 text-cyan-400 group-hover:text-cyan-300 transition-colors">
+                        <span>Selecionar</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- Cards Adicionais para Outros Modelos (opcional) -->
+        <div class="grid md:grid-cols-3 gap-6 mt-12">
+            <!-- Procuração Padrão -->
+            <a href="{{ url_for('procuracao.procuracao_padrao') }}" 
+               class="glass-effect-advanced rounded-xl p-6 border border-cyan-500/20 hover:border-cyan-400/40 transition-all duration-300 group">
+                <div class="text-center">
+                    <div class="w-12 h-12 mx-auto mb-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-file-alt text-white text-lg"></i>
+                    </div>
+                    <h4 class="text-lg font-semibold text-cyan-100 mb-2">Procuração Padrão</h4>
+                    <p class="text-cyan-200/70 text-sm">
+                        Modelo genérico de procuração
+                    </p>
+                </div>
+            </a>
+
+            <!-- Histórico -->
+            <a href="{{ url_for('placas.minhas_placas') }}" 
+               class="glass-effect-advanced rounded-xl p-6 border border-cyan-500/20 hover:border-cyan-400/40 transition-all duration-300 group">
+                <div class="text-center">
+                    <div class="w-12 h-12 mx-auto mb-4 rounded-xl bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-history text-white text-lg"></i>
+                    </div>
+                    <h4 class="text-lg font-semibold text-cyan-100 mb-2">Minhas Procurações</h4>
+                    <p class="text-cyan-200/70 text-sm">
+                        Visualizar procurações anteriores
+                    </p>
+                </div>
+            </a>
+
+            <!-- Ajuda -->
+            <a href="#" 
+               class="glass-effect-advanced rounded-xl p-6 border border-cyan-500/20 hover:border-cyan-400/40 transition-all duration-300 group">
+                <div class="text-center">
+                    <div class="w-12 h-12 mx-auto mb-4 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-question-circle text-white text-lg"></i>
+                    </div>
+                    <h4 class="text-lg font-semibold text-cyan-100 mb-2">Ajuda</h4>
+                    <p class="text-cyan-200/70 text-sm">
+                        Como usar os modelos de procuração
+                    </p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Botão Voltar -->
+        <div class="text-center mt-12">
+            <a href="{{ url_for('placas.homepage') }}" class="futuristic-nav-btn inline-flex items-center space-x-2">
+                <i class="fas fa-arrow-left"></i>
+                <span>Voltar para Início</span>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

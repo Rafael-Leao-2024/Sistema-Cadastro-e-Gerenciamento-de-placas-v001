@@ -35,6 +35,7 @@ def download_file(name):
     return ver_arquivo(filename=name)
 
 
+
 @documentos_bp.route('/upload-anexo/<id_placa>', methods=['GET', 'POST'])
 @login_required
 def upload_file_anexo(id_placa):
@@ -60,7 +61,14 @@ def upload_file_anexo(id_placa):
                         placa.chassi = saida_estruturada.veiculo.chassi
                         placa.renavan = saida_estruturada.veiculo.renavan
                         placa.crlv = saida_estruturada.veiculo.crlv
-                except:
+                    
+                    # RESET do cursor do arquivo para o início antes de enviar para AWS
+                    file.seek(0)
+                    
+                except Exception as e:
+                    print(f"Erro na leitura do PDF: {e}")
+                    # Mesmo com erro na leitura, tenta fazer upload do arquivo
+                    file.seek(0)  # Reset do cursor antes de continuar
                     continue
                 
                 # armazenamento AWS
@@ -84,6 +92,8 @@ def upload_file_anexo(id_placa):
         flash(message="arquivos armazenados com sucesso", category='success')
         return redirect(url_for('documentos.download_anexos', id_placa=id_placa))           
     return render_template('upload/muitos_file.html', title="muitos uploads", placa=placa)
+
+
 
 
 @documentos_bp.route('/download/<id_placa>')
