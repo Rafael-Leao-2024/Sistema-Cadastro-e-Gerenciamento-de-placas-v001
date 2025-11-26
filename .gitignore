@@ -175,3 +175,4 @@ memory_llm.db
 memory_agent.db
 teste.py
 db.py
+migrations_dev

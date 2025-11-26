@@ -20,6 +20,9 @@ class User(db.Model, UserMixin):
     data_criacao = db.Column(db.DateTime)
     despachante = db.Column(db.Integer, default=None)
 
+    cpf_cnpj = db.Column(db.String(100), nullable=True)
+    rg = db.Column(db.String(100), nullable=True)
+
     placas = db.relationship('Placa', backref='author', lazy=True, cascade='all, delete-orphan')
     enderecos = db.relationship('Endereco', backref='user', lazy=True, cascade='all, delete-orphan')
     pagamentos = db.relationship('Pagamento', backref='user', lazy=True, cascade='all, delete-orphan')
