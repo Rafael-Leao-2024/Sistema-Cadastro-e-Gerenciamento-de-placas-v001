@@ -108,7 +108,7 @@
               type="text"
               name="endereco_placa"
               class="futuristic-input"
-              value="{{ current_user.enderecos[-1].rua }}"
+              value="{{ current_user.enderecos[-1:].rua if current_user.enderecos else '' }}"
             />
           </div>
 
