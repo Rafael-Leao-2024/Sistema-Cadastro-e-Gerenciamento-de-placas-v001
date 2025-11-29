@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 import os
 from werkzeug.utils import secure_filename
 from grupo_andrade.procuracao.funcao_ia import ler_pdf, gerador_saida_estruturada
+from grupo_andrade.models import User
 
 
 procuracao = Blueprint("procuracao", __name__, template_folder="templates")
@@ -29,6 +30,7 @@ def selecionar_modelo():
 def veiculos_novos():
     """Modelo de procuração para veículos novos"""
     if request.method == 'POST':
+        despachante = User.query.filter(User.id == current_user.despachante).first()
         # Processar upload do arquivo
         if 'documento' not in request.files:
             flash('Nenhum arquivo selecionado', 'error')
@@ -46,29 +48,21 @@ def veiculos_novos():
             texto_saida = ler_pdf(file)
             resultado_estruturado = gerador_saida_estruturada(texto=texto_saida)         
             # Simulando dados processados do arquivo
-            dados_processados = {
-                'NOME_OUTORGANTE': resultado_estruturado.destinatario.nome_destinatario,
-                'CNPJ': resultado_estruturado.destinatario.cnpj_destinatario,
-                'CIDADE': resultado_estruturado.destinatario.cidade_destinatario,
-                'UF': resultado_estruturado.destinatario.cidade_destinatario,
-                'PLACA': 'ABC1D23',
-                'RENAVAM': '123456789',
-                'MARCA_MODELO': 'Fiat Argo',
-                'CHASSI': '9BWZZZ377VT004251',
-                'SERVICOS': 'Licenciamento e transferência'
-            }
+            
             
             return render_template('procuracao/procuracao_pronta.html',
                                  modelo='veiculos_novos',
-                                 dados=resultado_estruturado)
+                                 dados=resultado_estruturado, despachante=despachante)
     
     return render_template("procuracao/form_veiculos_novos.html")
+
 
 @procuracao.route("/procuracao/transferencia", methods=['GET', 'POST'])
 @login_required
 def transferencia():
     """Modelo de procuração para transferência"""
     if request.method == 'POST':
+        despachante = User.query.filter(User.id == current_user.despachante).first()
         # Processar upload do arquivo
         if 'documento' not in request.files:
             flash('Nenhum arquivo selecionado', 'error')
@@ -85,26 +79,15 @@ def transferencia():
             # file.save(os.path.join(UPLOAD_FOLDER, filename))
             
             # Simulando dados processados do arquivo
-            dados_processados = {
-                'NOME_OUTORGANTE': 'Maria Santos',
-                'RG_OUTORGANTE': '7654321',
-                'ORGAO_EMISSOR_OUTORGANTE': 'SSP',
-                'CPF_OUTORGANTE': '987.654.321-00',
-                'PLACA': 'XYZ9A87',
-                'RENAVAM': '987654321',
-                'MARCA_MODELO': 'Volkswagen Gol',
-                'CHASSI': '9BWZZZ377VT004252',
-                'SERVICOS': 'Transferência de propriedade'
-            }
-
             
             texto_saida = ler_pdf(file)
             resultado_estruturado = gerador_saida_estruturada(texto=texto_saida)
             
             flash('Documento processado com sucesso!', 'success')
-            return render_template('procuracao/procuracao_pronta.html', 
-                                 modelo='transferencia',
-                                 dados=resultado_estruturado)
+            return render_template('procuracao/procuracao_pronta.html',
+                                   despachante=despachante,
+                                   modelo='transferencia',
+                                    dados=resultado_estruturado)
     
     return render_template("procuracao/form_transferencia.html")
 

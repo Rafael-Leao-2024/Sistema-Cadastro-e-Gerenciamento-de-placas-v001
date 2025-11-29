@@ -58,6 +58,41 @@
                         {% endif %}
                     </div>
 
+
+                    <!-- Campo rg -->
+                    <div class="form-group mb-6">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-envelope text-cyan-400/80"></i>
+                            </div>
+                            {{ form.rg(class="futuristic-input pl-12", placeholder="RG") }}
+                        </div>
+                        {% if form.rg.errors %}
+                            {% for error in form.rg.errors %}
+                            <p class="text-red-400 text-sm mt-2 flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
+                            </p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Campo cpf cnpj -->
+                    <div class="form-group mb-6">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-envelope text-cyan-400/80"></i>
+                            </div>
+                            {{ form.cpf_cnpj(class="futuristic-input pl-12", placeholder="cpf ou cnpj") }}
+                        </div>
+                        {% if form.cpf_cnpj.errors %}
+                            {% for error in form.cpf_cnpj.errors %}
+                            <p class="text-red-400 text-sm mt-2 flex items-center">
+                                <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
+                            </p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
                     <!-- Campo Senha -->
                     <div class="form-group mb-6">
                         <div class="relative">

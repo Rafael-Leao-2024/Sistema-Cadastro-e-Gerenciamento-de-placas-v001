@@ -90,6 +90,48 @@
                 {% endfor %}
               {% endif %}
             </div>
+
+            <!-- Campo RG -->
+            <div class="form-group">
+              <label class="block text-cyan-300 font-medium mb-2">
+                {{ form.rg.label }}
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <i class="fas fa-envelope text-cyan-400/80"></i>
+                </div>
+                {{ form.rg(class="futuristic-input pl-12") }}
+              </div>
+              {% if form.rg.errors %}
+                {% for error in form.rg.errors %}
+                <p class="text-red-400 text-sm mt-2 flex items-center">
+                  <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
+                </p>
+                {% endfor %}
+              {% endif %}
+            </div>
+
+            <!-- Campo CPF CNPJ -->
+            <div class="form-group">
+              <label class="block text-cyan-300 font-medium mb-2">
+                {{ form.cpf_cnpj.label }}
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <i class="fas fa-envelope text-cyan-400/80"></i>
+                </div>
+                {{ form.cpf_cnpj(class="futuristic-input pl-12") }}
+              </div>
+              {% if form.cpf_cnpj.errors %}
+                {% for error in form.cpf_cnpj.errors %}
+                <p class="text-red-400 text-sm mt-2 flex items-center">
+                  <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
+                </p>
+                {% endfor %}
+              {% endif %}
+            </div>
+
+
           </div>
 
           <!-- Campo Picture -->

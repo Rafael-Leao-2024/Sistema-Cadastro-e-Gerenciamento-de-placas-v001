@@ -52,16 +52,16 @@
 
           <div class="form-group mb-8">
             <label class="block text-cyan-300 font-medium mb-3">
-              {{ form.endereco.label }}
+              {{ form.cidade.label }}
             </label>
             <div class="relative">
               <div class="absolute top-3 left-3 flex items-start pointer-events-none">
                 <i class="fas fa-home text-cyan-400/80 mt-1"></i>
               </div>
-              {{ form.endereco(class="futuristic-textarea pl-10", rows="4", placeholder="Digite seu endereço completo...") }}
+              {{ form.cidade(class="futuristic-input pl-12", rows="4", placeholder="Digite seu endereço completo...") }}
             </div>
-            {% if form.endereco.errors %}
-              {% for error in form.endereco.errors %}
+            {% if form.cidade.errors %}
+              {% for error in form.cidade.errors %}
               <p class="text-red-400 text-sm mt-2 flex items-center">
                 <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
               </p>
@@ -69,6 +69,91 @@
             {% endif %}
           </div>
 
+        <!-- input rua -->
+
+            <div class="form-group">
+              <label class="block text-cyan-300 font-medium mb-2">
+                {{ form.rua.label }}
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <i class="fas fa-envelope text-cyan-400/80"></i>
+                </div>
+                {{ form.rua(class="futuristic-input pl-12") }}
+              </div>
+              {% if form.rua.errors %}
+                {% for error in form.rua.errors %}
+                <p class="text-red-400 text-sm mt-2 flex items-center">
+                  <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
+                </p>
+                {% endfor %}
+              {% endif %}
+            </div>
+
+            <!-- input de bairro -->
+
+            <div class="form-group">
+              <label class="block text-cyan-300 font-medium mb-2">
+                {{ form.bairro.label }}
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <i class="fas fa-envelope text-cyan-400/80"></i>
+                </div>
+                {{ form.bairro(class="futuristic-input pl-12") }}
+              </div>
+              {% if form.bairro.errors %}
+                {% for error in form.bairro.errors %}
+                <p class="text-red-400 text-sm mt-2 flex items-center">
+                  <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
+                </p>
+                {% endfor %}
+              {% endif %}
+            </div>
+
+
+            <!-- input de cep -->
+
+            <div class="form-group">
+              <label class="block text-cyan-300 font-medium mb-2">
+                {{ form.cep.label }}
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <i class="fas fa-envelope text-cyan-400/80"></i>
+                </div>
+                {{ form.cep(class="futuristic-input pl-12") }}
+              </div>
+              {% if form.cep.errors %}
+                {% for error in form.cep.errors %}
+                <p class="text-red-400 text-sm mt-2 flex items-center">
+                  <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
+                </p>
+                {% endfor %}
+              {% endif %}
+            </div>
+
+            <!-- input de uf -->
+
+            <div class="form-group">
+              <label class="block text-cyan-300 font-medium mb-2">
+                {{ form.uf.label }}
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <i class="fas fa-envelope text-cyan-400/80"></i>
+                </div>
+                {{ form.uf(class="futuristic-input pl-12") }}
+              </div>
+              {% if form.uf.errors %}
+                {% for error in form.uf.errors %}
+                <p class="text-red-400 text-sm mt-2 flex items-center">
+                  <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
+                </p>
+                {% endfor %}
+              {% endif %}
+            </div>
+            
           <button type="submit" class="futuristic-btn px-8 py-3 group">
             <i class="fas fa-save mr-3 group-hover:scale-110 transition-transform duration-200"></i>
             Salvar Endereço

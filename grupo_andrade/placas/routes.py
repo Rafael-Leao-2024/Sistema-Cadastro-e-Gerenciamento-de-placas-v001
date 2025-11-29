@@ -171,10 +171,10 @@ def solicitar_placas():
         endereco = Endereco.query.filter_by(id_user=current_user.id).order_by(Endereco.id.desc()).first()
         placa = Placa.query.filter_by(id_user=current_user.id).order_by(Placa.id.desc()).first()
         try:
-            endereco = endereco.endereco.title()
+            endereco = endereco.rua.title()
             placa = placa.placa.title()
         except:
-            endereco = Endereco.endereco.default.arg
+            endereco = Endereco.rua.default.arg
             placa = Placa.placa.default.arg
     
     if request.method == 'POST':

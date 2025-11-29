@@ -73,7 +73,11 @@ class Endereco(db.Model):
     __tablename__ = 'enderecos'
     
     id = db.Column(db.Integer, primary_key=True)
-    endereco = db.Column(db.String(200), nullable=False, default="Nenhum")
+    rua = db.Column(db.String(100), nullable=True, default="Nenhum")
+    cep = db.Column(db.String(50), nullable=True, default="Nenhum")
+    bairro = db.Column(db.String(100), nullable=True, default="Nenhum")
+    cidade = db.Column(db.String(100), nullable=True, default="Nenhum")
+    uf = db.Column(db.String(100), nullable=True, default="Nenhum")
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
 

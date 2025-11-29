@@ -37,8 +37,9 @@
                            class="hidden" accept=".pdf,.doc,.docx,.txt" required>
                     <label for="documento" class="cursor-pointer">
                         <i class="fas fa-cloud-upload-alt text-green-400 text-4xl mb-4"></i>
-                        <p class="text-cyan-200 mb-2">Clique para selecionar o arquivo</p>
-                        <p class="text-cyan-200/70 text-sm">ou arraste e solte aqui</p>
+                        <p id="file-instructions" class="text-cyan-200 mb-2">Clique para selecionar o arquivo</p>
+                        <p id="file-name" class="text-green-400 font-semibold mb-2 hidden"></p>
+                        <p id="file-hint" class="text-cyan-200/70 text-sm">ou arraste e solte aqui</p>
                     </label>
                 </div>
 
@@ -58,15 +59,92 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const fileInput = document.getElementById('documento');
-    const fileLabel = fileInput.parentElement;
+    const fileInstructions = document.getElementById('file-instructions');
+    const fileName = document.getElementById('file-name');
+    const fileHint = document.getElementById('file-hint');
     
     fileInput.addEventListener('change', function(e) {
         if (e.target.files.length > 0) {
-            const fileName = e.target.files[0].name;
-            fileLabel.querySelector('p:first-child').textContent = `Arquivo selecionado: ${fileName}`;
-            fileLabel.querySelector('p:last-child').textContent = 'Clique para alterar';
+            const selectedFile = e.target.files[0];
+            const fileNameText = selectedFile.name;
+            const fileSize = (selectedFile.size / 1024 / 1024).toFixed(2); // Tamanho em MB
+            
+            // Mostrar o nome do arquivo
+            fileName.textContent = `${fileNameText} (${fileSize} MB)`;
+            fileName.classList.remove('hidden');
+            
+            // Atualizar textos
+            fileInstructions.textContent = 'Arquivo selecionado:';
+            fileHint.textContent = 'Clique para alterar o arquivo';
+            
+            // Adicionar efeito visual de confirmação
+            fileInput.parentElement.classList.add('border-green-400', 'bg-green-400/5');
+        } else {
+            // Resetar se não há arquivo
+            resetFileDisplay();
         }
     });
+    
+    // Drag and drop functionality
+    const dropArea = fileInput.parentElement;
+    
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+    });
+    
+    function highlight() {
+        dropArea.classList.add('border-green-400', 'bg-green-400/10');
+    }
+    
+    function unhighlight() {
+        dropArea.classList.remove('border-green-400', 'bg-green-400/10');
+    }
+    
+    dropArea.addEventListener('drop', handleDrop, false);
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        fileInput.files = files;
+        
+        // Disparar o evento change manualmente
+        const event = new Event('change');
+        fileInput.dispatchEvent(event);
+    }
+    
+    function resetFileDisplay() {
+        fileName.classList.add('hidden');
+        fileInstructions.textContent = 'Clique para selecionar o arquivo';
+        fileHint.textContent = 'ou arraste e solte aqui';
+        fileInput.parentElement.classList.remove('border-green-400', 'bg-green-400/5');
+    }
 });
 </script>
+
+<style>
+.hidden {
+    display: none;
+}
+
+.border-green-400\/5 {
+    border-color: rgba(74, 222, 128, 0.05);
+}
+
+.bg-green-400\/10 {
+    background-color: rgba(74, 222, 128, 0.1);
+}
+</style>
 {% endblock %}

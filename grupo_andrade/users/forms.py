@@ -10,6 +10,14 @@ class UpdateAccountForm(FlaskForm):
                           validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
+    
+    rg = StringField('rg', 
+                          validators=[DataRequired(), Length(min=2, max=20)])
+    
+    cpf_cnpj = StringField('cpf_cnpj', 
+                          validators=[DataRequired(), Length(min=2, max=20)])
+
+
     picture = FileField('Update Profile Picture', 
                         validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField('Update')
@@ -27,7 +35,26 @@ class UpdateAccountForm(FlaskForm):
                 raise ValidationError('Esse email ja esta em uso. Por favor escolha outro.')
 
 class EnderecoForm(FlaskForm):
-    endereco = StringField('Endereço Completo',
-                          validators=[DataRequired(), Length(min=10, max=200)],
+    rua = StringField('Rua',
+                          validators=[DataRequired(), Length(min=2, max=200)],
                           )
+    
+    bairro = StringField('bairro',
+                          validators=[DataRequired(), Length(min=2, max=200)],
+                          )
+    
+    cep = StringField('cep',
+                          validators=[DataRequired(), Length(min=5, max=20)],
+                          )
+    
+    cidade = StringField('cidade',
+                          validators=[DataRequired(), Length(min=2, max=200)],
+                          )
+    
+    uf = StringField('uf',
+                          validators=[DataRequired(), Length(min=2, max=20)],
+                          )
+
+
+
     submit = SubmitField('Atualizar Endereço')

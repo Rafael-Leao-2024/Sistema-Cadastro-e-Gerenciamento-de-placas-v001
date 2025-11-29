@@ -8,6 +8,13 @@ class RegistrationForm(FlaskForm):
                           validators=[DataRequired(), Length(min=2, max=20)])
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
+    
+    rg = StringField('rg', 
+                          validators=[DataRequired(), Length(min=2, max=20)])
+    
+    cpf_cnpj = StringField('cpf_cnpj', 
+                          validators=[DataRequired(), Length(min=2, max=20)])
+
     password = PasswordField('Password', 
                             validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password',

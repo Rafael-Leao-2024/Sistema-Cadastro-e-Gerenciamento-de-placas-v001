@@ -15,8 +15,12 @@ users = Blueprint('users', __name__)
 def endereco():
     form = EnderecoForm()
     if request.method == 'POST':
-        endereco = request.form['endereco']
-        novo_endereco = Endereco(endereco=endereco, id_user=current_user.id)
+        cidade = request.form['cidade']
+        rua = request.form['rua']
+        bairro = request.form['bairro']
+        cep = request.form['cep']
+        uf = request.form['uf']
+        novo_endereco = Endereco(cidade=cidade, rua=rua, id_user=current_user.id, bairro=bairro, cep=cep, uf=uf)
         db.session.add(novo_endereco)
         db.session.commit()
         flash('Endereco Atualizado com Sucesso!', 'success')
@@ -24,10 +28,13 @@ def endereco():
     elif request.method == 'GET':
         endereco = Endereco.query.filter_by(id_user=current_user.id).order_by(Endereco.id.desc()).first()
         if endereco:
-            form.endereco.data = endereco.endereco.title()
-        else:
-            form.endereco.data = Endereco.endereco.default.arg
-    print(endereco)
+            form.cidade.data = endereco.cidade.title()
+            form.rua.data = endereco.rua.title()
+            form.bairro.data = endereco.bairro
+            form.cep.data = endereco.cep
+            form.uf.data = endereco.uf
+
+
     return render_template('users/endereco.html', form=form, endereco=endereco)
 
 @users.route('/usuarios')
@@ -58,12 +65,16 @@ def account():
             current_user.image_file = picture_file
         current_user.username = form.username.data
         current_user.email = form.email.data
+        current_user.rg = form.rg.data
+        current_user.cpf_cnpj = form.cpf_cnpj.data
         db.session.commit()
         flash('Your account has been updated!', 'success')
         return redirect(url_for('users.account'))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
+        form.rg.data = current_user.rg
+        form.cpf_cnpj.data = current_user.cpf_cnpj
     image_file = url_for('static', filename='profile_pics/' + current_user.image_file)
     return render_template('users/account.html', title='Account', form=form, image_file=image_file)
 

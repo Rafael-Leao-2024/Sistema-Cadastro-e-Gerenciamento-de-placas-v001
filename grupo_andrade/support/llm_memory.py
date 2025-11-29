@@ -53,6 +53,7 @@ def conversa_memoria():
         get_session_history_db,
         input_messages_key="input",
         history_messages_key="history",
+        prompt=prompt
         )
 
     return conv_chain

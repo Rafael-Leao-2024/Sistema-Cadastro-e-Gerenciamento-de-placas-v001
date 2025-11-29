@@ -33,6 +33,14 @@
           <span class="text-cyan-100">{{ user.email }}</span>
         </div>
         <div class="flex justify-between items-center py-2 border-b border-cyan-500/10">
+          <span class="text-cyan-300 font-medium">RG:</span>
+          <span class="text-cyan-100">{{ user.rg.upper() }}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-cyan-500/10">
+          <span class="text-cyan-300 font-medium">Cadastro:</span>
+          <span class="text-cyan-100">{{ user.cpf_cnpj }}</span>
+        </div>
+        <div class="flex justify-between items-center py-2 border-b border-cyan-500/10">
           <span class="text-cyan-300 font-medium">Data de Cadastro:</span>
           <span class="text-cyan-100">{{ user.data_criacao.strftime('%d/%m/%Y %H:%M') if user.data_criacao else 'N/A' }}</span>
         </div>
@@ -74,11 +82,11 @@
       <i class="fas fa-map-marker-alt mr-2"></i> Endereços Cadastrados
     </h3>
     <div class="space-y-3">
-      {% for endereco in user.enderecos %}
+      {% for endereco in user.enderecos[-3:] %}
       <div class="p-4 bg-cyan-500/5 rounded-lg border border-cyan-500/10">
-        <p class="text-cyan-100">{{ endereco.endereco }}</p>
+        <p class="text-cyan-100">{{ endereco.rua }} - {{ endereco.bairro }} - {{ endereco.cidade }}- {{ endereco.uf }}</p>
         <p class="text-cyan-400 text-sm mt-1">
-          Cadastrado em: {{ endereco.data_criacao.strftime('%d/%m/%Y') if endereco.data_criacao else 'N/A' }}
+          Cadastrado em: {{ endereco.data_criacao.strftime('%d/%m/%Y %H:%M') if endereco.data_criacao else 'N/A' }}
         </p>
       </div>
       {% endfor %}
