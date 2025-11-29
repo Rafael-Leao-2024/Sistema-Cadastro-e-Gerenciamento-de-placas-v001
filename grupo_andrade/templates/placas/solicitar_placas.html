@@ -108,7 +108,11 @@
               type="text"
               name="endereco_placa"
               class="futuristic-input"
-              value="{{ current_user.enderecos[-1:].rua if current_user.enderecos else '' }}"
+              {% if current_user.enderecos and current_user.enderecos|length > 0 %}
+              value="{{ current_user.enderecos[-1].rua }}"
+              {% else %}
+              value=""
+              {% endif %}
             />
           </div>
 
