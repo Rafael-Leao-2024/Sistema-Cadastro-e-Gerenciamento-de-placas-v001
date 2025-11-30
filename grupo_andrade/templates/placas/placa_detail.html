@@ -23,11 +23,12 @@
       </a>
       <a
         href="{{ url_for('placas.editar_placa', placa_id=placa.id) }}"
-        class="futuristic-btn group"
+        class="flex items-center gap-2 px-4 py-2 rounded-md bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all duration-200"
       >
-        <i class="fas fa-edit px-3 py-3 group-hover:scale-110 transition-transform duration-200 px-3 py-3"></i>
-        Editar
+        <i class="fas fa-edit"></i>
+        <span>Editar</span>
       </a>
+
     </div>
   </div>
 
@@ -98,6 +99,7 @@
                   </div>
                   <span class="text-cyan-100 text-lg">
                     {{ usuario.username if usuario else "Usuário não encontrado" }}
+                    {{ placa.received_at.strftime('%d/%m/%Y %H:%M') }}
                   </span>
                 </div>
               </div>
@@ -251,9 +253,12 @@
               <span class="text-cyan-100 font-medium">Marcar como recebida</span>
             </label>
           </div>
-          <button type="submit" class="futuristic-btn w-full group">
-            <i class="fas fa-save mr-3 group-hover:scale-110 transition-transform duration-200"></i>
-            Atualizar Status
+          <button
+            type="submit"
+            class="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-md bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all duration-200"
+          >
+            <i class="fas fa-save"></i>
+            <span>Atualizar Status</span>
           </button>
         </form>
       </div>

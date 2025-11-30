@@ -198,7 +198,7 @@ def solicitar_placas():
         db.session.commit()
         db.session.refresh(nova_placa)
         
-        mensagem = f"{current_user.username.title()} Solicitou.{len(lista_placas)} data e hora {nova_placa.date_create}"
+        mensagem = f"{current_user.username.title()} Solicitou.{nova_placa.chassi} data e hora {nova_placa.date_create}"
         if len(lista_placas) > 1:
             mensagem = F"""{current_user.username.title()} Solicitou varios serviços total {len(lista_placas)} data e hora {nova_placa.date_create}"""
 

@@ -13,9 +13,11 @@
         <h2 class="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
           Documentos da Placa
         </h2>
-        <p class="text-cyan-300/80 text-lg mt-2 font-mono bg-cyan-500/10 px-4 py-2 rounded-lg border border-cyan-500/20 inline-block">
-          {{ placa.placa }}
-        </p>
+         <a href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}">
+          <p class="text-cyan-300/80 text-lg mt-2 font-mono bg-cyan-500/10 px-4 py-2 rounded-lg border border-cyan-500/20 inline-block">
+            {{ placa.placa }}
+          </p>
+        </a>
         <p class="text-cyan-300/70 text-sm mt-3">Gerencie os documentos anexos desta solicitação</p>
       </div>
     </div>
@@ -122,10 +124,10 @@
           </div>
           <a
             href="{{ url_for('documentos.upload_file_anexo', id_placa=placa.id) }}"
-            class="futuristic-btn group"
+            class="flex items-center gap-2 px-4 py-2 rounded-md bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all duration-200"
           >
-            <i class="fas fa-plus mr-3 group-hover:scale-110 transition-transform duration-200"></i>
-            Adicionar Novo Documento
+            <i class="fas fa-plus"></i>
+            <span>Adicionar Novo Documento</span>
           </a>
         </div>
       </div>

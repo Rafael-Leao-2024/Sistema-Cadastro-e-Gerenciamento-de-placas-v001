@@ -17,7 +17,7 @@ class Proprietario(BaseModel):
 class Veiculo(BaseModel):
     renavan : str = Field(description="o codigo renavam e a numeraçao antes da numeraçao da placa")
     placa: str 
-    crlv: str = Field(description="o crlv sao sempre a sequencia de 12 numeros e comessa com 25...")
+    crlv: str = Field(description="o crlv sao sempre a sequencia de 12 numeros")
     chassi: str = Field(description="o chassi é 17 caractere ex 95BO151R484RGC844 e começa sempre com numero nao confunda com numero de motor pois e parecido")
 
 
@@ -30,19 +30,26 @@ def gerador_saida_estruturada(input):
     parser = PydanticOutputParser(pydantic_object=SchemaDados)
 
     prompt = PromptTemplate(
-        template="""
-    Extraia os dados da procuração abaixo e retorne EXCLUSIVAMENTE no formato estruturado.
-    nao invente as informaçoes se nao souber deixe em branco.
+    template="""
+Extraia APENAS os dados solicitados no formato estruturado.
 
-    {format_instructions}
+⚠️ REGRAS IMPORTANTES (OBRIGATÓRIO SEGUIR):
+- RENAVAM tem EXATAMENTE 11 dígitos numéricos. Pegue somente este número.
+- CRLV tem EXATAMENTE 12 dígitos numéricos. Pegue somente este número.
+- Placa segue o padrão brasileiro: 7 caracteres (ex: ABC1D23).
+- Chassi tem EXATAMENTE 17 caracteres, misto de letras e números.
+- NÃO invente valores. Se não estiver no texto, deixe vazio.
+- O texto pode estar desordenado (PDF extraído). Use padrões, não posições.
 
-    TEXTO DA PROCURAÇÃO:
-    --------------------
-    {input}
-    """,
-        input_variables=["texto"],
-        partial_variables={"format_instructions": parser.get_format_instructions()},
-    )
+{format_instructions}
+
+TEXTO DO DOCUMENTO:
+--------------------
+{input}
+""",
+    input_variables=["input"],
+    partial_variables={"format_instructions": parser.get_format_instructions()},
+)
 
     modelo = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
@@ -55,4 +62,4 @@ def gerador_saida_estruturada(input):
 def ler_pdf(file):
     reader = PdfReader(file)
     page = reader.pages[0]
-    return "renavan " + page.extract_text()
+    return page.extract_text()

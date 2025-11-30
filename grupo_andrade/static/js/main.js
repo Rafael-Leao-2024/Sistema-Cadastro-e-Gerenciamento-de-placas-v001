@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="flex justify-between items-start">
                             <div class="flex-1">
                                 <p class="text-sm ${notif.lida ? 'text-gray-600' : 'text-gray-800 font-medium'}">
-                                    <a href="${urlMinhasPlacas}">${notif.mensagem}</a>
+                                    <a href="${urlMinhasPlacas.replace('0', notif.id)}">${notif.mensagem}</a>
                                 </p>
                                 <p class="text-xs text-gray-500 mt-1">${notif.data_criacao}</p>
                             </div>
