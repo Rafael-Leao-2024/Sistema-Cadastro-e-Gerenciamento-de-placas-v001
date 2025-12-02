@@ -31,6 +31,9 @@ def veiculos_novos():
     """Modelo de procuração para veículos novos"""
     if request.method == 'POST':
         despachante = User.query.filter(User.id == current_user.despachante).first()
+        if not despachante:
+            flash("Selecione um despachante ", "info")
+            return redirect(request.url)
         # Processar upload do arquivo
         if 'documento' not in request.files:
             flash('Nenhum arquivo selecionado', 'error')
@@ -43,10 +46,18 @@ def veiculos_novos():
         
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            # Aqui você salvaria o arquivo e processaria os dados
-            # file.save(os.path.join(UPLOAD_FOLDER, filename))
-            texto_saida = ler_pdf(file)
-            resultado_estruturado = gerador_saida_estruturada(texto=texto_saida)         
+
+            try:
+                texto_saida = ler_pdf(file)
+                
+                if "nota fiscal" in texto_saida.lower():
+                    resultado_estruturado = gerador_saida_estruturada(texto=texto_saida)
+                else:
+                    flash('Selecione uma nota fiscal para criar a procuraçao', 'info')
+                    return redirect(request.url)
+            except:
+                flash('Selecione uma nota fiscal para criar a procuraçao', 'info')
+                return redirect(request.url)
             # Simulando dados processados do arquivo
             
             
@@ -76,6 +87,7 @@ def transferencia():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             # Aqui você salvaria o arquivo e processaria os dados
+            
             # file.save(os.path.join(UPLOAD_FOLDER, filename))
             
             # Simulando dados processados do arquivo

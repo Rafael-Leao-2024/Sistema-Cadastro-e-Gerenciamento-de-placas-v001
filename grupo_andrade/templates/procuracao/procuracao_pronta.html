@@ -51,16 +51,31 @@
                 <h3 class="text-lg font-semibold text-cyan-400 mb-4 print:text-gray-300 border-b border-cyan-500/20 pb-2 print:border-gray-300">
                     OUTORGADO (Procurador Legal) — <span class="text-red-500 text-sm">*Campos obrigatórios*</span>
                 </h3>
-                <div class="grid md:grid-cols-2 gap-4 text-gray-300 print:text-black">
-                    <div><strong>Nome completo:</strong> {{ despachante.username }}</div>
-                    <div><strong>CPF / CNPJ:</strong> {{ despachante.cpf_cnpj }}</div>
-                    <div><strong>RG:</strong> {{ despachante.rg }}</div>
-                    <div><strong>Cep:</strong> {{ despachante.enderecos[-1].cep }}</div>
-                    <div><strong>Rua:</strong> {{ despachante.enderecos[-1].rua }}</div>
-                    <div><strong>Bairro:</strong> {{ despachante.enderecos[-1].bairro }}</div>
-                    <div><strong>Cidade:</strong> {{ despachante.enderecos[-1].cidade }}</div>
-                    <div><strong>UF:</strong> {{ despachante.enderecos[-1].uf }}</div>
-                </div>
+                {% if despachante %}
+                    {% if despachante.enderecos | length  > 0 %}
+                    <div class="grid md:grid-cols-2 gap-4 text-gray-300 print:text-black">
+                        <div><strong>Nome completo:</strong> {{ despachante.username }}</div>
+                        <div><strong>CPF / CNPJ:</strong> {{ despachante.cpf_cnpj }}</div>
+                        <div><strong>RG:</strong> {{ despachante.rg }}</div>
+                        <div><strong>Cep:</strong> {{ despachante.enderecos[-1].cep }}</div>
+                        <div><strong>Rua:</strong> {{ despachante.enderecos[-1].rua }}</div>
+                        <div><strong>Bairro:</strong> {{ despachante.enderecos[-1].bairro }}</div>
+                        <div><strong>Cidade:</strong> {{ despachante.enderecos[-1].cidade }}</div>
+                        <div><strong>UF:</strong> {{ despachante.enderecos[-1].uf }}</div>
+                    </div>
+                    {% else %}
+                    <div class="grid md:grid-cols-2 gap-4 text-gray-300 print:text-black">
+                        <div><strong>Nome completo:</strong></div>
+                        <div><strong>CPF / CNPJ:</strong></div>
+                        <div><strong>RG:</strong></div>
+                        <div><strong>Cep:</strong></div>
+                        <div><strong>Rua:</strong></div>
+                        <div><strong>Bairro:</strong></div>
+                        <div><strong>Cidade:</strong></div>
+                        <div><strong>UF:</strong></div>
+                    </div>
+                    {% endif %}
+                {% endif %}
             </div>
 
             <!-- Dados do Veículo -->

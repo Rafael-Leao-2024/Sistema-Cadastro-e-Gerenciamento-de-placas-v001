@@ -36,7 +36,6 @@ def relatorio():
 @pagamentos.route("/relatorio/<int:mes>/<int:ano>/<int:id_usuario_pagador>")
 @login_required
 def relatorio_resultados(mes, ano, id_usuario_pagador):
-    print(id_usuario_pagador)
     # Query base
     query = Placa.query.filter(
         Placa.id_user == id_usuario_pagador,
@@ -60,10 +59,7 @@ def relatorio_resultados(mes, ano, id_usuario_pagador):
     pagador_selecionado = None
     if id_usuario_pagador != 0:
         pagador_selecionado = User.query.get(id_usuario_pagador)
-    
-    print(total, init_point)
-    print(id_usuario_pagador)
-    print(placas)
+
     flash(category='success', message="relatorios automatizados com sucesso!")
     return render_template("pagamentos/relatorio_resultados.html", 
                          placas=placas, mes=mes, ano=ano, 

@@ -54,7 +54,6 @@ def upload_file_anexo(id_placa):
                 
                 try:
                     saida_texto = ler_pdf(file)
-                    print(saida_texto)
 
                     if "senatran" in saida_texto.lower():
                         saida_estruturada = gerador_saida_estruturada(saida_texto)
