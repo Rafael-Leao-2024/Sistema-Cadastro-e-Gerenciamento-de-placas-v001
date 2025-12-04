@@ -43,7 +43,7 @@ def upload_file_anexo(id_placa):
     if request.method == 'POST':
         if 'file' not in request.files:
             flash('Selecione um ou mais arquivos', category='info')
-            return redirect(url_for('documentos.upload_file_anexo'))
+            return redirect(url_for('documentos.upload_file_anexo', id_placa=placa.id))
         files = request.files.getlist('file')
         if files[0].filename == '':
             flash('Selecione um ou mais arquivos', category='info')

@@ -56,6 +56,9 @@
 </div>
 
 <script>
+
+// Adicione este script ao seu HTML existente
+
 document.addEventListener('DOMContentLoaded', function() {
     const fileInput = document.getElementById('documento');
     const fileInstructions = document.getElementById('file-instructions');
@@ -82,6 +85,34 @@ document.addEventListener('DOMContentLoaded', function() {
             // Resetar se não há arquivo
             resetFileDisplay();
         }
+    });
+
+    const form = document.querySelector('form');
+    const submitBtn = document.querySelector('button[type="submit"]');
+    
+    form.addEventListener('submit', function() {
+        // Desabilitar botão e mostrar loading
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processando...';
+        submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
+        
+        // Adicionar overlay de loading
+        const overlay = document.createElement('div');
+        overlay.id = 'loadingOverlay';
+        overlay.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50';
+        overlay.innerHTML = `
+            <div class="glass-effect-advanced rounded-2xl p-8 text-center">
+                <div class="w-16 h-16 mx-auto mb-4">
+                    <div class="relative w-full h-full">
+                        <div class="absolute inset-0 rounded-full border-4 border-cyan-500/30"></div>
+                        <div class="absolute inset-0 rounded-full border-4 border-transparent border-t-cyan-400 animate-spin"></div>
+                    </div>
+                </div>
+                <h3 class="text-lg font-semibold text-cyan-100 mb-2">Gerando Procuração</h3>
+                <p class="text-cyan-200/70 text-sm">Por favor, aguarde...</p>
+            </div>
+        `;
+        document.body.appendChild(overlay);
     });
     
     // Drag and drop functionality

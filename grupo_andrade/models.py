@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(100), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
-    data_criacao = db.Column(db.DateTime)
+    data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
     despachante = db.Column(db.Integer, default=None)
 
     cpf_cnpj = db.Column(db.String(100), nullable=True)
