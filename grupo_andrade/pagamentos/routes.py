@@ -63,7 +63,7 @@ def relatorio_resultados(mes, ano, id_usuario_pagador):
     flash(category='success', message="relatorios automatizados com sucesso!")
     return render_template("pagamentos/relatorio_resultados.html", 
                          placas=placas, mes=mes, ano=ano, 
-                         quantidade=len(placas), valor_total=total,
+                         quantidade=len(placas), valor_total=round(total, 2),
                          init_point=init_point,
                          pagador_selecionado=pagador_selecionado,
                          id_usuario_pagador=id_usuario_pagador)

@@ -27,7 +27,6 @@ retriever, chain = initialize_chatbot()
 chain_memoria = conversa_memoria()
 
 
-
 def memoria_session(banco_dados, nome_tabela):
     message_history = SQLChatMessageHistory(session_id=str(current_user.id), connection_string=banco_dados, table_name=nome_tabela)
     memory = ConversationBufferMemory(chat_memory=message_history, memory_key="chat_history", return_messages=True)
@@ -46,7 +45,6 @@ def chat():
     return render_template('support/chat.html', mensagens=mensagens)
 
 
-
 def agent_ferramenta(memory):
         agent = initialize_agent(
         agent=AgentType.CONVERSATIONAL_REACT_DESCRIPTION,
@@ -57,7 +55,6 @@ def agent_ferramenta(memory):
         handle_parsing_errors=True,
        )
         return agent
-
 
 
 @support.route('/question', methods=['POST'])

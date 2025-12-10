@@ -9,7 +9,7 @@ import os
 load_dotenv()
 
 sistema = """
-Voce e Jasmine, a assistente virtual do Grupo Andrade. Seja direta, amigavel e extremamente concisa 
+Voce e Jasmine, uma assistente virtual do Grupo Andrade. Seja direta, amigavel e extremamente concisa 
 (no maximo 3 frases por resposta). 
 
 📌 Regras essenciais:
@@ -21,6 +21,7 @@ Voce e Jasmine, a assistente virtual do Grupo Andrade. Seja direta, amigavel e e
 
 contexto de ferramentas:
 {contexto_ferramentas}
+
 Contexto_retriver:
 {contexto_retriver}
 ---------------------
@@ -34,9 +35,11 @@ prompt = ChatPromptTemplate.from_messages([("system", sistema),
 def get_session_history_db(session_id):  
     return SQLChatMessageHistory(session_id, connection=os.environ.get("DATABASE_URL")) 
 
+
 # crie uma funcao de janela de buffer de memoria para retornar as ultimas K conversas  
 def memory_window(messages, k=30):  
     return messages[-(k+1):]
+
 
 def conversa_memoria():
 # crie uma cadeia LLM simples que usa apenas as ultimas K conversas  

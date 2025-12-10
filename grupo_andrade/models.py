@@ -17,7 +17,7 @@ class User(db.Model, UserMixin):
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(100), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
-    data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
+    data_criacao = db.Column(db.DateTime, default=datetime.now)
     despachante = db.Column(db.Integer, default=None)
 
     cpf_cnpj = db.Column(db.String(100), nullable=True)
@@ -30,6 +30,11 @@ class User(db.Model, UserMixin):
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'])
         return s.dumps({'user_id': self.id, 'exp': expires_sec})
+    
+    def calcular_honorarios(self):
+        honorarios = [placa.honorario for placa in self.placas if placa.honorario]
+        total = sum(honorarios)
+        return total
 
     @staticmethod
     def verify_reset_token(token):
@@ -39,6 +44,8 @@ class User(db.Model, UserMixin):
         except:
             return None
         return User.query.get(user_id)
+    
+    
 
     def __repr__(self):
         return f"User(username={self.username}, email={self.email}, admin={self.is_admin})"
@@ -51,16 +58,17 @@ class Placa(db.Model):
     placa = db.Column(db.String(10), nullable=False, default="ABC1234")
     chassi = db.Column(db.String(30), nullable=True, default=000000)
     renavan = db.Column(db.String(20))
-    endereco_placa = db.Column(db.String(100), nullable=False)
+    endereco_placa = db.Column(db.String(100), nullable=False, default="nenhum")
     crlv = db.Column(db.String(20))
-    date_create = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_create = db.Column(db.DateTime, nullable=False, default=datetime.now)
     received = db.Column(db.Boolean, default=False)
     received_at = db.Column(db.DateTime)
     placa_confeccionada = db.Column(db.Boolean, default=False)
     placa_a_caminho = db.Column(db.Boolean, default=False)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     id_user_recebeu = db.Column(db.Integer)
-    id_user_recebeu_nao = db.Column(db.Integer)
+
+    honorario = db.Column(db.Float, default=1.01)
 
     uploads = db.relationship('UploadFile', backref='placa', lazy=True, cascade='all, delete-orphan')
     notificacoes = db.relationship('Notificacao', backref='placa', lazy=True, cascade='all, delete-orphan')
@@ -79,7 +87,7 @@ class Endereco(db.Model):
     cidade = db.Column(db.String(100), nullable=True, default="Nenhum")
     uf = db.Column(db.String(100), nullable=True, default="Nenhum")
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
+    data_criacao = db.Column(db.DateTime, default=datetime.now)
 
     def __repr__(self):
         return f"Endereco('{self.endereco}')"
@@ -92,7 +100,7 @@ class Pagamento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_pagamento = db.Column(db.String(100), nullable=False)
     status_pagamento = db.Column(db.String(50), nullable=False)
-    data_pagamento = db.Column(db.DateTime, default=datetime.utcnow)
+    data_pagamento = db.Column(db.DateTime, default=datetime.now)
     id_usuario = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     valor_transacao = db.Column(db.Float)
 
@@ -106,7 +114,7 @@ class UploadFile(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(200), unique=False, nullable=False)
-    date_create = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_create = db.Column(db.DateTime, nullable=False, default=datetime.now)
     id_usuario = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     id_placa = db.Column(db.Integer, db.ForeignKey('placas.id'), nullable=False)
 
@@ -119,7 +127,7 @@ class Notificacao(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     mensagem = db.Column(db.String(200), nullable=False)
     lida = db.Column(db.Boolean, default=False)
-    data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
+    data_criacao = db.Column(db.DateTime, default=datetime.now)
     id_solicitacao = db.Column(db.Integer, db.ForeignKey('placas.id'), nullable=False)
     id_usuario = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 

@@ -17,8 +17,8 @@ placas = Blueprint('placas', __name__)
 
 def injetar_notificacao():
     g.notificacoes_nao_lidas = 0
-    if current_user.is_authenticated and current_user.is_admin:
-        g.notificacoes_nao_lidas = Notificacao.query.filter_by(id_usuario=current_user.despachante ,lida=False).count()
+    if current_user.is_authenticated:
+        g.notificacoes_nao_lidas = Notificacao.query.filter_by(id_usuario=current_user.id ,lida=False).count()
     return (dict(notificacoes_nao_lidas=g.notificacoes_nao_lidas))
 
 
@@ -80,7 +80,7 @@ def placa_detail(placa_id):
         if received and not placa.received:
             placa.id_user_recebeu = current_user.id
             placa.received = True
-            placa.received_at = datetime.utcnow()
+            placa.received_at = datetime.now()
             flash(f"Placa {placa.placa.upper()} Recebida com sucesso.", 'success')
         elif not received and placa.received:
             time_limit = placa.received_at + timedelta(minutes=10)
@@ -148,6 +148,7 @@ def editar_placa(placa_id):
         placa.renavan = request.form.get('renavan')
         placa.endereco_placa = request.form.get('endereco_placa')
         placa.crlv = request.form.get('crlv')
+        placa.honorario = request.form.get('honorario')
         db.session.commit()
         flash(f"Os dados da placa {placa.placa.upper()} foram atualizados com sucesso!", "success")
         return redirect(url_for('placas.placa_detail', placa_id=placa.id))
@@ -173,9 +174,11 @@ def solicitar_placas():
         try:
             endereco = endereco.rua.title()
             placa = placa.placa.title()
+            honorario = placa.honorario
         except:
             endereco = Endereco.rua.default.arg
             placa = Placa.placa.default.arg
+            honorario = Placa.honorario.default.arg
     
     if request.method == 'POST':
         chassis = request.form.getlist('chassi')
@@ -183,15 +186,17 @@ def solicitar_placas():
         enderecos = request.form.getlist('endereco_placa') 
         crlvs = request.form.getlist('crlv')
         renavams = request.form.getlist('renavam')
+        honorarios = request.form.getlist('honorario')
 
         lista_placas = []
-        for chassi, placa, endereco, crlv, renavam in zip(chassis, placas, enderecos, crlvs, renavams):
+        for chassi, placa, endereco, crlv, renavam, honorario in zip(chassis, placas, enderecos, crlvs, renavams, honorarios):
             nova_placa = Placa(
                 placa=placa.upper(),
                 chassi=chassi.upper(),
                 endereco_placa=endereco, 
                 crlv=crlv, renavan=renavam,
-                id_user=current_user.id
+                id_user=current_user.id,
+                honorario=honorario
                 )
             db.session.add(nova_placa)
             lista_placas.append(nova_placa)    
@@ -223,7 +228,7 @@ def solicitar_placas():
         else:
             flash('Voce nao preencheu os campos com os dados!', 'info')
             return redirect(url_for('placas.solicitar_placas'))     
-    return render_template('placas/solicitar_placas.html', titulo='solicitar varias placas', endereco=endereco, placa=placa, despachante=despachante)
+    return render_template('placas/solicitar_placas.html', titulo='solicitar varias placas', honorario=honorario, endereco=endereco, placa=placa, despachante=despachante)
 
 @placas.route('/notificacoes')
 @login_required
@@ -239,7 +244,7 @@ def pegar_notificacoes():
         'mensagem': notif.mensagem,
         'data_criacao': notif.data_criacao.strftime('%d/%m/%Y %H:%M'),
         'lida': notif.lida,
-        
+        'id_solicitacao': notif.id_solicitacao        
         })
     
     return jsonify(notificacoes)
@@ -330,7 +335,12 @@ def gerenciamento_final(id_placa):
                 # Botão de placa a caminho
                 if 'placa_a_caminho' in request.form:
                     placa.placa_a_caminho = form.placa_a_caminho.data
-                
+                    notificacao = Notificacao(
+                        mensagem=f"Processo de ID {placa.id} Chassi:{placa.chassi} Concluido Marque como Recebido",
+                        id_solicitacao=placa.id,
+                        id_usuario=placa.author.id
+                        )
+                    db.session.add(notificacao)
                 # Outros botões podem ser adicionados de forma similar
                 db.session.commit()
             flash(category="success", message="checkbox valido")

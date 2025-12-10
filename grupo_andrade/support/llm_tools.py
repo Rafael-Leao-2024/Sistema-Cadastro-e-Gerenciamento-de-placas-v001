@@ -2,8 +2,7 @@ from langchain.tools import tool
 from bs4 import BeautifulSoup
 import requests
 from grupo_andrade.pagamentos.routes import relatorio_resultados
-from grupo_andrade.models import User
-from grupo_andrade.models import Placa
+from grupo_andrade.models import User, Placa
 from grupo_andrade.main import db
 
 
@@ -44,10 +43,10 @@ def meu_debito(mes):
     Returns:
         _type_: uma consulta SQL query
     """
-    html = relatorio_resultados(mes=mes, ano=2025, id_usuario_pagador=37)
+    html = relatorio_resultados(mes=mes, ano=2025, id_usuario_pagador=3)
     soup = BeautifulSoup(html, 'html.parser')
     informacao = soup.body.main.get_text()
-    link_pagameno = soup.body.main.find_all('a')[-2].get('href')
+    link_pagameno = soup.body.main.find_all('a')[-1].get('href')
     informacao += f"\n Link para pagamento: {link_pagameno}"
     informacao_txt = informacao.replace('\n', '').replace('  ', '')
     return informacao_txt + f"\n Link para pagamento: {link_pagameno}"

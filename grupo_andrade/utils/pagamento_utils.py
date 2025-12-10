@@ -11,7 +11,7 @@ UNIT_PRICE = float(os.environ.get('UNIT_PRICE'))
 
 def criar_preferencia(placas):
     corpo = {"items":[
-        {"id": str(placa.id), "title": placa.placa.upper(), "quantity": 1, "unit_price": UNIT_PRICE}
+        {"id": str(placa.id), "title": placa.placa.upper(), "quantity": 1, "unit_price": placa.honorario or 0}
         for placa in placas
         ],
             "back_urls": {

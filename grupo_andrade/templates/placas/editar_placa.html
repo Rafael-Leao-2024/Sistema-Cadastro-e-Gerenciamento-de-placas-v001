@@ -121,6 +121,26 @@
             </div>
           </div>
         </div>
+        <!-- Campo honorario  -->
+        <div class="form-group">
+            <label class="block text-cyan-300 font-medium mb-3 flex items-center">
+              <i class="fas fa-file-contract mr-2 text-cyan-400"></i>
+              Honorario do Serviço
+            </label>
+            <div class="relative">
+              <input
+                type="text"
+                name="honorario"
+                value="{{ placa.honorario }}"
+                class="futuristic-input pl-12"
+                placeholder="valor do honorario"
+              />
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <i class="fas fa-file-invoice text-cyan-400/80"></i>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Campo Endereço -->
         <div class="form-group mt-6">
@@ -129,13 +149,13 @@
             Endereço para Entrega
           </label>
           <div class="relative">
-            <textarea
+            <input
               name="endereco_placa"
               class="futuristic-textarea pl-12"
               rows="3"
               placeholder="Digite o endereço completo para entrega"
-              required
-            >{{ placa.endereco_placa }}</textarea>
+              
+            value="{{ placa.endereco_placa.title() }}"/>
             <div class="absolute top-3 left-3 flex items-start pointer-events-none">
               <i class="fas fa-home text-cyan-400/80 mt-1"></i>
             </div>
