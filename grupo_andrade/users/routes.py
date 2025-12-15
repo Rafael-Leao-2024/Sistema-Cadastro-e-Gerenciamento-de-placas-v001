@@ -28,11 +28,11 @@ def endereco():
     elif request.method == 'GET':
         endereco = Endereco.query.filter_by(id_user=current_user.id).order_by(Endereco.id.desc()).first()
         if endereco:
-            form.cidade.data = endereco.cidade.title()
-            form.rua.data = endereco.rua.title()
-            form.bairro.data = endereco.bairro
+            form.cidade.data = endereco.cidade.default.arg if not endereco.cidade else endereco.cidade.title()
+            form.rua.data = endereco.rua.default.arg if not endereco.rua else endereco.rua.title()
+            form.bairro.data = endereco.bairro.title() if endereco.bairro else endereco.bairro.default.arg
             form.cep.data = endereco.cep
-            form.uf.data = endereco.uf
+            form.uf.data = endereco.uf.upper() if endereco.uf else endereco.uf.default.arg
 
 
     return render_template('users/endereco.html', form=form, endereco=endereco)

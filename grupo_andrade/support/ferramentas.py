@@ -1,4 +1,5 @@
 from langchain.tools import tool
+from pydantic import BaseModel
 from bs4 import BeautifulSoup
 import requests
 from grupo_andrade.pagamentos.routes import relatorio_resultados
@@ -35,18 +36,31 @@ retorno informacoes em TEXTO
         return f"Placa {placa} nao consta no nosso Banco de Dados!"
     return informacoes
     
-@tool
-def meu_debito(mes):
+class MeuDebitoInput(BaseModel):
+    mes: int
+    ano: int
+    cliente: str
+
+@tool(args_schema=MeuDebitoInput)
+def meu_debito(mes: int, ano: int, cliente: str) -> str:
     """Descricao do nome da funcao pode ser chamada de meu 'faturameto' 'minhas_solicitacoes' etc tudo que envolve em querer a relacao de placas para pagamento ou conferencia
+        a funcao recebi tres argumenos (mes, ano, id_cliente)
     Args:
         mes (inteiro): mes pasado para a funcao calcular o relatorio
+        ano (inteiro): ano pasado para a funcao calcular o relatorio
+        cliente (string): cliente pasado para a funcao calcular o relatorio
     Returns:
         _type_: uma consulta SQL query
     """
-    html = relatorio_resultados(mes=mes, ano=2025, id_usuario_pagador=3)
+
+    clientedb = User.query.filter(User.username == cliente.lower()).first()
+    if not clientedb:
+        return "Cliente nao encontrado!"
+
+    html = relatorio_resultados(mes=mes, ano=ano, id_usuario_pagador=clientedb.id)
     soup = BeautifulSoup(html, 'html.parser')
     informacao = soup.body.main.get_text()
-    link_pagameno = soup.body.main.find_all('a')[-1].get('href')
+    link_pagameno = soup.body.main.find_all('a')[0].get('href')
     informacao += f"\n Link para pagamento: {link_pagameno}"
     informacao_txt = informacao.replace('\n', '').replace('  ', '')
     return informacao_txt + f"\n Link para pagamento: {link_pagameno}"
@@ -97,6 +111,7 @@ def cotaçao_moeda(dinheiro) -> float:
         return cotacao
     except Exception as e:
         return f"Erro ao consultar cotacao: {e}"
+    
 
 
 ferramentas = [cotaçao_moeda, meu_debito, informacao_placa, permissao_admin, tirar_permissao_admin]

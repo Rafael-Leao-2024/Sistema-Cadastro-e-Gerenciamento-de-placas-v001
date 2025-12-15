@@ -16,7 +16,7 @@ from grupo_andrade.upload.funcoesIA import ler_pdf, gerador_saida_estruturada
 
 load_dotenv()
 
-documentos_bp  = Blueprint('documentos', __name__, template_folder='templates')
+documentos_bp  = Blueprint('documentos', __name__, template_folder='templates', url_prefix="/documentos/")
 
 @documentos_bp.context_processor
 def inject_notificacoes_documentos():
@@ -74,7 +74,7 @@ def upload_file_anexo(id_placa):
                 # armazenamento AWS
                 try:
                     enviar_arquivo_s3(file=file, filename=filename)
-                    flash(f'Arquivo {filename} enviado com sucesso ')
+                    flash(f'Arquivo {filename} enviado com sucesso ', category="success")
                 except NoCredentialsError:
                     flash('Credenciais invalidas', 'info')
                     return redirect(url_for('documentos.upload_file_anexo', id_placa=placa.id))
@@ -89,7 +89,6 @@ def upload_file_anexo(id_placa):
                 flash('apenas arquivos PDFs sao permitidos', 'info')
                 return redirect(url_for('documentos.upload_file_anexo', id_placa=placa.id))
                 
-        flash(message="arquivos armazenados com sucesso", category='success')
         return redirect(url_for('documentos.download_anexos', id_placa=id_placa))           
     return render_template('upload/muitos_file.html', title="muitos uploads", placa=placa)
 

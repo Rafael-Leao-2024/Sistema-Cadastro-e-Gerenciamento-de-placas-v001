@@ -31,6 +31,7 @@ def veiculos_novos():
     """Modelo de procuração para veículos novos"""
     if request.method == 'POST':
         despachante = User.query.filter(User.id == current_user.despachante).first()
+        print(despachante)
         if not despachante:
             flash("Selecione um despachante ", "info")
             return redirect(request.url)
@@ -52,6 +53,7 @@ def veiculos_novos():
                 
                 if "nota fiscal" in texto_saida.lower():
                     resultado_estruturado = gerador_saida_estruturada(texto=texto_saida)
+                    print(resultado_estruturado)
                 else:
                     flash('Selecione uma nota fiscal para criar a procuraçao', 'info')
                     return redirect(request.url)

@@ -40,7 +40,7 @@
                                 <option value="" disabled selected class="text-cyan-300/50">-- Selecione um despachante --</option>
                                 {% for despachante in despachantes %}
                                 <option id="{{ despachante.id }}" value="{{ despachante.id }}" class="text-cyan-900">
-                                    {{ despachante.username }}
+                                    ID - {{ despachante.id }} ...{{ despachante.username.title() }}
                                 </option>
                                 {% endfor %}
                             </select>

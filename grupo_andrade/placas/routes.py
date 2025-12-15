@@ -38,7 +38,7 @@ def homepage():
 @placas.route("/todas")
 @login_required
 def todas():
-    usuarios = User.query.filter(User.despachante==current_user.id).all()
+    usuarios = User.query.all()
     per_page = 10
     page = request.args.get('page', 1, type=int)
     placas = Placa.query.filter(Placa.id_user.in_([user.id for user in usuarios])).options(joinedload(Placa.author))\

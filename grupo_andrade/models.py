@@ -26,6 +26,7 @@ class User(db.Model, UserMixin):
     placas = db.relationship('Placa', backref='author', lazy=True, cascade='all, delete-orphan')
     enderecos = db.relationship('Endereco', backref='user', lazy=True, cascade='all, delete-orphan')
     pagamentos = db.relationship('Pagamento', backref='user', lazy=True, cascade='all, delete-orphan')
+    notificacoes = db.relationship('Notificacao', backref='user', lazy=True, cascade='all, delete-orphan')
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'])

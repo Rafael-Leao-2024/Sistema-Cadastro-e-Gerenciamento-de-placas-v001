@@ -59,7 +59,7 @@ def gerador_saida_estruturada(texto):
         template="""Voce é um especialista contabil com esperiencia em notas fiscais.
 Extraia os dados da NOTA FISCAL abaixo e retorne EXCLUSIVAMENTE no formato estruturado.
 nao invente as informaçoes se nao souber deixe em branco
-{format_instructions}
+\n{format_instructions}\n
 
 TEXTO DA NOTA FISCAL
     --------------------

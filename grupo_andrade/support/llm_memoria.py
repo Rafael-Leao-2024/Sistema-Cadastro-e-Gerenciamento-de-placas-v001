@@ -4,7 +4,9 @@ from langchain_core.runnables import RunnablePassthrough, RunnableWithMessageHis
 from langchain_core.output_parsers import StrOutputParser  
 from langchain_community.chat_message_histories import SQLChatMessageHistory  
 from dotenv import load_dotenv
+from flask_login import current_user
 import os
+
 
 load_dotenv()
 
@@ -13,18 +15,21 @@ Voce e Jasmine, uma assistente virtual do Grupo Andrade. Seja direta, amigavel e
 (no maximo 3 frases por resposta). 
 
 📌 Regras essenciais:
-1. Sempre seja humano
+1. Sempre seja humano 
 2. Responda APENAS com o contexto fornecido 
 3. Seja específica sobre prazos, documentos e valores quando perguntado
 4. use emojis nas respostas a cada duas resposta.
 5. use informacao de  resultados "resposta_do_agente_para_LLM" para melhor esclarecimento de ferramentas 
 
 contexto de ferramentas:
-{contexto_ferramentas}
+\n{contexto_ferramentas}\n
 
 Contexto_retriver:
-{contexto_retriver}
----------------------
+\n{contexto_retriver}
+---------------------\n
+
+dialogo com humano:
+\n{current_user_input}\n
 """
 
 prompt = ChatPromptTemplate.from_messages([("system", sistema),
@@ -43,7 +48,7 @@ def memory_window(messages, k=30):
 
 def conversa_memoria():
 # crie uma cadeia LLM simples que usa apenas as ultimas K conversas  
-    chatgpt = ChatOpenAI(model_name="gpt-4o-mini", temperature=0)
+    chatgpt = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.1)
 
     llm_chain = (RunnablePassthrough.assign(history=lambda x: memory_window(x["history"]))  
                 | prompt  
