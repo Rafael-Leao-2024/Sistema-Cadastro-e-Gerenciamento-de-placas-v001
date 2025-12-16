@@ -46,7 +46,11 @@ def relatorio_resultados(mes, ano, id_usuario_pagador):
     # Filtro por pagador específico se não for "Todos"
     if id_usuario_pagador != 0:
         query = query.filter(Placa.id_user == id_usuario_pagador)
-        
+    else:
+        query = Placa.query.filter(
+        extract("month", Placa.date_create) == mes,
+        extract("year", Placa.date_create) == ano
+    )       
     
     placas = query.all()
     

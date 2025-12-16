@@ -69,7 +69,7 @@ class Placa(db.Model):
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     id_user_recebeu = db.Column(db.Integer)
 
-    honorario = db.Column(db.Float, default=1.01)
+    honorario = db.Column(db.Float, nullable=False, default=1.01)
 
     uploads = db.relationship('UploadFile', backref='placa', lazy=True, cascade='all, delete-orphan')
     notificacoes = db.relationship('Notificacao', backref='placa', lazy=True, cascade='all, delete-orphan')

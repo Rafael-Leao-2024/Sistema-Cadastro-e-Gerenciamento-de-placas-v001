@@ -13,27 +13,32 @@ APIKEY_SENDGRID = os.environ.get("APIKEY_SENDGRID")  # Substitua pela sua chave
 # Construa o e-mail
 def enviar_email_reset_senha(user):
     token = user.get_reset_token()
-    conta_sendgrid = SendGridAPIClient(APIKEY_SENDGRID)
+    conta_sendgrid = SendGridAPIClient(os.environ.get('APIKEY_SENDGRID', APIKEY_SENDGRID))
 
-    email = Mail(
-        from_email=os.environ.get,  # Use um e-mail verificado
+
+    message = Mail(
+        from_email=os.environ.get("EMAIL_SENDGRID"),  # Use um e-mail verificado
         to_emails=user.email,
         subject="Solicitação de redefinição de senha",
         html_content=f"""<p>
-Para redefinir sua senha, visite o seguinte link::
+Para redefinir sua senha, visite o seguinte link:<br><br>
+<a href="{url_for('auth.reset_token', token=token, _external=True)}">
 {url_for('auth.reset_token', token=token, _external=True)}
-Se voce nao fez esta solicitacao, simplesmente ignore este e-mail e nenhuma alteração será feita.
-obrigado {user.username}</p>
-"""
+</a><br><br>
+Se você não fez esta solicitação, simplesmente ignore este e-mail e nenhuma alteração será feita.<br><br>
+Obrigado,<br>
+{user.username}</p>"""
 )
 
     # Envie o e-mail
     try:
-        resposta = conta_sendgrid.send(email)
+        resposta = conta_sendgrid.send(message=message)
         print(f"E-mail enviado! Status: {resposta.status_code}")
+        return resposta.status_code
         # Status 202 indica sucesso:cite[3]
     except Exception as erro:
         print(f"Erro ao enviar e-mail: {erro}")
+        return None
 
 
 def verificar_email(email):

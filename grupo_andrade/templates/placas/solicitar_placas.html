@@ -120,11 +120,14 @@
            <div class="form-group">
             <label class="block text-cyan-300 font-medium mb-2">Preço honorario R$</label>
             <input
-              type="text"
+              type="number"
               name="honorario"
-              class="futuristic-input uppercase"
-              value="{{ honorario }}"
-              placeholder="0.00"
+              value="{{ placa.honorario }}"
+              class="futuristic-input pl-12"
+              placeholder="Valor do honorário"
+              step="0.01"         
+              min="0"             
+              oninput="validity.valid||(value='');"
               required
             />
           </div>
