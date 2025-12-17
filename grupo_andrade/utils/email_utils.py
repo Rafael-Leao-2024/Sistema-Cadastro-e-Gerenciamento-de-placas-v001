@@ -1,3 +1,6 @@
+import os
+import smtplib
+from email.mime.text import MIMEText
 from flask import  url_for
 import requests
 import os
@@ -10,35 +13,75 @@ load_dotenv()
 APIKEY_SENDGRID = os.environ.get("APIKEY_SENDGRID")  # Substitua pela sua chave
 
 
-# Construa o e-mail
+# # Construa o e-mail
+# def enviar_email_reset_senha(user):
+#     token = user.get_reset_token()
+#     conta_sendgrid = SendGridAPIClient(os.environ.get('APIKEY_SENDGRID', APIKEY_SENDGRID))
+
+#     message = Mail(
+#         from_email=os.environ.get("EMAIL_SENDGRID"),  # Use um e-mail verificado
+#         to_emails=user.email,
+#         subject="Solicitação de redefinição de senha",
+#         html_content=f"""<p>
+# Para redefinir sua senha, visite o seguinte link:<br><br>
+# <a href="{url_for('auth.reset_token', token=token, _external=True)}">
+# {url_for('auth.reset_token', token=token, _external=True)}
+# </a><br><br>
+# Se você não fez esta solicitação, simplesmente ignore este e-mail e nenhuma alteração será feita.<br><br>
+# Obrigado,<br>
+# {user.username}</p>"""
+# )
+
+#     # Envie o e-mail
+#     try:
+#         resposta = conta_sendgrid.send(message=message)
+#         print(f"E-mail enviado! Status: {resposta.status_code}")
+#         return resposta.status_code
+#         # Status 202 indica sucesso:cite[3]
+#     except Exception as erro:
+#         print(f"Erro ao enviar e-mail: {erro}")
+#         return None
+
+
 def enviar_email_reset_senha(user):
-    token = user.get_reset_token()
-    conta_sendgrid = SendGridAPIClient(os.environ.get('APIKEY_SENDGRID', APIKEY_SENDGRID))
-
-
-    message = Mail(
-        from_email=os.environ.get("EMAIL_SENDGRID"),  # Use um e-mail verificado
-        to_emails=user.email,
-        subject="Solicitação de redefinição de senha",
-        html_content=f"""<p>
-Para redefinir sua senha, visite o seguinte link:<br><br>
-<a href="{url_for('auth.reset_token', token=token, _external=True)}">
-{url_for('auth.reset_token', token=token, _external=True)}
-</a><br><br>
-Se você não fez esta solicitação, simplesmente ignore este e-mail e nenhuma alteração será feita.<br><br>
-Obrigado,<br>
-{user.username}</p>"""
-)
-
-    # Envie o e-mail
     try:
-        resposta = conta_sendgrid.send(message=message)
-        print(f"E-mail enviado! Status: {resposta.status_code}")
-        return resposta.status_code
-        # Status 202 indica sucesso:cite[3]
+        token = user.get_reset_token()
+
+        remetente = os.getenv("MAIL_DEFAULT_SENDER")
+        senha_app = os.getenv("MAIL_PASSWORD")
+
+        link_reset = url_for(
+            'auth.reset_token',
+            token=token,
+            _external=True
+        )
+
+        html = f"""
+        <p>
+            Para redefinir sua senha, clique no link abaixo:<br><br>
+            <a href="{link_reset}">{link_reset}</a><br><br>
+            Se você não solicitou a redefinição, ignore este e-mail.<br><br>
+            Atenciosamente,<br>
+            <strong>{user.username}</strong>
+        </p>
+        """
+
+        msg = MIMEText(html, "html", "utf-8")
+        msg["Subject"] = "Solicitação de redefinição de senha"
+        msg["From"] = remetente
+        msg["To"] = user.email
+
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(remetente, senha_app)
+            server.send_message(msg)
+
+        print("E-mail de redefinição enviado com sucesso")
+        return True
+
     except Exception as erro:
-        print(f"Erro ao enviar e-mail: {erro}")
-        return None
+        print(f"Erro ao enviar e-mail de redefinição: {erro}")
+        return False
+
 
 
 def verificar_email(email):
