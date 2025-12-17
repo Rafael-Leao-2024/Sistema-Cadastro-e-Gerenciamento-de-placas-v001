@@ -58,15 +58,14 @@ def reset_request():
     form = RequestResetForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user:
-            with current_app.app_context():
-                token = user.get_reset_token()
-                link_reset = url_for(
-                'auth.reset_token',
-                token=token,
-                _external=True
-            )
-                enviar_email_em_background(user, link_reset)
+        if user:        
+            token = user.get_reset_token()
+            link_reset = url_for(
+            'auth.reset_token',
+            token=token,
+            _external=True
+        )
+            enviar_email_em_background(user, link_reset)
             flash('Um e-mail foi enviado com instrucoes para redefinir sua senha.', 'info')
             return redirect(url_for('auth.login'))
         else:
