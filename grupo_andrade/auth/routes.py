@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
 from flask_login import login_user, logout_user, current_user
 from grupo_andrade.models import User
 from grupo_andrade.auth.forms import RegistrationForm, LoginForm, RequestResetForm, ResetPasswordForm
@@ -59,7 +59,8 @@ def reset_request():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
-            enviar_email_em_background(user)
+            with current_app.app_context():
+                enviar_email_em_background(user)
             flash('Um e-mail foi enviado com instrucoes para redefinir sua senha.', 'info')
             return redirect(url_for('auth.login'))
         else:
