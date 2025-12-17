@@ -35,7 +35,9 @@ def enviar_email_reset_senha(user, link_reset):
         msg["From"] = remetente
         msg["To"] = user.email
 
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+        with smtplib.SMTP("smtp.gmail.com", 587, timeout=15) as server:
+            server.ehlo()
+            server.starttls()
             server.login(remetente, senha_app)
             server.send_message(msg)
 
