@@ -6,6 +6,8 @@ import requests
 import os
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+import threading
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -81,6 +83,14 @@ def enviar_email_reset_senha(user):
     except Exception as erro:
         print(f"Erro ao enviar e-mail de redefinição: {erro}")
         return False
+
+
+def enviar_email_em_background(user):
+    thread = threading.Thread(
+        target=enviar_email_reset_senha,
+        args=(user,)
+    )
+    thread.start()
 
 
 

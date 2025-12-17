@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, current_user
 from grupo_andrade.models import User
 from grupo_andrade.auth.forms import RegistrationForm, LoginForm, RequestResetForm, ResetPasswordForm
 from grupo_andrade.main import db, bcrypt, mail
-from grupo_andrade.utils.email_utils import enviar_email_reset_senha
+from grupo_andrade.utils.email_utils import enviar_email_em_background
 from grupo_andrade.utils.email_utils import verificar_email
 from datetime import datetime
 
@@ -59,7 +59,7 @@ def reset_request():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
-            enviar_email_reset_senha(user)
+            enviar_email_em_background(user)
             flash('Um e-mail foi enviado com instrucoes para redefinir sua senha.', 'info')
             return redirect(url_for('auth.login'))
         else:
