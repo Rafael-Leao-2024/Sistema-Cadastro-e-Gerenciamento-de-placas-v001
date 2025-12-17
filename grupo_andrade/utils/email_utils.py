@@ -15,18 +15,10 @@ load_dotenv()
 APIKEY_SENDGRID = os.environ.get("APIKEY_SENDGRID")  # Substitua pela sua chave
 
 
-def enviar_email_reset_senha(user):
+def enviar_email_reset_senha(user, link_reset):
     try:
-        token = user.get_reset_token()
-
         remetente = os.getenv("MAIL_DEFAULT_SENDER")
         senha_app = os.getenv("MAIL_PASSWORD")
-
-        link_reset = url_for(
-            'auth.reset_token',
-            token=token,
-            _external=True
-        )
 
         html = f"""
         <p>
@@ -55,15 +47,17 @@ def enviar_email_reset_senha(user):
         return False
 
 
-def enviar_email_em_background(user):
+def enviar_email_em_background(user, link_reset):
+    import threading
+    from flask import current_app
+
     app = current_app._get_current_object()
 
     def task():
         with app.app_context():
-            enviar_email_reset_senha(user)
+            enviar_email_reset_senha(user, link_reset)
 
-    thread = threading.Thread(target=task)
-    thread.start()
+    threading.Thread(target=task).start()
 
 
 
