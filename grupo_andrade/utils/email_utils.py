@@ -1,3 +1,4 @@
+from flask import current_app
 import os
 import smtplib
 from email.mime.text import MIMEText
@@ -53,11 +54,15 @@ def enviar_email_reset_senha(user):
         print(f"Erro ao enviar e-mail de redefinição: {erro}")
         return False
 
+
 def enviar_email_em_background(user):
-    thread = threading.Thread(
-        target=enviar_email_reset_senha,
-        args=(user,)
-    )
+    app = current_app._get_current_object()
+
+    def task():
+        with app.app_context():
+            enviar_email_reset_senha(user)
+
+    thread = threading.Thread(target=task)
     thread.start()
 
 
