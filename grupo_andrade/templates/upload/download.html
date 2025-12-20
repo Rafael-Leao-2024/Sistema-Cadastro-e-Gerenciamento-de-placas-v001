@@ -13,7 +13,7 @@
         <h2 class="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
           Documentos da Placa
         </h2>
-         <a href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}">
+        <a href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}">
           <p class="text-cyan-300/80 text-lg mt-2 font-mono bg-cyan-500/10 px-4 py-2 rounded-lg border border-cyan-500/20 inline-block">
             {{ placa.placa }}
           </p>
@@ -62,6 +62,7 @@
                   <div class="flex items-center space-x-4 text-cyan-400/70 text-sm">
                     <span class="flex items-center">
                       <i class="fas fa-calendar mr-1"></i>
+                      por {{ file.author.username|title }}
                       {{ file.date_create.strftime('%d/%m/%Y') }}
                     </span>
                     <span class="flex items-center">

@@ -28,12 +28,11 @@ def endereco():
     elif request.method == 'GET':
         endereco = Endereco.query.filter_by(id_user=current_user.id).order_by(Endereco.id.desc()).first()
         if endereco:
-            form.cidade.data = endereco.cidade.default.arg if not endereco.cidade else endereco.cidade.title()
-            form.rua.data = endereco.rua.default.arg if not endereco.rua else endereco.rua.title()
-            form.bairro.data = endereco.bairro.title() if endereco.bairro else endereco.bairro.default.arg
-            form.cep.data = endereco.cep
-            form.uf.data = endereco.uf.upper() if endereco.uf else endereco.uf.default.arg
-
+            form.cidade.data = "" if not endereco.cidade else endereco.cidade.title()
+            form.rua.data = "" if not endereco.rua else endereco.rua.title()
+            form.bairro.data = endereco.bairro.title() if endereco.bairro else ""
+            form.cep.data = endereco.cep if endereco.cep else ""
+            form.uf.data = endereco.uf.upper() if endereco.uf else ""
 
     return render_template('users/endereco.html', form=form, endereco=endereco)
 
@@ -83,6 +82,9 @@ def account():
 @login_required
 def info_user(user_id):
     user = User.query.filter(User.id == user_id).first()
+    if not user:
+        flash("Usuario de ID: {user_id} nao encontrado ", "info")
+        return redirect(url_for("users.listar_usuarios"))
     return render_template('users/info_user.html', user=user)
 
 

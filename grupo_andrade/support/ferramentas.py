@@ -9,10 +9,25 @@ from grupo_andrade.main import db
 
 from dotenv import load_dotenv
 load_dotenv()
+    
 
 
-@tool
-def informacao_placa(placa):
+class MeuDebitoInput(BaseModel):
+    mes: int
+    ano: int
+    cliente: str
+
+
+class EntradaID(BaseModel):
+    id_usuario: int
+
+
+class EntradaPlaca(BaseModel):
+    placa: str
+
+
+@tool(args_schema=EntradaPlaca)
+def informacao_placa(placa: str):
     """"
 descricao: funcao para pegar informacao de placa pela PLACA 
 caso queiram "consultar" , "saber", "informa" e etc .
@@ -20,26 +35,24 @@ argumentos: placa type(string) Exemplo ABC0A00
 retorno informacoes em TEXTO
     """
     placas = Placa.query.filter(Placa.placa.ilike(f"%{placa}%")).order_by(Placa.date_create.desc()).all()
+    
+    if len(placas) < 1:
+        return f"Placa {placa} nao consta no nosso Banco de Dados!"
+
     informacoes = [
         {
             "placa":placa.placa, "endereco": placa.endereco_placa,
             "revavam": placa.renavan, "CRLV": placa.crlv,
-            "solicitante": placa.author.username,
+            "solicitada por ": placa.author.username,
             "data solicitada": placa.date_create,
-            "confeccionada": placa.placa_confeccionada, "entregue": placa.placa_a_caminho,
+            "Se confeccionada": placa.placa_confeccionada, "Se entregue": placa.placa_a_caminho,
             "data de entrega": placa.received_at,
-            "Recebimento": (User.query.filter(User.id==placa.id_user_recebeu).first().username if User.query.filter(User.id==placa.id_user_recebeu).first() else "Nao recebido"),
+            "quem Recebeu ?": (User.query.filter(User.id==placa.id_user_recebeu).first().username if User.query.filter(User.id==placa.id_user_recebeu).first() else "Nao recebido"),
         } 
         for placa in placas
         ]
-    if len(informacoes) < 1:
-        return f"Placa {placa} nao consta no nosso Banco de Dados!"
     return informacoes
-    
-class MeuDebitoInput(BaseModel):
-    mes: int
-    ano: int
-    cliente: str
+
 
 @tool(args_schema=MeuDebitoInput)
 def meu_debito(mes: int, ano: int, cliente: str) -> str:
@@ -66,8 +79,8 @@ def meu_debito(mes: int, ano: int, cliente: str) -> str:
     return informacao_txt + f"\n Link para pagamento: {link_pagameno}"
 
 
-@tool
-def permissao_admin(id_usuario):
+@tool(args_schema=EntradaID)
+def permissao_admin(id_usuario: int):
     """_summary_
         funcao para liberar acesso de admin requerido ID do usuario
     Args:
@@ -83,8 +96,8 @@ def permissao_admin(id_usuario):
     return f"usuario {usuario.username} de ID{usuario.id}. liberado para ADMIN, "
 
 
-@tool
-def tirar_permissao_admin(id):
+@tool(args_schema=EntradaID)
+def tirar_permissao_admin(id_usuario: int):
     """_summary_
         funcao para liberar acesso de admin requerido ID do usuario
     Args:
@@ -92,7 +105,7 @@ def tirar_permissao_admin(id):
     Returns:
         uma messages do tipo str()
     """
-    usuario = User.query.filter(User.id == id).first()
+    usuario = User.query.filter(User.id == id_usuario).first()
     if not usuario:
         return f"ID invalido presizamos do id para liberar seu ADMIN"
     usuario.is_admin = False

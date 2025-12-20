@@ -72,6 +72,8 @@ def ask_question():
             f"Content: {ctx.page_content}" 
             for ctx in contextos
         )
+
+        print(contextos)
         resposta_agente = agente.invoke(pergunta)
 
         resposta_memoria = chain_memoria.invoke(
