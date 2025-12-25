@@ -72,7 +72,7 @@
           <tr class="border-b border-cyan-500/20">
             <th class="px-6 py-4 text-left text-cyan-300 font-semibold">ID</th>
             <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Nome</th>
-            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Email</th>
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Despachante</th>
             <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Data Cadastro</th>
             <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Permissão</th>
             <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Ação</th>
@@ -89,13 +89,13 @@
                 <div class="w-8 h-8 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center">
                   <i class="fas fa-user text-white text-xs"></i>
                 </div>
-                <span class="text-cyan-100 font-medium">{{ usuario.username }}</span>
+                <span class="text-cyan-100 font-medium">{{ usuario.username | title }}</span>
                 {% if usuario.is_admin %}
                 <span class="px-2 py-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs rounded-full font-bold">ADMIN</span>
                 {% endif %}
               </div>
             </td>
-            <td class="px-6 py-4 text-cyan-200">{{ usuario.email }}</td>
+            <td class="px-6 py-4 text-cyan-200">{{ usuario.meu_despachante | title }}</td>
             <td class="px-6 py-4">
               <span class="text-cyan-300 text-sm">{{ usuario.data_criacao.strftime('%d/%m/%Y') if usuario.data_criacao else 'N/A' }}</span>
             </td>

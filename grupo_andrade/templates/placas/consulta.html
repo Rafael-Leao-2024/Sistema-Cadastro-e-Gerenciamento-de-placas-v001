@@ -84,7 +84,7 @@
             <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Chassi</th>
             <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Cliente</th>
             <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Data</th>
-            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Status</th>
+            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Debito</th>
             <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Ações</th>
           </tr>
         </thead>
@@ -124,29 +124,15 @@
               <div class="text-cyan-400 text-xs">{{ placa.date_create.strftime('%H:%M') }}</div>
             </td>
             
-            <!-- Status -->
+            <!-- debito boleto -->
             <td class="px-6 py-4">
-              {% if placa.received %}
-              <div class="flex items-center space-x-2 text-green-400">
-                <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-                <span class="font-medium">Recebida</span>
-              </div>
-              {% elif placa.placa_a_caminho %}
-              <div class="flex items-center space-x-2 text-yellow-400">
-                <div class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></div>
-                <span class="font-medium">A caminho</span>
-              </div>
-              {% elif placa.placa_confeccionada %}
-              <div class="flex items-center space-x-2 text-blue-400">
-                <div class="w-2 h-2 rounded-full bg-blue-400"></div>
-                <span class="font-medium">Confeccionada</span>
-              </div>
-              {% else %}
-              <div class="flex items-center space-x-2 text-cyan-400">
-                <div class="w-2 h-2 rounded-full bg-cyan-400"></div>
-                <span>Pendente</span>
-              </div>
-              {% endif %}
+              <a
+                  href="{{ url_for('detalhamento.detalhamento_debito_placa', id_placa=placa.id) }}"
+                  class="inline-flex items-center px-3 py-2 rounded-lg border border-purple-500/30 text-purple-300 hover:bg-purple-500/10 hover:border-purple-400/50 transition-all duration-200 group/btn"
+                  title="Detalhamento de débito"
+                >
+                  <i class="fas fa-file-invoice-dollar group-hover/btn:scale-110 transition-transform duration-200"></i>
+                </a>
             </td>
             
             <!-- Ações -->

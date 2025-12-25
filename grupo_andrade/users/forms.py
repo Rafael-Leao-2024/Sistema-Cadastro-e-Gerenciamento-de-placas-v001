@@ -7,7 +7,7 @@ from flask_login import current_user
 
 class UpdateAccountForm(FlaskForm):
     username = StringField('Username',
-                          validators=[DataRequired(), Length(min=2, max=20)])
+                          validators=[DataRequired(), Length(min=2, max=50)])
     email = StringField('Email',
                         validators=[DataRequired(), Email()])
     

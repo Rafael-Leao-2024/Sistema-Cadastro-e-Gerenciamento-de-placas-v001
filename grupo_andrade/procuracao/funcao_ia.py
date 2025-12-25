@@ -42,8 +42,6 @@ class DadosCompleto(BaseModel):
     produto: Produto
 
 
-
-
 def ler_pdf(file):
     reader = PdfReader(file)    
     texto = reader.pages[0].extract_text()
@@ -56,18 +54,42 @@ def gerador_saida_estruturada(texto):
     parser = PydanticOutputParser(pydantic_object=DadosCompleto)
 
     prompt = PromptTemplate(
-        template="""Voce é um especialista contabil com esperiencia em notas fiscais.
-Extraia os dados da NOTA FISCAL abaixo e retorne EXCLUSIVAMENTE no formato estruturado.
-nao invente as informaçoes se nao souber deixe em branco
-\n{format_instructions}\n
+    template="""
+Você é um especialista em contabilidade e documentação fiscal brasileira,
+com experiência em NOTAS FISCAIS DE VEÍCULOS (carros, motos, caminhões e reboques).
 
-TEXTO DA NOTA FISCAL
-    --------------------
-    {texto}
-    """,
-        input_variables=["texto"],
-        partial_variables={"format_instructions": parser.get_format_instructions()},
-    )
+As notas podem ter formatos e layouts diferentes (NF-e, DANFE, concessionárias,
+despachantes ou DETRAN).
+
+### REGRAS IMPORTANTES:
+- Extraia SOMENTE informações presentes no texto.
+- NÃO invente valores.
+- Se um campo não existir ou não estiver claro, retorne string vazia "".
+- Use sinônimos e variações comuns:
+  - Remetente pode aparecer como "Emitente", "Fornecedor" ou "Vendedor".
+  - Destinatário pode aparecer como "Comprador", "Adquirente" ou "Cliente".
+  - Produto pode aparecer como "Veículo", "Descrição do Produto" ou "Item".
+- Para dados do veículo, procure informações como:
+  - Chassi
+  - Motor
+  - Ano/Modelo
+  - Ano/Fabricação
+  - Cor
+- Caso existam múltiplos produtos, considere o PRINCIPAL (veículo).
+- Retorne EXCLUSIVAMENTE no formato estruturado solicitado.
+- NÃO adicione explicações, comentários ou texto fora do formato.
+
+{format_instructions}
+
+### TEXTO DA NOTA FISCAL:
+------------------------
+{texto}
+""",
+    input_variables=["texto"],
+    partial_variables={
+        "format_instructions": parser.get_format_instructions()
+    },
+)
 
     chain = prompt | llm | parser
     resultado = chain.invoke({"texto": texto})

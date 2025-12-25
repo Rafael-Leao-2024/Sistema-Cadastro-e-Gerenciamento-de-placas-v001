@@ -12,7 +12,7 @@ class User(db.Model, UserMixin):
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=False, nullable=False)
+    username = db.Column(db.String(50), unique=False, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(100), nullable=False)
@@ -28,10 +28,19 @@ class User(db.Model, UserMixin):
     enderecos = db.relationship('Endereco', backref='user', lazy=True, cascade='all, delete-orphan')
     pagamentos = db.relationship('Pagamento', backref='user', lazy=True, cascade='all, delete-orphan')
     notificacoes = db.relationship('Notificacao', backref='user', lazy=True, cascade='all, delete-orphan')
+    boletos = db.relationship('Boleto', backref='author', lazy=True, cascade='all, delete-orphan')
+
 
     def get_reset_token(self, expires_sec=1800):
         s = Serializer(current_app.config['SECRET_KEY'])
         return s.dumps({'user_id': self.id, 'exp': expires_sec})
+    
+    @property
+    def meu_despachante(self):
+        despachante = User.query.filter(User.id == self.despachante).first()
+        if not despachante:
+            return "Ainda nao ha despachante"
+        return despachante.username
     
     def calcular_honorarios(self):
         honorarios = [placa.honorario for placa in self.placas if placa.honorario]
@@ -57,6 +66,7 @@ class Placa(db.Model):
     __tablename__ = 'placas'
     
     id = db.Column(db.Integer, primary_key=True)
+
     placa = db.Column(db.String(10), nullable=False, default="ABC1234")
     chassi = db.Column(db.String(30), nullable=True, default=000000)
     renavan = db.Column(db.String(20))
@@ -71,9 +81,11 @@ class Placa(db.Model):
     id_user_recebeu = db.Column(db.Integer)
 
     honorario = db.Column(db.Float, nullable=False, default=1.01)
+    nome_proprietario = db.Column(db.String(40), unique=False, nullable=True, default="vazio")
 
     uploads = db.relationship('UploadFile', backref='placa', lazy=True, cascade='all, delete-orphan')
     notificacoes = db.relationship('Notificacao', backref='placa', lazy=True, cascade='all, delete-orphan')
+    boletos = db.relationship('Boleto', backref='placa', lazy=True, cascade='all, delete-orphan')
 
     def __repr__(self):
         return f"Placa('{self.placa}', '{self.date_create}')"
@@ -115,12 +127,41 @@ class UploadFile(db.Model):
     __tablename__ = 'uploads'
 
     id = db.Column(db.Integer, primary_key=True)
-    filename = db.Column(db.String(200), unique=False, nullable=False)
+    filename = db.Column(db.String(200), unique=False, nullable=False, default="vazio")
     date_create = db.Column(db.DateTime, nullable=False, default=datetime.now)
     id_usuario = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     id_placa = db.Column(db.Integer, db.ForeignKey('placas.id'), nullable=False)
 
+
+class Boleto(db.Model):
+    __tablename__ = "boletos"
+
+    id = db.Column(db.Integer, primary_key=True)
+    data_criacao = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    id_placa = db.Column(db.Integer, db.ForeignKey("placas.id"), nullable=False)
+    usuario_id = db.Column(db.Integer, db.ForeignKey("users.id"), name='fk_boleto_usuario', nullable=False)
+    taxas = db.relationship('Taxa', backref='boleto', lazy=True, cascade='all, delete-orphan')
+
+    def total_taxas(self):
+        return sum(taxa.valor for taxa in self.taxas if taxa.valor)
     
+    def __repr__(self):
+        return f"<Boleto {self.id}>"
+    
+    
+
+class Taxa(db.Model):
+    __tablename__ = "taxas"
+
+    id = db.Column(db.Integer, primary_key=True)
+    descricao = db.Column(db.String(150), nullable=False)
+    valor = db.Column(db.Numeric(10, 2), nullable=False)
+    id_boleto = db.Column(db.Integer, db.ForeignKey("boletos.id"), nullable=False)
+
+    def __repr__(self):
+        return f"<Taxa {self.descricao} - {self.valor}>"
+
+
     
 class Notificacao(db.Model):
 

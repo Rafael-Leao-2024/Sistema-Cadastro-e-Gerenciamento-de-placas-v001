@@ -53,6 +53,7 @@ def create_app():
     from grupo_andrade.upload.routes import documentos_bp
     from grupo_andrade.despachante.routes import despachante
     from grupo_andrade.procuracao.routes import procuracao
+    from grupo_andrade.detalhamento.routes import detalhamento
     
     
     app.register_blueprint(auth)
@@ -64,5 +65,6 @@ def create_app():
     app.register_blueprint(documentos_bp)
     app.register_blueprint(despachante)
     app.register_blueprint(procuracao)
+    app.register_blueprint(detalhamento)
     
     return app

@@ -120,6 +120,13 @@
                 >
                   <i class="fas fa-edit group-hover/btn:scale-110 transition-transform duration-200"></i>
                 </a>
+                <a
+                  href="{{ url_for('detalhamento.detalhamento_debito_placa', id_placa=placa.id) }}"
+                  class="inline-flex items-center px-3 py-2 rounded-lg border border-purple-500/30 text-purple-300 hover:bg-purple-500/10 hover:border-purple-400/50 transition-all duration-200 group/btn"
+                  title="Detalhamento de débito"
+                >
+                  <i class="fas fa-file-invoice-dollar group-hover/btn:scale-110 transition-transform duration-200"></i>
+                </a>
               </div>
             </td>
             <td class="px-6 py-4">

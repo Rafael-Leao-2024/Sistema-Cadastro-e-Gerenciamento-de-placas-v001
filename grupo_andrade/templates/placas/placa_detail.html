@@ -87,7 +87,21 @@
             </div>
 
             <!-- Coluna 2 -->
+            
+            
             <div class="space-y-6">
+              {% if placa.nome_proprietario %}
+              <div class="futuristic-info-card">
+                <div class="text-cyan-300 text-sm font-medium mb-1">Proprietario do Veiculo</div>
+                <div class="flex items-center space-x-3">
+                  <div class="w-8 h-8 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center">
+                    <i class="fas fa-user text-white text-xs"></i>
+                  </div>
+                  <span class="text-cyan-100 text-lg">{{ placa.nome_proprietario | title }}</span>
+                </div>
+              </div>
+              {% endif %}
+
               <div class="futuristic-info-card">
                 <div class="text-cyan-300 text-sm font-medium mb-1">Solicitante</div>
                 <div class="flex items-center space-x-3">
@@ -107,7 +121,7 @@
                   </div>
                   <span class="text-cyan-100 text-lg">
                     {{ usuario.username|title if usuario else "Usuário não encontrado" }}
-                    {{ placa.received_at.strftime('%d/%m/%Y %H:%M') }}
+                    {{ placa.received_at.strftime('%H:%M %d/%m/%Y') }}
                   </span>
                 </div>
               </div>

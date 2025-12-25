@@ -1,0 +1,172 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="container mx-auto px-4">
+    <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-white">Detalhamento de Debito</h1>
+        <div class="space-x-4">
+            <a href="{{ url_for('placas.homepage') }}" class="btn-futuristic">
+                <i class="fas fa-home mr-2"></i>Volta ao Início
+            </a>
+            <a href="{{ url_for('placas.solicitar_placas') }}" class="btn-futuristic" id="btnNovaSolicitacao">
+                <i class="fas fa-plus-circle mr-2"></i>Nova Solicitação
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for placa in placas %}
+        {% if placa.boletos %}
+        <div class="card-futuristic">
+            <div class="card-header">
+                <h3 class="text-xl font-bold text-cyan-300">ID: {{ placa.id }}</h3>
+                <p class="text-gray-300">
+                    <i class="fas fa-car mr-2"></i>Placa: <span class="font-mono">{{ placa.placa }}</span>
+                </p>
+                <p class="text-gray-300">
+                    <i class="fas fa-barcode mr-2"></i>Chassi: <span class="font-mono">{{ placa.chassi }}</span>
+                </p>
+            </div>
+
+            <div class="card-body">
+                {% if placa.boletos %}
+                <div class="space-y-4">
+                    {% for boleto in placa.boletos %}
+                    <div class="bg-slate-800/50 rounded-lg p-4">
+                        <div class="flex justify-between items-start mb-3">
+                            <span class="text-sm text-cyan-400">Boleto ID: {{ boleto.id }}</span>
+                            <span class="text-xs text-gray-400">{{ boleto.data_criacao.strftime('%d/%m/%Y %H:%M') }}</span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {% for taxa in boleto.taxas %}
+                            <div class="flex justify-between py-1 border-b border-slate-700">
+                                <span class="text-gray-300">{{ taxa.descricao }}</span>
+                                <span class="text-green-400 font-medium">R$ {{ "%.2f"|format(taxa.valor) }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="flex justify-between items-center pt-3 border-t border-slate-700">
+                            <span class="text-white font-bold">Total:</span>
+                            <span class="text-xl font-bold text-green-400">R$ {{ "%.2f"|format(boleto.total_taxas()) }}</span>
+                        </div>
+                        
+                        <p class="text-sm text-gray-400 mt-3">
+                            <i class="fas fa-user mr-1"></i>
+                            Inserido por: {{ boleto.author.username }}
+                        </p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="card-footer">
+                <div class="flex flex-wrap gap-2">
+                    <a href="{{ url_for('documentos.download_anexos', id_placa=placa.id) }}"  class="btn-sm btn-outline" id="btnVerDocs{{ placa.id }}">
+                        <i class="fas fa-file-alt mr-1"></i>Ver Documentos
+                    </a>
+                    <a href="{{ url_for('detalhamento.detalhamento_debito_placa', id_placa=placa.id) }}" class="btn-sm btn-outline" id="btnEditar{{ placa.id }}">
+                        <i class="fas fa-edit mr-1"></i>Editar
+                    </a>
+                    <a href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}" class="btn-sm btn-outline" id="btnDetalhes{{ placa.id }}">
+                        <i class="fas fa-info-circle mr-1"></i>Detalhes
+                    </a>
+                    <a href="{{ url_for('documentos.upload_file_anexo', id_placa=placa.id) }}" class="btn-sm btn-outline" id="btnAnexar{{ placa.id }}">
+                        <i class="fas fa-paperclip mr-1"></i>Anexar Arquivo
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+</div>
+
+<style>
+.card-futuristic {
+    background: linear-gradient(145deg, #0f172a, #1e293b);
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.card-futuristic:hover {
+    border-color: #06b6d4;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(6, 182, 212, 0.1), 0 4px 6px -2px rgba(6, 182, 212, 0.05);
+}
+
+.card-header {
+    border-bottom: 1px solid #334155;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.card-body {
+    min-height: 150px;
+    margin-bottom: 1.5rem;
+}
+
+.card-footer {
+    border-top: 1px solid #334155;
+    padding-top: 1rem;
+}
+
+.btn-futuristic {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #06b6d4, #3b82f6);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-futuristic:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px -10px #06b6d4;
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #475569;
+    color: #cbd5e1;
+}
+
+.btn-outline:hover {
+    border-color: #06b6d4;
+    color: #06b6d4;
+    background: rgba(6, 182, 212, 0.1);
+}
+
+.alert-futuristic {
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid #334155;
+    border-left: 4px solid #06b6d4;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+</style>
+
+<script>
+</script>
+
+{% endblock content %}

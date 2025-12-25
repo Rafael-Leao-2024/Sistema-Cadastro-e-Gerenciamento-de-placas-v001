@@ -1,0 +1,279 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="container mx-auto px-4 py-8">
+    <!-- Cabeçalho com navegação -->
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-white">Criar Novo Boleto</h1>
+            <p class="text-gray-400 mt-2">Adicionar débito para a placa</p>
+        </div>
+        <div class="space-x-4">
+            <a href="{{ url_for('placas.homepage') }}" class="btn-futuristic">
+                <i class="fas fa-home mr-2"></i>Voltar ao Início
+            </a>
+            <a href="{{ url_for('detalhamento.detalhamento_debito_placa', id_placa=id_placa) }}" 
+               class="btn-futuristic btn-outline">
+                <i class="fas fa-arrow-left mr-2"></i>Voltar aos Débitos
+            </a>
+        </div>
+    </div>
+
+    <!-- Card principal -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Informações da Placa -->
+        <div class="lg:col-span-1">
+            <div class="card-futuristic">
+                <div class="card-header">
+                    <h2 class="text-xl font-bold text-cyan-300">
+                        <i class="fas fa-car mr-2"></i>Informações da Placa
+                    </h2>
+                </div>
+                
+                <div class="space-y-4 p-4">
+                    <div class="flex items-center justify-between py-2 border-b border-slate-700">
+                        <span class="text-gray-300">
+                            <i class="fas fa-hashtag mr-2"></i>ID:
+                        </span>
+                        <span class="font-mono font-bold text-white">{{ placa.id }}</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between py-2 border-b border-slate-700">
+                        <span class="text-gray-300">
+                            <i class="fas fa-tag mr-2"></i>Placa:
+                        </span>
+                        <span class="font-mono text-lg font-bold text-cyan-300">{{ placa.placa }}</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between py-2 border-b border-slate-700">
+                        <span class="text-gray-300">
+                            <i class="fas fa-barcode mr-2"></i>Chassi:
+                        </span>
+                        <span class="font-mono text-sm text-gray-300">{{ placa.chassi }}</span>
+                    </div>
+                    
+                    <div class="flex items-center justify-between py-2 border-b border-slate-700">
+                        <span class="text-gray-300">
+                            <i class="fas fa-calendar-alt mr-2"></i>Cadastro:
+                        </span>
+                        <span class="text-sm text-gray-400">{{ placa.received_at }}</span>
+                    </div>
+                    
+                    {% if placa.received_at %}
+                    <div class="flex items-center justify-between py-2 border-b border-slate-700">
+                        <span class="text-gray-300">
+                            <i class="fas fa-clock mr-2"></i>Hora:
+                        </span>
+                        <span class="text-sm text-gray-400">{{ placa.received_at }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="card-footer p-4">
+                    <div class="bg-slate-800/50 rounded-lg p-3">
+                        <p class="text-sm text-gray-400">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Preencha o formulário ao lado para adicionar um novo boleto a esta placa.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulário de Boleto -->
+        <div class="lg:col-span-2">
+            <div class="card-futuristic">
+                <div class="card-header">
+                    <h2 class="text-xl font-bold text-cyan-300">
+                        <i class="fas fa-file-invoice-dollar mr-2"></i>Novo Boleto
+                    </h2>
+                </div>
+                
+                <div class="p-6">
+                    <form method="POST" class="space-y-6">
+                        {{ form.hidden_tag() }}
+                        
+                        <!-- Campo Descrição -->
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-300">
+                                <i class="fas fa-align-left mr-2"></i>
+                                {{ form.descricao.label.text }}
+                                <span class="text-red-500">*</span>
+                            </label>
+                            {{ form.descricao(class="input-futuristic w-full") }}
+                            {% for error in form.descricao.errors %}
+                            <div class="text-red-400 text-sm flex items-center mt-1">
+                                <i class="fas fa-exclamation-circle mr-2"></i>
+                                {{ error }}
+                            </div>
+                            {% endfor %}
+                            <p class="text-xs text-gray-500 mt-1">
+                                Descreva o tipo de débito (ex: IPVA, Licenciamento, Multa, Seguro DPVAT)
+                            </p>
+                        </div>
+                        
+                        <!-- Campo Valor -->
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-gray-300">
+                                <i class="fas fa-money-bill-wave mr-2"></i>
+                                {{ form.valor.label.text }}
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                                    
+                                </span>
+                                {{ form.valor(class="input-futuristic w-full pl-10") }}
+                            </div>
+                            {% for error in form.valor.errors %}
+                            <div class="text-red-400 text-sm flex items-center mt-1">
+                                <i class="fas fa-exclamation-circle mr-2"></i>
+                                {{ error }}
+                            </div>
+                            {% endfor %}
+                            <p class="text-xs text-gray-500 mt-1">
+                                Insira o valor do boleto (use ponto para decimais)
+                            </p>
+                        </div>
+                        
+                        <!-- Informações de Criação -->
+                        <div class="bg-slate-800/30 rounded-lg p-4">
+                            <h3 class="text-sm font-semibold text-gray-300 mb-2">
+                                <i class="fas fa-user-cog mr-2"></i>Informações do Cadastro
+                            </h3>
+                            <div class="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <p class="text-gray-400">Responsável:</p>
+                                    <p class="text-cyan-300 font-medium">{{ current_user.username }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400">Data/Hora:</p>
+                                    <p class="text-gray-300">{{ now.strftime('%d/%m/%Y %H:%M') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Botões de Ação -->
+                        <div class="flex flex-wrap gap-4 pt-6 border-t border-slate-700">
+                            <button type="submit" class="btn-futuristic">
+                                <i class="fas fa-save mr-2"></i>
+                                Criar Boleto
+                            </button>
+                            
+                            <a href="{{ url_for('detalhamento.detalhamento_debito_placa', id_placa=id_placa) }}" 
+                               class="btn-futuristic btn-outline">
+                                <i class="fas fa-times mr-2"></i>
+                                Cancelar
+                            </a>
+                            
+                            <button type="reset" class="btn-futuristic btn-outline">
+                                <i class="fas fa-redo mr-2"></i>
+                                Limpar Campos
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Dica -->
+            <div class="mt-6 alert-futuristic">
+                <div class="flex items-start">
+                    <i class="fas fa-lightbulb text-yellow-400 mt-1 mr-3"></i>
+                    <div>
+                        <h4 class="font-semibold text-white mb-1">Dica</h4>
+                        <p class="text-gray-300 text-sm">
+                            Após criar o boleto, você poderá visualizá-lo na lista de débitos da placa 
+                            e adicionar documentos relacionados se necessário.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.input-futuristic {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.input-futuristic:focus {
+    outline: none;
+    border-color: #06b6d4;
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+}
+
+.input-futuristic::placeholder {
+    color: #64748b;
+}
+
+.card-futuristic {
+    background: linear-gradient(145deg, #0f172a, #1e293b);
+    border: 1px solid #334155;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.card-futuristic:hover {
+    border-color: #06b6d4;
+    transform: translateY(-2px);
+}
+
+.card-header {
+    background: rgba(15, 23, 42, 0.9);
+    border-bottom: 1px solid #334155;
+    padding: 1.25rem 1.5rem;
+}
+
+.card-footer {
+    border-top: 1px solid #334155;
+    background: rgba(15, 23, 42, 0.5);
+}
+
+.btn-futuristic {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #06b6d4, #3b82f6);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-futuristic:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px -10px #06b6d4;
+}
+
+.btn-futuristic.btn-outline {
+    background: transparent;
+    border: 1px solid #475569;
+    color: #cbd5e1;
+}
+
+.btn-futuristic.btn-outline:hover {
+    border-color: #06b6d4;
+    color: #06b6d4;
+    background: rgba(6, 182, 212, 0.1);
+}
+
+.alert-futuristic {
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid #334155;
+    border-left: 4px solid #f59e0b;
+    border-radius: 8px;
+    padding: 1rem;
+}
+</style>
+
+{% endblock content %}

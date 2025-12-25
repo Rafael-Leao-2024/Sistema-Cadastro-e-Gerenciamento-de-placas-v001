@@ -36,23 +36,15 @@ def relatorio():
 @pagamentos.route("/relatorio/<int:mes>/<int:ano>/<int:id_usuario_pagador>")
 @login_required
 def relatorio_resultados(mes, ano, id_usuario_pagador):
+    if id_usuario_pagador == 0:
+        flash("Selecione um usuario")
+        return redirect(url_for("pagamentos.relatorio"))        
     # Query base
-    query = Placa.query.filter(
+    placas = Placa.query.filter(
         Placa.id_user == id_usuario_pagador,
         extract("month", Placa.date_create) == mes,
         extract("year", Placa.date_create) == ano
-    )
-    
-    # Filtro por pagador específico se não for "Todos"
-    if id_usuario_pagador != 0:
-        query = query.filter(Placa.id_user == id_usuario_pagador)
-    else:
-        query = Placa.query.filter(
-        extract("month", Placa.date_create) == mes,
-        extract("year", Placa.date_create) == ano
-    )       
-    
-    placas = query.all()
+    ).all()
     
     try:
         total, init_point = criar_preferencia(placas=placas)

@@ -16,14 +16,14 @@ class Proprietario(BaseModel):
 
 class Veiculo(BaseModel):
     renavan : str = Field(description="o codigo renavam e a numeraçao antes da numeraçao da placa")
-    placa: str 
+    placa: str = Field(description="- Placa segue o padrão brasileiro: 7 caracteres (ex: ABC1D23).")
     crlv: str = Field(description="o crlv sao sempre a sequencia de 12 numeros")
     chassi: str = Field(description="o chassi é 17 caractere ex 95BO151R484RGC844 e começa sempre com numero nao confunda com numero de motor pois e parecido")
 
 
 class SchemaDados(BaseModel):
     veiculo: Veiculo
-    proprietario : Proprietario 
+    proprietario : Proprietario
 
 
 def gerador_saida_estruturada(input):
@@ -40,6 +40,8 @@ Extraia APENAS os dados solicitados no formato estruturado.
 - Chassi tem EXATAMENTE 17 caracteres, misto de letras e números.
 - NÃO invente valores. Se não estiver no texto, deixe vazio.
 - O texto pode estar desordenado (PDF extraído). Use padrões, não posições.
+
+Caso nao saiba nao invente deixe em branco ("")
 
 {format_instructions}
 

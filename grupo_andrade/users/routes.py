@@ -83,7 +83,7 @@ def account():
 def info_user(user_id):
     user = User.query.filter(User.id == user_id).first()
     if not user:
-        flash("Usuario de ID: {user_id} nao encontrado ", "info")
+        flash(f"Usuario de ID: {user_id} nao encontrado ", "info")
         return redirect(url_for("users.listar_usuarios"))
     return render_template('users/info_user.html', user=user)
 

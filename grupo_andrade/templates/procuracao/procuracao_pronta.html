@@ -37,7 +37,7 @@
                 </h3>
                 <div class="grid md:grid-cols-2 gap-4 text-gray-300 print:text-black">
                     <div><strong>Nome completo:</strong> {{ dados.destinatario.nome_destinatario }}</div>
-                    <div><strong>CNPJ</strong> {{ dados.destinatario.cnpj_destinatario }}</div>
+                    <div><strong>CPF / CNPJ</strong> {{ dados.destinatario.cnpj_destinatario }}</div>
                     <div><strong>Endereço:</strong> {{ dados.destinatario.endereco_destinatario }}</div>
                     <div><strong>Bairro:</strong> {{ dados.destinatario.bairro_destinatario }}</div>
                     <div><strong>CEP:</strong> {{ dados.destinatario.cep_destinatario }}</div>
@@ -54,14 +54,14 @@
                 {% if despachante %}
                     {% if despachante.enderecos | length  > 0 %}
                     <div class="grid md:grid-cols-2 gap-4 text-gray-300 print:text-black">
-                        <div><strong>Nome completo:</strong> {{ despachante.username }}</div>
+                        <div><strong>Nome completo:</strong> {{ despachante.username | upper }}</div>
                         <div><strong>CPF / CNPJ:</strong> {{ despachante.cpf_cnpj }}</div>
                         <div><strong>RG:</strong> {{ despachante.rg }}</div>
                         <div><strong>Cep:</strong> {{ despachante.enderecos[-1].cep }}</div>
-                        <div><strong>Rua:</strong> {{ despachante.enderecos[-1].rua }}</div>
-                        <div><strong>Bairro:</strong> {{ despachante.enderecos[-1].bairro }}</div>
-                        <div><strong>Cidade:</strong> {{ despachante.enderecos[-1].cidade }}</div>
-                        <div><strong>UF:</strong> {{ despachante.enderecos[-1].uf }}</div>
+                        <div><strong>Rua:</strong> {{ despachante.enderecos[-1].rua | upper }}</div>
+                        <div><strong>Bairro:</strong> {{ despachante.enderecos[-1].bairro | title }}</div>
+                        <div><strong>Cidade:</strong> {{ despachante.enderecos[-1].cidade | title }}</div>
+                        <div><strong>UF:</strong> {{ despachante.enderecos[-1].uf | upper }}</div>
                     </div>
                     {% else %}
                     <div class="grid md:grid-cols-2 gap-4 text-gray-300 print:text-black">

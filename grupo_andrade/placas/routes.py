@@ -38,7 +38,7 @@ def homepage():
 @placas.route("/todas")
 @login_required
 def todas():
-    usuarios = User.query.all()
+    usuarios = User.query.filter(User.despachante == current_user.despachante).all()
     per_page = 10
     page = request.args.get('page', 1, type=int)
     placas = Placa.query.filter(Placa.id_user.in_([user.id for user in usuarios])).options(joinedload(Placa.author))\
@@ -99,9 +99,12 @@ def placa_detail(placa_id):
 @login_required
 def delete(placa_id):
     placa = Placa.query.get(placa_id)
-    if placa.author != current_user and current_user.email != "rafaelampaz6@gmail.com":
-        flash("Voce nao tem permissão para deletar esta placa.", "warning")
-        return redirect(url_for('placas.minhas_placas'))
+    if not placa:
+        raise ValueError("Placa nao existi")
+    if placa.author.username != current_user.username:
+        if current_user.email != "rafaelampaz6@gmail.com":
+            flash("Voce nao tem permissão para deletar esta placa.", "warning")
+            return redirect(url_for('placas.minhas_placas'))
 
     time_limit = placa.date_create + timedelta(hours=24)
     if datetime.now() > time_limit:
@@ -120,8 +123,17 @@ def consulta():
     form = ConsultarForm()
     if request.method == 'POST':
         chassi = request.form.get('chassi')
+
+        usuarios_com_despachante = User.query.filter(User.despachante == current_user.despachante).all()
+        ids_usuarios = [user.id for user in usuarios_com_despachante]
+
         if chassi:
-            resultados = Placa.query.filter(Placa.chassi.ilike(f"%{chassi.upper()}%")).order_by(Placa.date_create.desc()).all()
+            # Consultar placas
+            resultados = Placa.query.filter(
+                Placa.chassi.ilike(f"%{chassi.upper()}%"),
+                Placa.id_user.in_(ids_usuarios)  # Placas de qualquer usuário do despachante
+            ).order_by(Placa.date_create.desc()).all()
+            
             if not resultados:
                 flash("Placa nao encontrada!", "warning")
             else:
@@ -282,9 +294,12 @@ def marcar_todas_lidas():
 @login_required
 def gerenciamento_pedidos():
     page = request.args.get('page', 1, type=int)
-    placas = Placa.query.options(joinedload(Placa.author))\
-                       .order_by(desc(Placa.date_create))\
-                       .paginate(page=page, per_page=10, error_out=False)
+    usuarios = User.query.filter(User.despachante == current_user.despachante).all()
+    per_page = 10
+    page = request.args.get('page', 1, type=int)
+    placas = Placa.query.filter(Placa.id_user.in_([user.id for user in usuarios])).options(joinedload(Placa.author))\
+                .order_by(desc(Placa.date_create))\
+                .paginate(page=page, per_page=per_page, error_out=False)
     form = PlacaStatusForm()
     return render_template('placas/status_manager_placas.html', placas=placas, titulo='gerenciamento', tamanho=placas.total, form=form, page=page)
 

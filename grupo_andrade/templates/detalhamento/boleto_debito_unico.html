@@ -1,0 +1,422 @@
+{% extends "layout.html" %}
+{% block title %} | Débito Único - Placa {{ placa.placa if placa }}{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- Cabeçalho da página -->
+    <div class="mb-8">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-white mb-2">
+                    <i class="fas fa-file-invoice-dollar mr-3 text-cyan-400"></i>
+                    Detalhamento de Débito Único
+                </h1>
+                <p class="text-gray-400">
+                    Visualização detalhada dos boletos e taxas associadas à placa
+                </p>
+            </div>
+            <div class="flex flex-wrap gap-3">
+                <a href="{{ url_for('detalhamento.detalhamento_debito') }}" class="btn-futuristic">
+                    <i class="fas fa-arrow-left mr-2"></i>Voltar para Lista
+                </a>
+                <a href="{{ url_for('detalhamento.criar_boleto', id_placa=placa.id) }}" class="btn-futuristic" id="btnImprimir">
+                    <i class="fas fa-print mr-2"></i>Boleto Novo
+                </a>
+            </div>
+        </div>
+
+        <!-- Card da Placa -->
+        <div class="card-futuristic mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                <div>
+                    <h2 class="text-2xl font-bold text-white mb-2">
+                        <i class="fas fa-car mr-3 text-cyan-400"></i>
+                        Placa: <span class="font-mono text-3xl">{{ placa.placa }}</span>
+                    </h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                        <div class="info-item">
+                            <span class="label">Chassi:</span>
+                            <span class="value font-mono">{{ placa.chassi }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">ID:</span>
+                            <span class="value">#{{ placa.id }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Status:</span>
+                            <span class="value status-active">Ativa</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <span class="tag-cyan">
+                        <i class="fas fa-hashtag mr-2"></i>Débito Único
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção de Boletos -->
+    <div class="mb-8">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-white">
+                <i class="fas fa-receipt mr-3 text-cyan-400"></i>
+                Boletos Associados
+            </h2>
+            <a href="#" class="btn-sm btn-outline" id="btnNovoBoleto">
+                <i class="fas fa-plus-circle mr-2"></i>Novo Boleto
+            </a>
+        </div>
+
+        {% if placa.boletos %}
+        <div class="space-y-6">
+            {% for boleto in placa.boletos %}
+            {% set indice = loop.index0 %}
+            <div class="card-futuristic">
+                <div class="card-header flex flex-col md:flex-row justify-between items-start md:items-center">
+                    <div>
+                        <h3 class="text-xl font-bold text-white">
+                            Boleto #{{ boleto.id }}
+                            <span class="text-sm font-normal text-gray-400 ml-3">
+                                <i class="far fa-calendar mr-1"></i>
+                                {{ boleto.data_criacao.strftime('%d/%m/%Y') }}
+                            </span>
+                        </h3>
+                        <p class="text-gray-400 text-sm mt-1">
+                            <i class="fas fa-user mr-1"></i>
+                            Cadastrado por: {{ boleto.author.username }}
+                        </p>
+                    </div>
+                    <div class="mt-3 md:mt-0">
+                        <span class="tag-green">
+                            <i class="fas fa-money-bill-wave mr-2"></i>
+                            Total: R$ {{ "%.2f"|format(boleto.total_taxas()) }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <h4 class="text-lg font-semibold text-white mb-4">
+                        <i class="fas fa-list mr-2"></i>Taxas Aplicadas
+                    </h4>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full table-futuristic">
+                            <thead>
+                                <tr>
+                                    <th class="text-left">Descrição</th>
+                                    <th class="text-left">Código</th>
+                                    <th class="text-left">Tipo</th>
+                                    <th class="text-left">Valor (R$)</th>
+                                    <th class="text-left">Vencimento</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for taxa in boleto.taxas %}
+                                <tr>
+                                    <td class="font-medium text-white">{{ taxa.descricao }}</td>
+                                    <td class="text-cyan-300 font-mono">{{ taxa.codigo or 'N/A' }}</td>
+                                    <td>
+                                        <span class="tag-sm tag-blue">
+                                            {{ taxa.tipo or 'Padrão' }}
+                                        </span>
+                                    </td>
+                                    <td class="text-green-400 font-bold">
+                                        R$ {{ "%.2f"|format(taxa.valor) }}
+                                    </td>
+                                    <td class="text-gray-300">
+                                        {{ taxa.data_vencimento.strftime('%d/%m/%Y') if taxa.data_vencimento else 'Não definido' }}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Resumo do Boleto -->
+                    <div class="mt-6 pt-6 border-t border-slate-700">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                            <div class="space-y-2">
+                                <p class="text-gray-400">
+                                    <i class="fas fa-info-circle mr-2"></i>
+                                    Quantidade de taxas: <span class="text-white font-bold">{{ boleto.taxas|length }}</span>
+                                </p>
+                                <p class="text-gray-400">
+                                    <i class="far fa-clock mr-2"></i>
+                                    Data de criação: <span class="text-white">{{ boleto.data_criacao.strftime('%d/%m/%Y %H:%M') }}</span>
+                                </p>
+                            </div>
+                            <div class="mt-4 md:mt-0 text-right">
+                                <p class="text-gray-400 mb-1">Valor Total:</p>
+                                <p class="text-3xl font-bold text-green-400">
+                                    R$ {{ "%.2f"|format(boleto.total_taxas()) }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <div class="flex flex-wrap gap-3 justify-end">
+                        <a href="{{ url_for('placas.placa_detail', placa_id=boleto.placa.id) }}" class="btn-sm btn-outline" id="btnEditarBoleto{{ boleto.id }}">
+                            <i class="fas fa-edit mr-2"></i>Detalhes
+                        </a>
+                        <a href="{{ url_for('detalhamento.deletar_boleto', id_boleto=boleto.id) }}" class="btn-sm btn-outline" id="btnExcluirBoleto{{ boleto.id }}">
+                            <i class="fas fa-trash-alt mr-2"></i>Excluir
+                        </a>
+                        <a href="{{ url_for('documentos.download_anexos', id_placa=boleto.placa.id) }}" class="btn-sm btn-outline" id="btnDuplicarBoleto{{ boleto.id }}">
+                            <i class="fas fa-copy mr-2"></i>Documentos
+                        </a>
+                        <a href="" class="btn-sm btn-primary" id="btnGerarPDF{{ boleto.id }}">
+                            <i class="fas fa-file-pdf mr-2"></i>Baixar
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="card-futuristic text-center py-12">
+            <i class="fas fa-file-invoice text-6xl text-gray-600 mb-4"></i>
+            <h3 class="text-xl text-gray-400 mb-2">Nenhum boleto encontrado</h3>
+            <p class="text-gray-500 mb-6">Esta placa não possui boletos registrados</p>
+            <a href="{{ url_for('detalhamento.criar_boleto', id_placa=placa.id) }}" class="btn-futuristic inline-flex" id="btnCriarPrimeiroBoleto">
+                <i class="fas fa-plus-circle mr-2"></i>Criar Primeiro Boleto
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Seção de Ações Rápidas -->
+    <div class="card-futuristic">
+        <h3 class="text-xl font-bold text-white mb-6">
+            <i class="fas fa-bolt mr-3 text-cyan-400"></i>
+            Ações Rápidas
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <a href="#" class="action-card" id="btnHistorico">
+                <i class="fas fa-history text-2xl mb-3"></i>
+                <span>Histórico</span>
+            </a>
+            <a href="#" class="action-card" id="btnRelatorios">
+                <i class="fas fa-chart-bar text-2xl mb-3"></i>
+                <span>Relatórios</span>
+            </a>
+            <a href="#" class="action-card" id="btnNotificacoes">
+                <i class="fas fa-bell text-2xl mb-3"></i>
+                <span>Notificações</span>
+            </a>
+            <a href="#" class="action-card" id="btnExportar">
+                <i class="fas fa-download text-2xl mb-3"></i>
+                <span>Exportar Dados</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.card-futuristic {
+    background: linear-gradient(145deg, #0f172a, #1e293b);
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.card-futuristic:hover {
+    border-color: #06b6d4;
+    box-shadow: 0 10px 15px -3px rgba(6, 182, 212, 0.1), 0 4px 6px -2px rgba(6, 182, 212, 0.05);
+}
+
+.card-header {
+    border-bottom: 1px solid #334155;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.card-body {
+    margin-bottom: 1.5rem;
+}
+
+.card-footer {
+    border-top: 1px solid #334155;
+    padding-top: 1.5rem;
+}
+
+.btn-futuristic {
+    display: inline-flex;
+    align-items: center;
+    background: linear-gradient(135deg, #06b6d4, #3b82f6);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-futuristic:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px -10px #06b6d4;
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid #475569;
+    color: #cbd5e1;
+}
+
+.btn-outline:hover {
+    border-color: #06b6d4;
+    color: #06b6d4;
+    background: rgba(6, 182, 212, 0.1);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-item .label {
+    font-size: 0.875rem;
+    color: #94a3b8;
+    margin-bottom: 0.25rem;
+}
+
+.info-item .value {
+    font-size: 1.125rem;
+    color: white;
+    font-weight: 600;
+}
+
+.status-active {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+}
+
+.tag-cyan {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(6, 182, 212, 0.1);
+    color: #06b6d4;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.tag-green {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.tag-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: 6px;
+}
+
+.tag-blue {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.table-futuristic {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-futuristic thead tr {
+    background: rgba(30, 41, 59, 0.8);
+}
+
+.table-futuristic th {
+    padding: 1rem;
+    text-align: left;
+    color: #94a3b8;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 2px solid #334155;
+}
+
+.table-futuristic td {
+    padding: 1rem;
+    border-bottom: 1px solid #334155;
+}
+
+.table-futuristic tbody tr:hover {
+    background: rgba(51, 65, 85, 0.3);
+}
+
+.action-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px solid #334155;
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-decoration: none;
+    color: #cbd5e1;
+    transition: all 0.3s ease;
+    text-align: center;
+    min-height: 120px;
+}
+
+.action-card:hover {
+    background: rgba(6, 182, 212, 0.1);
+    border-color: #06b6d4;
+    color: white;
+    transform: translateY(-2px);
+}
+
+.action-card i {
+    color: #06b6d4;
+    margin-bottom: 0.75rem;
+}
+
+.action-card span {
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+</style>
+
+{% endblock content %}
