@@ -1,51 +1,43 @@
-from flask import current_app
 import os
-import smtplib
-from email.mime.text import MIMEText
-from flask import url_for
 import requests
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-import threading
-
 from dotenv import load_dotenv
 
 load_dotenv()
 
-APIKEY_SENDGRID = os.environ.get("APIKEY_SENDGRID")  # Substitua pela sua chave
-
+APIKEY_SENDGRID = os.environ.get("APIKEY_SENDGRID")
 
 def enviar_email_reset_senha(user, link_reset):
     try:
-        remetente = os.getenv("MAIL_DEFAULT_SENDER")
-        senha_app = os.getenv("MAIL_PASSWORD")
-
-        html = f"""
-        <p>
-            Para redefinir sua senha, clique no link abaixo:<br><br>
-            <a href="{link_reset}">{link_reset}</a><br><br>
-            Se você não solicitou a redefinição, ignore este e-mail.<br><br>
-            Atenciosamente,<br>
-            <strong>{user.username}</strong>
-        </p>
+        import os
+        import certifi
+        os.environ['REQUESTS_CA_BUNDLE'] = certifi.where()
+        os.environ['SSL_CERT_FILE'] = certifi.where()
+        
+        import sendgrid
+        from sendgrid.helpers.mail import Mail
+        
+        sg = sendgrid.SendGridAPIClient(api_key=APIKEY_SENDGRID)
+        
+        html_content = f"""
+        <p>Para redefinir sua senha, clique no link abaixo:<br><br>
+        <a href="{link_reset}">{link_reset}</a></p>
         """
-
-        msg = MIMEText(html, "html", "utf-8")
-        msg["Subject"] = "Solicitação de redefinição de senha"
-        msg["From"] = remetente
-        msg["To"] = user.email
-
-        with smtplib.SMTP("smtp.gmail.com", 587, timeout=15) as server:
-            server.ehlo()
-            server.starttls()
-            server.login(remetente, senha_app)
-            server.send_message(msg)
-
-        print("E-mail de redefinição enviado com sucesso")
+        
+        message = Mail(
+            from_email=os.getenv("MAIL_DEFAULT_SENDER"),
+            to_emails=[user.email],
+            subject="Solicitação de redefinição de senha",
+            html_content=html_content
+        )
+        
+        response = sg.send(message)
+        print(f"E-mail enviado via SendGrid: {response.status_code}")
         return True
-
+        
     except Exception as erro:
-        print(f"Erro ao enviar e-mail de redefinição: {erro}")
+        print(f"Erro: {erro}")
         return False
 
 

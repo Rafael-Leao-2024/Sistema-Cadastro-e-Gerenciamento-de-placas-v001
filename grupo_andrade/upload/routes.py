@@ -2,6 +2,7 @@ from flask import Blueprint, flash, request, redirect, url_for, render_template
 from werkzeug.utils import secure_filename
 from flask import current_app
 from flask_login import login_required, current_user
+from PyPDF2 import PdfReader
 import os
 
 from botocore.exceptions import NoCredentialsError
@@ -12,7 +13,7 @@ from grupo_andrade.placas.routes import injetar_notificacao
 from grupo_andrade.upload.funcoes_aws import enviar_arquivo_s3, ver_arquivo
 from dotenv import load_dotenv
 from grupo_andrade.upload.funcoesIA import ler_pdf, gerador_saida_estruturada
-from grupo_andrade.upload.funcao_taxa_ia import extrator_taxa_ia, lendo_boleto, deduplicar_taxas
+from grupo_andrade.upload.funcao_taxa_ia import extrator_taxa_ia
 
 
 load_dotenv()
@@ -55,40 +56,41 @@ def upload_file_anexo(id_placa):
                 
                 try:
                     saida_texto = ler_pdf(file)
-                    saida_texto_boleto = lendo_boleto(file)
+                    reader = PdfReader(file)
+                    for page in reader.pages:
+                        saida_texto_boleto = page.extract_text()
                     
-                    if "valor cobrado" in saida_texto_boleto.lower():
-                        taxas_estruturadas = extrator_taxa_ia(saida_texto_boleto)
-                        print(taxas_estruturadas.taxas)
-                        taxas_estruturadas.taxas = deduplicar_taxas(taxas_estruturadas.taxas)
-                        print(taxas_estruturadas.taxas)
+                        if "valor cobrado" in saida_texto_boleto.lower():
+                            taxas_estruturadas = extrator_taxa_ia(saida_texto_boleto)
+                            # taxas_estruturadas.taxas = deduplicar_taxas(taxas_estruturadas.taxas)
 
-                        if not taxas_estruturadas.taxas:
-                            raise ValueError("Nenhuma taxa válida encontrada")
+                            if not taxas_estruturadas.taxas:
+                                raise ValueError("Nenhuma taxa válida encontrada")
 
-                        boleto_db = Boleto(id_placa=id_placa, usuario_id=current_user.id)
-                        db.session.add(boleto_db)
-                        db.session.commit()
-                        db.session.refresh(boleto_db)
+                            boleto_db = Boleto(id_placa=id_placa, usuario_id=current_user.id)
+                            db.session.add(boleto_db)
+                            db.session.commit()
+                            db.session.refresh(boleto_db)
 
-                        print(taxas_estruturadas)
+                            print(taxas_estruturadas)
 
-                        for taxa in taxas_estruturadas.taxas:
-                            taxa_db = Taxa(
-                                descricao=taxa.descricao, 
-                                valor=taxa.valor, 
-                                id_boleto=boleto_db.id
-                            )
-                            db.session.add(taxa_db)
-                        db.session.commit()
+                            for taxa in taxas_estruturadas.taxas:
+                                taxa_db = Taxa(
+                                    descricao=taxa.descricao, 
+                                    valor=taxa.valor, 
+                                    id_boleto=boleto_db.id
+                                )
+                                db.session.add(taxa_db)
+                            db.session.commit()
 
 
                     if "senatran" in saida_texto.lower():
                         saida_estruturada = gerador_saida_estruturada(saida_texto)
+                        print(saida_estruturada.veiculo)
                         placa.placa = saida_estruturada.veiculo.placa
                         placa.chassi = saida_estruturada.veiculo.chassi
-                        placa.renavan = saida_estruturada.veiculo.renavan
-                        placa.crlv = saida_estruturada.veiculo.crlv
+                        placa.renavan = saida_estruturada.veiculo.codigo_renavam
+                        placa.crlv = saida_estruturada.veiculo.numero_do_crv
                         placa.nome_proprietario = saida_estruturada.proprietario.nome
                     
                     # RESET do cursor do arquivo para o início antes de enviar para AWS

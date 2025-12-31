@@ -73,7 +73,6 @@ def ask_question():
             for ctx in contextos
         )
 
-        print(contextos)
         resposta_agente = agente.invoke(pergunta)
 
         resposta_memoria = chain_memoria.invoke(

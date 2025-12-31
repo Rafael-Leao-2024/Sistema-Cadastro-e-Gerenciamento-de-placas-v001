@@ -15,10 +15,11 @@ class Proprietario(BaseModel):
     uf: str
 
 class Veiculo(BaseModel):
-    renavan : str = Field(description="o codigo renavam e a numeraçao antes da numeraçao da placa")
-    placa: str = Field(description="- Placa segue o padrão brasileiro: 7 caracteres (ex: ABC1D23).")
-    crlv: str = Field(description="o crlv sao sempre a sequencia de 12 numeros")
+    codigo_renavam : str
+    placa: str 
+    numero_do_crv: str
     chassi: str = Field(description="o chassi é 17 caractere ex 95BO151R484RGC844 e começa sempre com numero nao confunda com numero de motor pois e parecido")
+
 
 
 class SchemaDados(BaseModel):
@@ -34,9 +35,11 @@ def gerador_saida_estruturada(input):
 Extraia APENAS os dados solicitados no formato estruturado.
 
 ⚠️ REGRAS IMPORTANTES (OBRIGATÓRIO SEGUIR):
-- RENAVAM tem EXATAMENTE 11 dígitos numéricos. Pegue somente este número.
-- CRLV tem EXATAMENTE 12 dígitos numéricos. Pegue somente este número.
-- Placa segue o padrão brasileiro: 7 caracteres (ex: ABC1D23).
+- Nao confunda o numero do CRV com o codigo renavam REGRAS:
+- O renavan ta sempre logo apos a frase "Leia o QR Code e baixe agora."
+- CODIGO RENAVAM tem EXATAMENTE  dígitos numéricos. Pegue somente este número.
+- O NUMERO DO CRV tem EXATAMENTE  (doze) dígitos numéricos. Pegue somente este número o crv vem logo apos a PLACA.
+- Placa segue o padrão brasileiro mercosul: 7 caracteres , PLACA esta logo apos o renavam.
 - Chassi tem EXATAMENTE 17 caracteres, misto de letras e números.
 - NÃO invente valores. Se não estiver no texto, deixe vazio.
 - O texto pode estar desordenado (PDF extraído). Use padrões, não posições.
@@ -53,7 +56,7 @@ TEXTO DO DOCUMENTO:
     partial_variables={"format_instructions": parser.get_format_instructions()},
 )
 
-    modelo = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    modelo = ChatOpenAI(model="gpt-4o-mini", temperature=0.1)
 
     chain = prompt | modelo | parser
 

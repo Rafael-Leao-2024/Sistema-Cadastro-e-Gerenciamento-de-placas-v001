@@ -15,7 +15,7 @@ load_dotenv()
 class MeuDebitoInput(BaseModel):
     mes: int
     ano: int
-    cliente: str
+    id_usuario: int
 
 
 class EntradaID(BaseModel):
@@ -55,18 +55,18 @@ retorno informacoes em TEXTO
 
 
 @tool(args_schema=MeuDebitoInput)
-def meu_debito(mes: int, ano: int, cliente: str) -> str:
+def meu_debito(mes: int, ano: int, id_usuario: int) -> str:
     """Descricao do nome da funcao pode ser chamada de meu 'faturameto' 'minhas_solicitacoes' etc tudo que envolve em querer a relacao de placas para pagamento ou conferencia
         a funcao recebi tres argumenos (mes, ano, id_cliente)
     Args:
         mes (inteiro): mes pasado para a funcao calcular o relatorio
         ano (inteiro): ano pasado para a funcao calcular o relatorio
-        cliente (string): cliente pasado para a funcao calcular o relatorio
+        id_usuario (inteiro): cliente pasado para a funcao calcular o relatorio
     Returns:
         _type_: uma consulta SQL query
     """
 
-    clientedb = User.query.filter(User.username == cliente.lower()).first()
+    clientedb = User.query.filter(User.id == id_usuario).first()
     if not clientedb:
         return "Cliente nao encontrado!"
 
@@ -112,22 +112,6 @@ def tirar_permissao_admin(id_usuario: int):
     db.session.commit()    
     return f"usuario {usuario.username} de ID{usuario.id}. esta sem permissao de admin"    
 
-@tool
-def cotaçao_moeda(dinheiro) -> float:
-    """Consulta a cotacao atual do dinheiro em reais usando a AwesomeAPI.
-    argumento exemplo de moeda BTC"""
-    try:
-        url = f"https://economia.awesomeapi.com.br/json/last/{dinheiro}-BRL"
-        response = requests.get(url)
-        data = response.json()
-        cotacao = float(data[f"{dinheiro}BRL"]["bid"])
-        return cotacao
-    except Exception as e:
-        return f"Erro ao consultar cotacao: {e}"
     
-
-
-ferramentas = [cotaçao_moeda, meu_debito, informacao_placa, permissao_admin, tirar_permissao_admin]
-
-
+ferramentas = [meu_debito, informacao_placa, permissao_admin, tirar_permissao_admin]
 
