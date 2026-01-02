@@ -29,6 +29,7 @@ class User(db.Model, UserMixin):
     pagamentos = db.relationship('Pagamento', backref='user', lazy=True, cascade='all, delete-orphan')
     notificacoes = db.relationship('Notificacao', backref='user', lazy=True, cascade='all, delete-orphan')
     boletos = db.relationship('Boleto', backref='author', lazy=True, cascade='all, delete-orphan')
+    atividades = db.relationship('Atividade', backref='author', lazy=True, cascade='all, delete-orphan')
 
 
     def get_reset_token(self, expires_sec=1800):
@@ -177,3 +178,16 @@ class Notificacao(db.Model):
 
     def __repr__(self):
         return f"Notificacao(mensagem='{self.mensagem}', lida={self.lida})"
+    
+
+class Atividade(db.Model):
+    __tablename__ = "atividades"
+
+    id = db.Column(db.Integer, primary_key=True)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('users.id'), name='fk_atividade_user',nullable=False)
+    acao = db.Column(db.String(100), nullable=False)
+    descricao = db.Column(db.String(255), nullable=True)
+    data = db.Column(db.DateTime, default=datetime.now)
+
+    def __repr__(self):
+        return f"<Atividade {self.acao} - Usuario {self.usuario_id}>"

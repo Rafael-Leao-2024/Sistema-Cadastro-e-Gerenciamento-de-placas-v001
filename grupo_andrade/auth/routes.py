@@ -5,6 +5,7 @@ from grupo_andrade.auth.forms import RegistrationForm, LoginForm, RequestResetFo
 from grupo_andrade.main import db, bcrypt, mail
 from grupo_andrade.utils.email_utils import enviar_email_em_background
 from grupo_andrade.utils.email_utils import verificar_email
+from grupo_andrade.atividade.services import registrar_atividade
 from datetime import datetime
 
 auth = Blueprint('auth', __name__)
@@ -20,6 +21,13 @@ def login():
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user)
             next_page = request.args.get('next')
+
+            registrar_atividade(
+                usuario_id=user.id,
+                acao="LOGIN",
+                descricao=f"{user.username.upper()} esta conectado!"
+            )
+
             flash(f'User {user.username.title()} connected online', 'success')
             return redirect(next_page or url_for('placas.solicitar_placas'))
         else:

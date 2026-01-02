@@ -17,6 +17,54 @@ pagamentos = Blueprint('pagamentos', __name__)
 def inject_notificacoes_pagamentos():
     return injetar_notificacao()
 
+from sqlalchemy import extract, func
+
+
+@pagamentos.route("/financas-geral", methods=["POST", "GET"])
+@login_required
+def financas_geral():
+    # Pegar todos os usuários
+    usuarios = User.query.filter(User.despachante == current_user.id).all()
+    if not usuarios:
+        usuarios = User.query.filter(User.id == current_user.id).all()
+    
+    # Para cada usuário, buscar os dados agrupados
+    usuarios_com_dados = []
+    
+    for usuario in usuarios:
+        # Consulta específica para este usuário
+        placas_agrupadas = db.session.query(
+            extract('year', Placa.date_create).label('ano'),
+            extract('month', Placa.date_create).label('mes'),
+            func.count(Placa.id).label('total_placas'),
+            func.sum(Placa.honorario).label('total_honorario')
+        ).filter(
+            Placa.author == usuario
+        ).group_by(
+            extract('year', Placa.date_create),
+            extract('month', Placa.date_create)
+        ).order_by(
+            extract('year', Placa.date_create).desc(),
+            extract('month', Placa.date_create).desc()
+        ).all()
+        
+        # Calcular totais
+        total_placas = sum([p.total_placas or 0 for p in placas_agrupadas])
+        total_honorario = sum([float(p.total_honorario or 0) for p in placas_agrupadas])
+        
+        usuarios_com_dados.append({
+            'usuario': usuario,
+            'placas_agrupadas': placas_agrupadas,
+            'total_placas': total_placas,
+            'total_honorario': total_honorario
+        })
+    
+    # Ordenar usuários por total de honorários (decrescente)
+    usuarios_com_dados.sort(key=lambda x: x['total_honorario'], reverse=True)
+    
+    return render_template('pagamentos/geral_financa.html', 
+                         usuarios=usuarios_com_dados, now=datetime.now())
+
 
 @pagamentos.route("/relatorio", methods=["GET", "POST"])
 @login_required

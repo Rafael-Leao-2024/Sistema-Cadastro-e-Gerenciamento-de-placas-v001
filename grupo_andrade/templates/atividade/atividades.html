@@ -1,0 +1,229 @@
+{% extends "layout.html" %}
+
+{% block title %} | Minhas Atividades {% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6">
+
+  <!-- Cabeçalho -->
+  <div class="mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-100 flex items-center gap-3">
+          <i class="fas fa-history text-cyan-400"></i>
+          Histórico de Atividades
+        </h1>
+        <p class="text-slate-400 text-sm mt-1">
+          Registro completo das ações realizadas na sua conta
+        </p>
+      </div>
+      <div class="flex items-center gap-2 text-sm">
+        <span class="text-slate-400">Total:</span>
+        <span class="bg-slate-700 text-slate-200 px-3 py-1 rounded-full font-medium">
+          {{ atividades|length }} atividade{{ 's' if atividades|length != 1 }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Filtros de ação -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button class="filter-btn active px-4 py-2 rounded-lg text-sm font-medium transition-all bg-cyan-600 text-white" data-filter="all">
+        <i class="fas fa-layer-group mr-2"></i>Todas
+      </button>
+      <button class="filter-btn px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-700 text-slate-300 hover:bg-slate-600" data-filter="LOGIN">
+        <i class="fas fa-sign-in-alt mr-2"></i>Login
+      </button>
+      <button class="filter-btn px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-700 text-slate-300 hover:bg-slate-600" data-filter="RECEBIMENTO">
+        <i class="fas fa-download mr-2"></i>Recebimento
+      </button>
+      <button class="filter-btn px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-700 text-slate-300 hover:bg-slate-600" data-filter="ATUALIZADO">
+        <i class="fas fa-sync-alt mr-2"></i>Atualizações
+      </button>
+      <button class="filter-btn px-4 py-2 rounded-lg text-sm font-medium transition-all bg-slate-700 text-slate-300 hover:bg-slate-600" data-filter="DELETE">
+        <i class="fas fa-trash mr-2"></i>Exclusões
+      </button>
+    </div>
+  </div>
+
+  <!-- Lista de atividades -->
+  <div class="bg-slate-800 rounded-xl shadow-lg overflow-hidden">
+    {% if atividades %}
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-slate-900">
+            <tr>
+              <th class="py-3 px-6 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Ação</th>
+              <th class="py-3 px-6 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Descrição</th>
+              <th class="py-3 px-6 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Data</th>
+              <th class="py-3 px-6 text-left text-xs font-medium text-slate-400 uppercase tracking-wider">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-700">
+            {% for atividade in atividades %}
+            <tr class="activity-row hover:bg-slate-750 transition-colors" data-action="{{ atividade.acao }}">
+              <td class="py-4 px-6 whitespace-nowrap">
+                <div class="flex items-center">
+                  {% if atividade.acao == "LOGIN" %}
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                      <i class="fas fa-sign-in-alt text-blue-400"></i>
+                    </div>
+                    <div class="ml-3">
+                      <div class="text-sm font-medium text-slate-100">Login</div>
+                      <div class="text-xs text-blue-400">Acesso ao sistema</div>
+                    </div>
+                  
+                  {% elif atividade.acao == "RECEBIMENTO" %}
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                      <i class="fas fa-download text-green-400"></i>
+                    </div>
+                    <div class="ml-3">
+                      <div class="text-sm font-medium text-slate-100">Recebimento</div>
+                      <div class="text-xs text-green-400">Processo recebido</div>
+                    </div>
+                  
+                  {% elif atividade.acao == "ATUALIZADO" %}
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
+                      <i class="fas fa-sync-alt text-amber-400"></i>
+                    </div>
+                    <div class="ml-3">
+                      <div class="text-sm font-medium text-slate-100">Atualização</div>
+                      <div class="text-xs text-amber-400">Dados modificados</div>
+                    </div>
+                  
+                  {% elif atividade.acao == "DELETE" %}
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
+                      <i class="fas fa-trash text-red-400"></i>
+                    </div>
+                    <div class="ml-3">
+                      <div class="text-sm font-medium text-slate-100">Exclusão</div>
+                      <div class="text-xs text-red-400">Item removido</div>
+                    </div>
+                  
+                  {% else %}
+                    <div class="flex-shrink-0 w-10 h-10 rounded-full bg-slate-500/20 flex items-center justify-center">
+                      <i class="fas fa-info-circle text-slate-400"></i>
+                    </div>
+                    <div class="ml-3">
+                      <div class="text-sm font-medium text-slate-100">{{ atividade.acao }}</div>
+                      <div class="text-xs text-slate-400">Outra ação</div>
+                    </div>
+                  {% endif %}
+                </div>
+              </td>
+
+              <td class="py-4 px-6">
+              <a href="{{ url_for('atividade.detalhe_atividade', id_atividade=atividade.id) }}">
+                <div class="text-sm text-slate-300 max-w-md">
+                  {{ atividade.descricao or "Sem descrição detalhada" }}
+                </div>
+              </a>
+              </td>
+
+              <td class="py-4 px-6 whitespace-nowrap">
+                <div class="text-sm text-slate-300">
+                  {{ atividade.data.strftime("%d/%m/%Y") }}
+                </div>
+                <div class="text-xs text-slate-500">
+                  {{ atividade.data.strftime("%H:%M") }}
+                </div>
+              </td>
+              
+              <td class="py-4 px-6">
+                {% if atividade.acao == "LOGIN" %}
+                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-500/20 text-blue-300">
+                  <i class="fas fa-check-circle mr-1"></i> Sucesso
+                </span>
+                {% elif atividade.acao == "RECEBIMENTO" %}
+                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500/20 text-green-300">
+                  <i class="fas fa-check-circle mr-1"></i> Concluído
+                </span>
+                {% elif atividade.acao == "ATUALIZADO" %}
+                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-amber-500/20 text-amber-300">
+                  <i class="fas fa-sync-alt mr-1"></i> Atualizado
+                </span>
+                {% elif atividade.acao == "DELETE" %}
+                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-500/20 text-red-300">
+                  <i class="fas fa-exclamation-triangle mr-1"></i> Excluído
+                </span>
+                {% endif %}
+              </td>
+              
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Contadores por ação -->
+      <div class="bg-slate-900 px-6 py-4 border-t border-slate-700">
+        <div class="flex flex-wrap gap-4">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+            <span class="text-sm text-slate-400">Login: <span class="text-slate-200 font-medium">{{ atividades|selectattr('acao', 'equalto', 'LOGIN')|list|length }}</span></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-green-500"></span>
+            <span class="text-sm text-slate-400">Recebimento: <span class="text-slate-200 font-medium">{{ atividades|selectattr('acao', 'equalto', 'RECEBIMENTO')|list|length }}</span></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+            <span class="text-sm text-slate-400">Atualizações: <span class="text-slate-200 font-medium">{{ atividades|selectattr('acao', 'equalto', 'ATUALIZADO')|list|length }}</span></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-red-500"></span>
+            <span class="text-sm text-slate-400">Exclusões: <span class="text-slate-200 font-medium">{{ atividades|selectattr('acao', 'equalto', 'DELETE')|list|length }}</span></span>
+          </div>
+        </div>
+      </div>
+      
+    {% else %}
+      <div class="p-12 text-center">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-slate-700 mb-4">
+          <i class="fas fa-inbox text-3xl text-slate-400"></i>
+        </div>
+        <h3 class="text-lg font-medium text-slate-200 mb-2">Nenhuma atividade registrada</h3>
+        <p class="text-slate-400 max-w-md mx-auto">
+          Suas ações aparecerão aqui assim que você começar a usar o sistema.
+        </p>
+      </div>
+    {% endif %}
+  </div>
+
+</div>
+
+<style>
+  .bg-slate-750 {
+    background-color: rgb(30 41 59 / 0.3);
+  }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const activityRows = document.querySelectorAll('.activity-row');
+  
+  filterButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const filter = this.getAttribute('data-filter');
+      
+      // Atualiza botões ativos
+      filterButtons.forEach(btn => {
+        btn.classList.remove('active', 'bg-cyan-600', 'text-white');
+        btn.classList.add('bg-slate-700', 'text-slate-300');
+      });
+      this.classList.add('active', 'bg-cyan-600', 'text-white');
+      this.classList.remove('bg-slate-700', 'text-slate-300');
+      
+      // Filtra atividades
+      activityRows.forEach(row => {
+        if (filter === 'all' || row.getAttribute('data-action') === filter) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    });
+  });
+});
+</script>
+{% endblock %}

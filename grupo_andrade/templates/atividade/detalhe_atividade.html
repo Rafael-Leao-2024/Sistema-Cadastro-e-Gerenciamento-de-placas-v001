@@ -1,0 +1,528 @@
+{% extends "layout.html" %}
+
+{% block title %} | Detalhe da Atividade - {{ atividade.author.username }} {% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6">
+
+  <!-- Cabeçalho com navegação -->
+  <div class="mb-6">
+    <nav class="flex items-center text-sm text-slate-400 mb-4">
+      <a href="{{ url_for('atividade.todas_atividades') }}" class="hover:text-slate-300 transition-colors inline-flex items-center gap-2">
+        <i class="fas fa-chevron-left"></i>
+        Voltar para Histórico
+      </a>
+    </nav>
+    
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-slate-100 flex items-center gap-3">
+          {% if atividade.acao == "LOGIN" %}
+            <div class="p-2 rounded-lg bg-blue-500/20">
+              <i class="fas fa-sign-in-alt text-blue-400"></i>
+            </div>
+          {% elif atividade.acao == "RECEBIMENTO" %}
+            <div class="p-2 rounded-lg bg-green-500/20">
+              <i class="fas fa-download text-green-400"></i>
+            </div>
+          {% elif atividade.acao == "ATUALIZADO" %}
+            <div class="p-2 rounded-lg bg-amber-500/20">
+              <i class="fas fa-sync-alt text-amber-400"></i>
+            </div>
+          {% elif atividade.acao == "DELETE" %}
+            <div class="p-2 rounded-lg bg-red-500/20">
+              <i class="fas fa-trash text-red-400"></i>
+            </div>
+          {% else %}
+            <div class="p-2 rounded-lg bg-cyan-500/20">
+              <i class="fas fa-info-circle text-cyan-400"></i>
+            </div>
+          {% endif %}
+          <span>Detalhe da Atividade</span>
+        </h1>
+        <p class="text-slate-400 text-sm mt-2 ml-12">
+          Registro completo desta ação no sistema
+        </p>
+      </div>
+      
+      <!-- Badge da ação -->
+      <div>
+        {% if atividade.acao == "LOGIN" %}
+          <span class="px-4 py-2 inline-flex items-center text-sm font-semibold rounded-lg bg-blue-500/20 text-blue-300 border border-blue-500/30">
+            <i class="fas fa-sign-in-alt mr-2"></i> LOGIN
+          </span>
+        {% elif atividade.acao == "RECEBIMENTO" %}
+          <span class="px-4 py-2 inline-flex items-center text-sm font-semibold rounded-lg bg-green-500/20 text-green-300 border border-green-500/30">
+            <i class="fas fa-download mr-2"></i> RECEBIMENTO
+          </span>
+        {% elif atividade.acao == "ATUALIZADO" %}
+          <span class="px-4 py-2 inline-flex items-center text-sm font-semibold rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30">
+            <i class="fas fa-sync-alt mr-2"></i> ATUALIZADO
+          </span>
+        {% elif atividade.acao == "DELETE" %}
+          <span class="px-4 py-2 inline-flex items-center text-sm font-semibold rounded-lg bg-red-500/20 text-red-300 border border-red-500/30">
+            <i class="fas fa-trash mr-2"></i> DELETE
+          </span>
+        {% else %}
+          <span class="px-4 py-2 inline-flex items-center text-sm font-semibold rounded-lg bg-slate-500/20 text-slate-300 border border-slate-500/30">
+            <i class="fas fa-info-circle mr-2"></i> {{ atividade.acao }}
+          </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Card principal -->
+  <div class="bg-slate-800 rounded-xl shadow-lg overflow-hidden mb-6 border border-slate-700">
+    <!-- Cabeçalho do card -->
+    <div class="p-6 border-b border-slate-700">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <div class="flex-1">
+          <h2 class="text-lg font-semibold text-slate-100 mb-2">{{ atividade.descricao or "Atividade do Sistema" }}</h2>
+          <div class="flex flex-wrap items-center gap-3 text-sm text-slate-400">
+            <div class="flex items-center gap-2">
+              <i class="fas fa-calendar-alt text-slate-500"></i>
+              <span>{{ atividade.data.strftime("%d/%m/%Y") }}</span>
+            </div>
+            <div class="w-px h-4 bg-slate-600"></div>
+            <div class="flex items-center gap-2">
+              <i class="fas fa-clock text-slate-500"></i>
+              <span>{{ atividade.data.strftime("%H:%M:%S") }}</span>
+            </div>
+            <div class="w-px h-4 bg-slate-600"></div>
+            <div class="flex items-center gap-2">
+              <i class="fas fa-hashtag text-slate-500"></i>
+              <span class="font-mono">ID: {{ atividade.id }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Status da ação -->
+        <div class="flex items-center gap-2">
+          {% if atividade.acao == "LOGIN" %}
+            <span class="px-3 py-1 text-xs font-medium rounded-full bg-green-500/20 text-green-300 flex items-center gap-1">
+              <i class="fas fa-check-circle"></i>
+              Sucesso
+            </span>
+          {% elif atividade.acao == "RECEBIMENTO" %}
+            <span class="px-3 py-1 text-xs font-medium rounded-full bg-green-500/20 text-green-300 flex items-center gap-1">
+              <i class="fas fa-check-circle"></i>
+              Concluído
+            </span>
+          {% elif atividade.acao == "ATUALIZADO" %}
+            <span class="px-3 py-1 text-xs font-medium rounded-full bg-amber-500/20 text-amber-300 flex items-center gap-1">
+              <i class="fas fa-sync-alt"></i>
+              Processado
+            </span>
+          {% elif atividade.acao == "DELETE" %}
+            <span class="px-3 py-1 text-xs font-medium rounded-full bg-red-500/20 text-red-300 flex items-center gap-1">
+              <i class="fas fa-exclamation-triangle"></i>
+              Excluído
+            </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Conteúdo do card -->
+    <div class="p-6">
+      <!-- Grid de informações -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Coluna 1: Informações da atividade -->
+        <div>
+          <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <div class="p-1.5 rounded bg-slate-700">
+              <i class="fas fa-info-circle text-cyan-400 text-sm"></i>
+            </div>
+            Informações da Atividade
+          </h3>
+          
+          <div class="space-y-5">
+            <!-- Tipo de Ação -->
+            <div>
+              <label class="block text-xs text-slate-500 mb-2">Tipo de Ação</label>
+              <div class="flex items-center gap-3 p-3 bg-slate-900/50 rounded-lg">
+                {% if atividade.acao == "LOGIN" %}
+                  <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center">
+                    <i class="fas fa-sign-in-alt text-blue-400"></i>
+                  </div>
+                  <div>
+                    <div class="text-slate-100 font-medium">Login no Sistema</div>
+                    <div class="text-xs text-blue-400">Acesso à plataforma</div>
+                  </div>
+                {% elif atividade.acao == "RECEBIMENTO" %}
+                  <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                    <i class="fas fa-download text-green-400"></i>
+                  </div>
+                  <div>
+                    <div class="text-slate-100 font-medium">Recebimento de Arquivo</div>
+                    <div class="text-xs text-green-400">Upload ou download</div>
+                  </div>
+                {% elif atividade.acao == "ATUALIZADO" %}
+                  <div class="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
+                    <i class="fas fa-sync-alt text-amber-400"></i>
+                  </div>
+                  <div>
+                    <div class="text-slate-100 font-medium">Atualização de Dados</div>
+                    <div class="text-xs text-amber-400">Modificação de informações</div>
+                  </div>
+                {% elif atividade.acao == "DELETE" %}
+                  <div class="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
+                    <i class="fas fa-trash text-red-400"></i>
+                  </div>
+                  <div>
+                    <div class="text-slate-100 font-medium">Exclusão de Item</div>
+                    <div class="text-xs text-red-400">Remoção permanente</div>
+                  </div>
+                {% else %}
+                  <div class="w-10 h-10 rounded-full bg-slate-500/20 flex items-center justify-center">
+                    <i class="fas fa-cog text-slate-400"></i>
+                  </div>
+                  <div>
+                    <div class="text-slate-100 font-medium">{{ atividade.acao }}</div>
+                    <div class="text-xs text-slate-400">Ação do sistema</div>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Descrição -->
+            <div>
+              <label class="block text-xs text-slate-500 mb-2">Descrição</label>
+              <div class="p-4 bg-slate-900/50 rounded-lg">
+                <p class="text-slate-300 leading-relaxed">
+                  {{ atividade.descricao or "Nenhuma descrição adicional fornecida." }}
+                </p>
+              </div>
+            </div>
+
+            <!-- Data e Hora detalhadas -->
+            <div>
+              <label class="block text-xs text-slate-500 mb-2">Data e Hora Detalhadas</label>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="p-3 bg-slate-900/50 rounded-lg">
+                  <div class="text-xs text-slate-500 mb-1">Data Completa</div>
+                  <div class="text-slate-100">{{ atividade.data.strftime("%d de %B de %Y") }}</div>
+                </div>
+                <div class="p-3 bg-slate-900/50 rounded-lg">
+                  <div class="text-xs text-slate-500 mb-1">Horário</div>
+                  <div class="text-slate-100">{{ atividade.data.strftime("%H:%M:%S") }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Coluna 2: Informações do usuário -->
+        <div>
+          <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4 flex items-center gap-2">
+            <div class="p-1.5 rounded bg-slate-700">
+              <i class="fas fa-user text-cyan-400 text-sm"></i>
+            </div>
+            Informações do Usuário
+          </h3>
+          
+          <div class="space-y-5">
+            <!-- Perfil do Usuário -->
+            <div>
+              <label class="block text-xs text-slate-500 mb-2">Usuário Responsável</label>
+              <div class="p-4 bg-slate-900/50 rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="relative">
+                    <div class="w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center">
+                      <i class="fas fa-user text-slate-300"></i>
+                    </div>
+                    {% if atividade.author.is_admin %}
+                      <div class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-amber-500 flex items-center justify-center">
+                        <i class="fas fa-crown text-xs text-amber-900"></i>
+                      </div>
+                    {% endif %}
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2">
+                      <span class="text-slate-100 font-medium">{{ atividade.author.username }}</span>
+                      {% if atividade.author.is_admin %}
+                        <span class="px-2 py-0.5 text-xs font-medium rounded-full bg-amber-500/20 text-amber-300">
+                          Admin
+                        </span>
+                      {% endif %}
+                    </div>
+                    <div class="text-xs text-slate-400 mt-1">ID: {{ atividade.author.id }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Informações da Conta -->
+            <div>
+              <label class="block text-xs text-slate-500 mb-2">Informações da Conta</label>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="p-3 bg-slate-900/50 rounded-lg">
+                  <div class="text-xs text-slate-500 mb-1">ID do Usuário</div>
+                  <div class="text-slate-100 font-mono text-sm">{{ atividade.usuario_id }}</div>
+                </div>
+                <div class="p-3 bg-slate-900/50 rounded-lg">
+                  <div class="text-xs text-slate-500 mb-1">Tipo de Conta</div>
+                  <div class="text-slate-100">
+                    {% if atividade.author.is_admin %}
+                      <span class="text-amber-300">Administrador</span>
+                    {% else %}
+                      <span class="text-slate-300">Usuário Padrão</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ações do usuário -->
+            <div>
+              <label class="block text-xs text-slate-500 mb-2">Ações Disponíveis</label>
+              <div class="space-y-2">
+                <a href="{{ url_for('users.info_user', user_id=atividade.author.id) }}" 
+                   class="w-full flex items-center justify-between p-3 bg-slate-900/50 hover:bg-slate-700/50 rounded-lg transition-colors group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-slate-700 group-hover:bg-slate-600 flex items-center justify-center">
+                      <i class="fas fa-eye text-sm text-slate-300"></i>
+                    </div>
+                    <span class="text-slate-300 text-sm">Ver Perfil do Usuário</span>
+                  </div>
+                  <i class="fas fa-chevron-right text-sm text-slate-500 group-hover:text-slate-400"></i>
+                </a>
+                
+                <button onclick="copiarInformacoes()" 
+                        class="w-full flex items-center justify-between p-3 bg-slate-900/50 hover:bg-slate-700/50 rounded-lg transition-colors group">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-slate-700 group-hover:bg-slate-600 flex items-center justify-center">
+                      <i class="fas fa-copy text-sm text-slate-300"></i>
+                    </div>
+                    <span class="text-slate-300 text-sm">Copiar Informações</span>
+                  </div>
+                  <i class="fas fa-chevron-right text-sm text-slate-500 group-hover:text-slate-400"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Tempo decorrido -->
+            <div>
+              <label class="block text-xs text-slate-500 mb-2">Tempo Decorrido</label>
+              <div class="p-3 bg-slate-900/50 rounded-lg">
+                <div class="text-slate-100">
+                  {% set diff = (now - atividade.data).total_seconds() %}
+                  {% if diff < 60 %}
+                    Há menos de 1 minuto
+                  {% elif diff < 3600 %}
+                    Há {{ (diff // 60)|int }} minutos
+                  {% elif diff < 86400 %}
+                    Há {{ (diff // 3600)|int }} horas
+                  {% elif diff < 2592000 %}
+                    Há {{ (diff // 86400)|int }} dias
+                  {% else %}
+                    Há mais de 1 mês
+                  {% endif %}
+                </div>
+                <div class="text-xs text-slate-500 mt-1">
+                  Desde {{ atividade.data.strftime("%d/%m/%Y às %H:%M") }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rodapé do card -->
+    <div class="p-6 border-t border-slate-700 bg-slate-900/50">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="text-sm text-slate-400">
+          <i class="fas fa-info-circle mr-2"></i>
+          Esta atividade foi registrada automaticamente pelo sistema.
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="text-xs text-slate-500">
+            Última atualização: {{ atividade.data.strftime("%d/%m/%Y %H:%M") }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ações disponíveis -->
+  <div class="bg-slate-800 rounded-xl shadow-lg overflow-hidden border border-slate-700">
+    <div class="p-6">
+      <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4">Ações Disponíveis</h3>
+      <div class="flex flex-wrap gap-3">
+        <a href="{{ url_for('atividade.todas_atividades') }}" 
+           class="px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-sm font-medium transition-colors inline-flex items-center gap-2">
+          <i class="fas fa-arrow-left"></i>
+          Voltar ao Histórico
+        </a>
+        
+        <button onclick="window.print()" 
+                class="px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-sm font-medium transition-colors inline-flex items-center gap-2">
+          <i class="fas fa-print"></i>
+          Imprimir Detalhes
+        </button>
+        
+        <button onclick="compartilharAtividade()" 
+                class="px-4 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-sm font-medium transition-colors inline-flex items-center gap-2">
+          <i class="fas fa-share-alt"></i>
+          Compartilhar
+        </button>
+        
+        {% if current_user.is_admin %}
+        <button onclick="exportarAtividade()" 
+                class="px-4 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg text-sm font-medium transition-colors inline-flex items-center gap-2">
+          <i class="fas fa-file-export"></i>
+          Exportar Relatório
+        </button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<style>
+.bg-slate-750 {
+  background-color: rgb(30 41 59 / 0.3);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Estilos para impressão */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .bg-slate-800 {
+    background: white !important;
+    border: 1px solid #ddd !important;
+  }
+  
+  .text-slate-100 {
+    color: black !important;
+  }
+  
+  .text-slate-400 {
+    color: #666 !important;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Adiciona animação de entrada
+  const mainCard = document.querySelector('.bg-slate-800');
+  if (mainCard) {
+    mainCard.classList.add('animate-fade-in');
+  }
+  
+  // Adiciona tooltips
+  const adminBadge = document.querySelector('[title*="Admin"]');
+  if (adminBadge) {
+    adminBadge.setAttribute('title', 'Usuário Administrador');
+  }
+});
+
+// Função para copiar informações da atividade
+function copiarInformacoes() {
+  const info = `
+Atividade ID: {{ atividade.id }}
+Ação: {{ atividade.acao }}
+Usuário: {{ atividade.author.username }} (ID: {{ atividade.author.id }})
+Data: {{ atividade.data.strftime("%d/%m/%Y %H:%M:%S") }}
+Descrição: {{ atividade.descricao or "Nenhuma descrição" }}
+Descrição: {{ atividade.descricao or "Nenhuma descrição" }}
+Status: {{ "Administrador" if atividade.author.is_admin else "Usuário Padrão" }}
+  `.trim();
+  
+  navigator.clipboard.writeText(info)
+    .then(() => {
+      showNotification('Informações copiadas para a área de transferência!', 'success');
+    })
+    .catch(err => {
+      showNotification('Erro ao copiar informações.', 'error');
+      console.error('Erro ao copiar:', err);
+    });
+}
+
+// Função para compartilhar atividade
+function compartilharAtividade() {
+  if (navigator.share) {
+    navigator.share({
+      title: 'Atividade do Sistema - {{ atividade.acao }}',
+      text: 'Confira os detalhes desta atividade do sistema',
+      url: window.location.href
+    })
+    .then(() => console.log('Compartilhado com sucesso'))
+    .catch(err => console.error('Erro ao compartilhar:', err));
+  } else {
+    // Fallback para copiar link
+    navigator.clipboard.writeText(window.location.href)
+      .then(() => {
+        showNotification('Link copiado para a área de transferência!', 'success');
+      })
+      .catch(err => {
+        showNotification('Erro ao copiar link.', 'error');
+      });
+  }
+}
+
+// Função para exportar relatório (apenas admin)
+function exportarAtividade() {
+  // Aqui você implementaria a lógica de exportação
+  showNotification('Exportando relatório da atividade...', 'info');
+  // Simulação de exportação
+  setTimeout(() => {
+    showNotification('Relatório exportado com sucesso!', 'success');
+  }, 1500);
+}
+
+// Função auxiliar para mostrar notificações
+function showNotification(message, type = 'info') {
+  // Cria elemento de notificação
+  const notification = document.createElement('div');
+  notification.className = `fixed top-4 right-4 px-4 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 ${
+    type === 'success' ? 'bg-green-600 text-white' :
+    type === 'error' ? 'bg-red-600 text-white' :
+    'bg-blue-600 text-white'
+  }`;
+  notification.innerHTML = `
+    <div class="flex items-center gap-2">
+      <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'}"></i>
+      <span>${message}</span>
+    </div>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  // Remove após 3 segundos
+  setTimeout(() => {
+    notification.style.opacity = '0';
+    notification.style.transform = 'translateY(-10px)';
+    setTimeout(() => {
+      document.body.removeChild(notification);
+    }, 300);
+  }, 3000);
+}
+</script>
+{% endblock %}

@@ -10,6 +10,7 @@ from grupo_andrade.models import Placa, Endereco, User, Notificacao
 from grupo_andrade.main import db
 from flask import current_app, g
 from grupo_andrade.models import Notificacao
+from grupo_andrade.atividade.services import registrar_atividade
 
 
 placas = Blueprint('placas', __name__)
@@ -81,6 +82,13 @@ def placa_detail(placa_id):
             placa.id_user_recebeu = current_user.id
             placa.received = True
             placa.received_at = datetime.now()
+            
+            registrar_atividade(
+                usuario_id=current_user.id,
+                acao="RECEBIMENTO",
+                descricao=f"{current_user.username.upper()} recebeu o processo {placa.placa}"
+            )
+
             flash(f"Placa {placa.placa.upper()} Recebida com sucesso.", 'success')
         elif not received and placa.received:
             time_limit = placa.received_at + timedelta(minutes=10)
@@ -110,9 +118,18 @@ def delete(placa_id):
     if datetime.now() > time_limit:
         flash("Voce so pode deletar placas criadas ha menos de 24 horas.", "error")
         return redirect(url_for('placas.minhas_placas'))
+    
+    chassi = placa.chassi
 
     db.session.delete(placa)
     db.session.commit()
+    # atividade 
+    registrar_atividade(
+        usuario_id=current_user.id,
+        acao="DELETE",
+        descricao=f"{current_user.username.upper()} deletou o processo de  chassi: {chassi}."
+    )
+
     flash(f'Sua placa {placa.placa.upper()} foi deletada!', 'success')
     return redirect(url_for('placas.minhas_placas'))
 
@@ -145,6 +162,7 @@ def consulta():
 def editar_placa(placa_id):
     form = EmplacamentoUpdateForm()
     placa = Placa.query.filter(Placa.id == placa_id).first()
+    
     if not placa:
         flash(f"placa de ID {placa_id} nao existe.", "info")
         return redirect(url_for('placas.minhas_placas'))
@@ -162,6 +180,13 @@ def editar_placa(placa_id):
         placa.crlv = request.form.get('crlv')
         placa.honorario = request.form.get('honorario')
         db.session.commit()
+
+        registrar_atividade(
+            usuario_id=current_user.id,
+            acao="ATUALIZADO",
+            descricao=f"{current_user.username.upper()} atualizou informaçao de {request.form.get('chassi')}"
+        )
+
         flash(f"Os dados da placa {placa.placa.upper()} foram atualizados com sucesso!", "success")
         return redirect(url_for('placas.placa_detail', placa_id=placa.id))
 
@@ -290,7 +315,7 @@ def marcar_todas_lidas():
 
 
 
-@placas.route("/gerenciamento-pedidos")
+@placas.route("/gerenciamentno-pedidos")
 @login_required
 def gerenciamento_pedidos():
     page = request.args.get('page', 1, type=int)

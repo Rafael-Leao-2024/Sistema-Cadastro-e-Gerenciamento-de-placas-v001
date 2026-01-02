@@ -14,7 +14,7 @@ from grupo_andrade.upload.funcoes_aws import enviar_arquivo_s3, ver_arquivo
 from dotenv import load_dotenv
 from grupo_andrade.upload.funcoesIA import ler_pdf, gerador_saida_estruturada
 from grupo_andrade.upload.funcao_taxa_ia import extrator_taxa_ia
-
+from grupo_andrade.atividade.services import registrar_atividade
 
 load_dotenv()
 
@@ -146,6 +146,7 @@ def download_anexos(id_placa):
 @login_required
 def delete_file(id_file):
     file = UploadFile.query.filter(UploadFile.id == id_file).first()
+    
     placa = Placa.query.filter(Placa.id == file.id_placa).first()
     if request.method == 'POST':
         file_record = UploadFile.query.get(id_file)
@@ -155,6 +156,13 @@ def delete_file(id_file):
                 os.remove(file_path)
             db.session.delete(file_record)
         db.session.commit()
+
+        registrar_atividade(
+            usuario_id=current_user.id,
+            acao="DELETE",
+            descricao=f"{current_user.username.upper()} deletou o arquivo {file_record.filename} da placa {placa.placa.upper()}"
+        )
+
         flash(f'Arquivo {file_record.filename} deletado com sucesso', category='success')
         return redirect(url_for('documentos.download_anexos', id_placa=placa.id))
     return render_template('upload/delete.html', file=file, title="Confirmar Exclusão", placa=placa)

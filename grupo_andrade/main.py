@@ -54,7 +54,7 @@ def create_app():
     from grupo_andrade.despachante.routes import despachante
     from grupo_andrade.procuracao.routes import procuracao
     from grupo_andrade.detalhamento.routes import detalhamento
-    
+    from grupo_andrade.atividade.routes import atividade
     
     app.register_blueprint(auth)
     app.register_blueprint(users)
@@ -66,5 +66,6 @@ def create_app():
     app.register_blueprint(despachante)
     app.register_blueprint(procuracao)
     app.register_blueprint(detalhamento)
+    app.register_blueprint(atividade)
     
     return app

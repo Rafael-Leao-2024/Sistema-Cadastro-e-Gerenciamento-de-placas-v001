@@ -1,0 +1,245 @@
+{% extends "layout.html" %}
+
+{% block title %}Finanças Gerais{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Cabeçalho -->
+    <div class="futuristic-card">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-cyan-400 mb-2">Finanças Gerais</h1>
+                <p class="text-slate-300">Resumo financeiro de todos os usuários</p>
+            </div>
+            <div class="mt-4 md:mt-0">
+                <div class="text-right">
+                    <p class="text-slate-300">Data: {{ now.strftime('%d/%m/%Y') }}</p>
+                    <p class="text-slate-300">Hora: {{ now.strftime('%H:%M') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resumo Total -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <a href="{{ url_for('users.listar_usuarios') }}">
+            <div class="futuristic-card">
+                <div class="text-center p-6">
+                    <i class="fas fa-users text-cyan-400 text-4xl mb-4"></i>
+                    <h3 class="text-xl font-semibold text-slate-300 mb-2">Total de Usuários</h3>
+                    <p class="text-3xl font-bold text-cyan-400">{{ usuarios|length }}</p>
+                </div>
+            </div>
+        </a>
+        
+        <a href="{{ url_for('placas.todas') }}">
+            <div class="futuristic-card">
+                <div class="text-center p-6">
+                    <i class="fas fa-car text-cyan-400 text-4xl mb-4"></i>
+                    <h3 class="text-xl font-semibold text-slate-300 mb-2">Total de Placas</h3>
+                    <p class="text-3xl font-bold text-cyan-400">
+                        {{ usuarios|sum(attribute='total_placas') }}
+                    </p>
+                </div>
+            </div>
+        </a>
+
+        <div class="futuristic-card">
+            <div class="text-center p-6">
+                <i class="fas fa-money-bill-wave text-cyan-400 text-4xl mb-4"></i>
+                <h3 class="text-xl font-semibold text-slate-300 mb-2">Total de Honorários</h3>
+                <p class="text-3xl font-bold text-cyan-400">
+                    R$ {{ "%.2f"|format(usuarios|sum(attribute='total_honorario')) }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de Usuários -->
+    {% for usuario_data in usuarios %}
+    
+    <div class="futuristic-card">
+    <a href="{{ url_for('pagamentos.relatorio') }}">
+            <!-- Cabeçalho do Usuário -->
+        <div class="border-b border-slate-700 pb-4 mb-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div class="flex items-center space-x-4 mb-4 md:mb-0">
+                    <div class="w-12 h-12 bg-cyan-900 rounded-full flex items-center justify-center">
+                        <i class="fas fa-user text-cyan-400 text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-cyan-400">{{ usuario_data.usuario.username }}</h2>
+                        <p class="text-slate-400">{{ usuario_data.usuario.email }}</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="text-center">
+                        <p class="text-sm text-slate-400">Posição</p>
+                        <p class="text-lg font-bold text-cyan-400">#{{ loop.index }}</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-sm text-slate-400">Total Placas</p>
+                        <p class="text-lg font-bold text-cyan-400">{{ usuario_data.total_placas }}</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-sm text-slate-400">Média/Placa</p>
+                        <p class="text-lg font-bold text-cyan-400">
+                            {% if usuario_data.total_placas > 0 %}
+                            R$ {{ "%.2f"|format(usuario_data.total_honorario / usuario_data.total_placas) }}
+                            {% else %}
+                            R$ 0.00
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-sm text-slate-400">Total Honorários</p>
+                        <p class="text-lg font-bold text-cyan-400">R$ {{ "%.2f"|format(usuario_data.total_honorario) }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Detalhes Mensais -->
+        {% if usuario_data.placas_agrupadas %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-700">
+                <thead>
+                    <tr class="bg-slate-800">
+                        <th class="px-6 py-3 text-left text-xs font-medium text-cyan-400 uppercase tracking-wider">
+                            Ano/Mês
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-cyan-400 uppercase tracking-wider">
+                            Quantidade de Placas
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-cyan-400 uppercase tracking-wider">
+                            Total de Honorários
+                        </th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-cyan-400 uppercase tracking-wider">
+                            Média por Placa
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-700">
+                    {% for placa in usuario_data.placas_agrupadas %}
+                    <tr class="hover:bg-slate-800 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-slate-300 font-medium">
+                                {{ "%02d"|format(placa.mes|int) }}/{{ placa.ano|int }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-slate-300">
+                                {{ placa.total_placas }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-slate-300">
+                                R$ {{ "%.2f"|format(placa.total_honorario or 0) }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-slate-300">
+                                {% if placa.total_placas > 0 %}
+                                    R$ {{ "%.2f"|format((placa.total_honorario or 0) / placa.total_placas) }}
+                                {% else %}
+                                    R$ 0.00
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-8">
+            <i class="fas fa-chart-line text-slate-600 text-4xl mb-4"></i>
+            <p class="text-slate-400">Nenhum dado financeiro disponível para este usuário</p>
+        </div>
+        {% endif %}
+    </a>
+    </div>
+    {% endfor %}
+    
+    <!-- Estatísticas Gerais -->
+    <div class="futuristic-card">
+        <h3 class="text-xl font-bold text-cyan-400 mb-6">Estatísticas Gerais</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <h4 class="text-lg font-semibold text-slate-300 mb-4">Top 5 Usuários por Honorários</h4>
+                <div class="space-y-3">
+                    {% for usuario_data in usuarios[:5] %}
+                    <div class="flex items-center justify-between p-3 bg-slate-800 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-cyan-400 font-bold">#{{ loop.index }}</span>
+                            <span class="text-slate-300">{{ usuario_data.usuario.username }}</span>
+                        </div>
+                        <span class="text-cyan-400 font-bold">
+                            R$ {{ "%.2f"|format(usuario_data.total_honorario) }}
+                        </span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div>
+                <h4 class="text-lg font-semibold text-slate-300 mb-4">Distribuição por Usuário</h4>
+                <div class="space-y-4">
+                    {% set total_geral = usuarios|sum(attribute='total_honorario') %}
+                    {% for usuario_data in usuarios %}
+                    {% if total_geral > 0 %}
+                    {% set percentual = (usuario_data.total_honorario / total_geral * 100) %}
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm text-slate-300">{{ usuario_data.usuario.username }}</span>
+                            <span class="text-sm text-cyan-400">{{ "%.1f"|format(percentual) }}%</span>
+                        </div>
+                        <div class="w-full bg-slate-700 rounded-full h-2">
+                            <div 
+                                class="bg-cyan-500 h-2 rounded-full" 
+                                style="width: '{{ percentual }}'"
+                            ></div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block head %}
+<style>
+    .futuristic-card {
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(34, 211, 238, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .futuristic-card:hover {
+        border-color: rgba(34, 211, 238, 0.4);
+        box-shadow: 0 8px 30px rgba(34, 211, 238, 0.1);
+    }
+    
+    table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    
+    th {
+        background: rgba(15, 23, 42, 0.8);
+    }
+    
+    tr:last-child td {
+        border-bottom: none;
+    }
+</style>
+{% endblock %}

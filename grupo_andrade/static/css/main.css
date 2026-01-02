@@ -1205,3 +1205,12 @@ h2 {
 .futuristic-textarea::placeholder {
     color: rgba(178, 245, 255, 0.5);
 }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.5s ease-out;
+}
