@@ -161,6 +161,12 @@
             <span class="w-3 h-3 rounded-full bg-blue-500"></span>
             <span class="text-sm text-slate-400">Login: <span class="text-slate-200 font-medium">{{ atividades|selectattr('acao', 'equalto', 'LOGIN')|list|length }}</span></span>
           </div>
+
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+            <span class="text-sm text-slate-400">Logout: <span class="text-slate-200 font-medium">{{ atividades|selectattr('acao', 'equalto', 'LOGOUT')|list|length }}</span></span>
+          </div>
+
           <div class="flex items-center gap-2">
             <span class="w-3 h-3 rounded-full bg-green-500"></span>
             <span class="text-sm text-slate-400">Recebimento: <span class="text-slate-200 font-medium">{{ atividades|selectattr('acao', 'equalto', 'RECEBIMENTO')|list|length }}</span></span>

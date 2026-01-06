@@ -7,6 +7,8 @@ from grupo_andrade.utils.pagamento_utils import verificar_status_pagamento, cria
 from dotenv import load_dotenv
 from grupo_andrade.placas.routes import injetar_notificacao
 from datetime import datetime
+from sqlalchemy import extract, func
+from grupo_andrade.atividade.services import registrar_atividade
 
 load_dotenv()
 
@@ -17,7 +19,6 @@ pagamentos = Blueprint('pagamentos', __name__)
 def inject_notificacoes_pagamentos():
     return injetar_notificacao()
 
-from sqlalchemy import extract, func
 
 
 @pagamentos.route("/financas-geral", methods=["POST", "GET"])
@@ -103,6 +104,12 @@ def relatorio_resultados(mes, ano, id_usuario_pagador):
     pagador_selecionado = None
     if id_usuario_pagador != 0:
         pagador_selecionado = User.query.get(id_usuario_pagador)
+
+    registrar_atividade(
+        usuario_id=current_user.id,
+        acao="PAGAMENTO",
+        descricao=f'{current_user.username.upper()} pesquisou finanças de {pagador_selecionado.username.upper()} mes-({mes}), total R${total}'
+    )
 
     flash(category='success', message="relatorios automatizados com sucesso!")
     return render_template("pagamentos/relatorio_resultados.html", 

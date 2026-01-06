@@ -46,6 +46,7 @@ def todas():
                 .order_by(desc(Placa.date_create))\
                 .paginate(page=page, per_page=per_page, error_out=False)
     total_placas = placas.total
+    flash('Todas as placas', category='success')
     return render_template('placas/todas.html', placas=placas, total_placas=total_placas, titulo='todas')
 
 
@@ -116,7 +117,7 @@ def delete(placa_id):
 
     time_limit = placa.date_create + timedelta(hours=24)
     if datetime.now() > time_limit:
-        flash("Voce so pode deletar placas criadas ha menos de 24 horas.", "error")
+        flash("Voce so pode deletar placas criadas ha menos de 24 horas.", "danger")
         return redirect(url_for('placas.minhas_placas'))
     
     chassi = placa.chassi
@@ -164,7 +165,7 @@ def editar_placa(placa_id):
     placa = Placa.query.filter(Placa.id == placa_id).first()
     
     if not placa:
-        flash(f"placa de ID {placa_id} nao existe.", "info")
+        flash(f"placa de ID {placa_id} nao existe.", "warning")
         return redirect(url_for('placas.minhas_placas'))
 
     if placa.id_user != current_user.id:

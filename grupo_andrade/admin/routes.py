@@ -21,9 +21,9 @@ def permitir(id_usuario):
         return redirect(url_for("admin.admin_permissao"))
     if usuario.is_admin:
         usuario.is_admin = False
-        flash(message=f"Usuario {usuario.username} desabilitado em permissao de admin", category='danger')
+        flash(message=f"Usuario {usuario.username.upper()} desabilitado em permissao de admin", category='danger')
     else:
         usuario.is_admin = True
-        flash(message=f"Usuario {usuario.username} agora tem permissao de admin", category='success')
+        flash(message=f"Usuario {usuario.username.upper()} agora tem permissao de admin", category='success')
     db.session.commit()
     return redirect(url_for("admin.admin_permissao"))

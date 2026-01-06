@@ -5,10 +5,11 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
 from dotenv import load_dotenv
+from datetime import timedelta
 import os
 
-load_dotenv()
 
+load_dotenv()
 
 
 db = SQLAlchemy()
@@ -32,6 +33,11 @@ def create_app():
     app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
     app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
     app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=4)
+
+    from grupo_andrade.signals import register_signals
+    register_signals(app=app)
 
     app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'documentos') 
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)

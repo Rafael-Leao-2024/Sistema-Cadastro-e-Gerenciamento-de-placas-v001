@@ -14,6 +14,7 @@ from grupo_andrade.upload.funcoes_aws import enviar_arquivo_s3, ver_arquivo
 from dotenv import load_dotenv
 from grupo_andrade.upload.funcoesIA import ler_pdf, gerador_saida_estruturada
 from grupo_andrade.upload.funcao_taxa_ia import extrator_taxa_ia
+from grupo_andrade.upload.leitor_atpv import leitor_atpv_ia
 from grupo_andrade.atividade.services import registrar_atividade
 
 load_dotenv()
@@ -83,8 +84,15 @@ def upload_file_anexo(id_placa):
                                 db.session.add(taxa_db)
                             db.session.commit()
 
+                    if "assinatura do comprador" in saida_texto.lower():
+                        veiculo = leitor_atpv_ia(saida_texto)
+                        print(veiculo)
+                        placa.chassi = veiculo.chassi
+                        placa.nome_proprietario = veiculo.comprador.nome_comprador
 
-                    if "senatran" in saida_texto.lower():
+                        
+
+                    if "categoria" in saida_texto.lower():
                         saida_estruturada = gerador_saida_estruturada(saida_texto)
                         print(saida_estruturada.veiculo)
                         placa.placa = saida_estruturada.veiculo.placa

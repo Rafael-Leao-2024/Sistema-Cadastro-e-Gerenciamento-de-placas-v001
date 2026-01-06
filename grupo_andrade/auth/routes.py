@@ -1,12 +1,12 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app
-from flask_login import login_user, logout_user, current_user
+from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, session
+from flask_login import login_user, logout_user, current_user, login_required
 from grupo_andrade.models import User
 from grupo_andrade.auth.forms import RegistrationForm, LoginForm, RequestResetForm, ResetPasswordForm
 from grupo_andrade.main import db, bcrypt, mail
 from grupo_andrade.utils.email_utils import enviar_email_em_background
 from grupo_andrade.utils.email_utils import verificar_email
 from grupo_andrade.atividade.services import registrar_atividade
-from datetime import datetime
+from datetime import datetime, timedelta
 
 auth = Blueprint('auth', __name__)
 
@@ -20,6 +20,7 @@ def login():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user)
+            session.permanent = False
             next_page = request.args.get('next')
 
             registrar_atividade(
@@ -37,7 +38,7 @@ def login():
 @auth.route("/logout")
 def logout():
     logout_user()
-    flash(f'Voce esta desconectado', 'error')
+    flash(f'Voce esta desconectado', category='warning')
     return redirect(url_for('auth.login'))
 
 @auth.route("/register", methods=['GET', 'POST'])

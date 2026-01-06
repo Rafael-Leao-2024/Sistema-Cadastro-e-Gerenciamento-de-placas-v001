@@ -8,6 +8,7 @@ from datetime import datetime
 
 atividade = Blueprint("atividade", __name__, url_prefix="/atividade")
 
+
 @atividade.context_processor
 def inject_notificacoes_support():
     return injetar_notificacao()
@@ -18,7 +19,7 @@ def inject_notificacoes_support():
 def todas_atividades():
     usuarios = User.query.filter(User.despachante == current_user.despachante).all()
     atividades = Atividade.query.filter(Atividade.usuario_id.in_([user.id for user in usuarios])).options(joinedload(Atividade.author))\
-        .order_by(Atividade.data.desc()).all()[:50]
+        .order_by(Atividade.data.desc()).all()[:30]
 
     return render_template("atividade/atividades.html", atividades=atividades)
 

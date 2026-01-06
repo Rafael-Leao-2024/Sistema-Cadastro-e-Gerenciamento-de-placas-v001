@@ -43,6 +43,7 @@ def listar_usuarios():
     usuarios_clientes = usuarios.filter(User.despachante == current_user.id).all()
     return render_template('users/listar_usuarios.html', usuarios=usuarios_clientes)
 
+
 def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
