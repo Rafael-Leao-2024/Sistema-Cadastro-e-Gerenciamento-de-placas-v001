@@ -2,17 +2,18 @@ from pydantic import BaseModel, Field
 from langchain.output_parsers import PydanticOutputParser
 from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
-
-from dotenv import load_dotenv 
 from PyPDF2 import PdfReader
+from dotenv import load_dotenv 
 
 load_dotenv()
+
 
 class Proprietario(BaseModel):
     nome: str
     cpf: str
     cidade: str
     uf: str
+
 
 class Veiculo(BaseModel):
     codigo_renavam : str
@@ -21,13 +22,12 @@ class Veiculo(BaseModel):
     chassi: str = Field(description="o chassi é 17 caractere ex 95BO151R484RGC844 e começa sempre com numero nao confunda com numero de motor pois e parecido")
 
 
-
 class SchemaDados(BaseModel):
     veiculo: Veiculo
     proprietario : Proprietario
 
 
-def gerador_saida_estruturada(input):
+def leitor_crlv_ia(input):
     parser = PydanticOutputParser(pydantic_object=SchemaDados)
 
     prompt = PromptTemplate(
@@ -63,6 +63,7 @@ TEXTO DO DOCUMENTO:
     resultado = chain.invoke({"input": input})
 
     return resultado
+
 
 def ler_pdf(file):
     reader = PdfReader(file)

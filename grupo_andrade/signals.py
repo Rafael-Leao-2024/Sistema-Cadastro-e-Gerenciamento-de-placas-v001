@@ -1,5 +1,5 @@
 # app/signals.py
-from flask_login import user_logged_out, current_user
+from flask_login import user_logged_out
 from grupo_andrade.atividade.services import registrar_atividade
 
 def register_signals(app):
@@ -10,6 +10,6 @@ def register_signals(app):
             registrar_atividade(
                 usuario_id=user.id,
                 acao="LOGOUT",
-                descricao=f"{user.username.upper()} Logout automático por expiração de sessão"
+                descricao=f"{user.username.upper()} Encerramento de sessão"
             )
             

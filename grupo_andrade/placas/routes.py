@@ -5,10 +5,9 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy import desc
 
 from grupo_andrade.placas.forms import EmplacamentoForm, ConsultarForm, PlacaStatusForm, EmplacamentoUpdateForm
-from grupo_andrade.utils.email_utils import enviar_email_confirmacao_servivos
 from grupo_andrade.models import Placa, Endereco, User, Notificacao
 from grupo_andrade.main import db
-from flask import current_app, g
+from flask import g
 from grupo_andrade.models import Notificacao
 from grupo_andrade.atividade.services import registrar_atividade
 
@@ -21,7 +20,6 @@ def injetar_notificacao():
     if current_user.is_authenticated:
         g.notificacoes_nao_lidas = Notificacao.query.filter_by(id_usuario=current_user.id ,lida=False).count()
     return (dict(notificacoes_nao_lidas=g.notificacoes_nao_lidas))
-
 
 
 @placas.context_processor
@@ -258,14 +256,10 @@ def solicitar_placas():
             flash('Solicitaçao enviada com sucesso!', 'success')
             return redirect(url_for('documentos.upload_file_anexo', id_placa=lista_placas[0].id))
         
-        if len(lista_placas) > 1:
-            enviar_email_confirmacao_servivos(current_user, lista_placas)
-            flash('Solicitaçao enviada com sucesso e e-mail enviado!', 'success')
-            return redirect(url_for('placas.minhas_placas'))
-        
         else:
             flash('Voce nao preencheu os campos com os dados!', 'info')
             return redirect(url_for('placas.solicitar_placas'))     
+        
     return render_template('placas/solicitar_placas.html', titulo='solicitar varias placas', honorario=honorario, endereco=endereco, placa=placa, despachante=despachante)
 
 @placas.route('/notificacoes')

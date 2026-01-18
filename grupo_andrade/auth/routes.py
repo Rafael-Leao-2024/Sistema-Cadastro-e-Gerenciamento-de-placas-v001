@@ -1,101 +1,102 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, current_app, session
-from flask_login import login_user, logout_user, current_user, login_required
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session
+from flask_login import login_user, logout_user
 from grupo_andrade.models import User
-from grupo_andrade.auth.forms import RegistrationForm, LoginForm, RequestResetForm, ResetPasswordForm
-from grupo_andrade.main import db, bcrypt, mail
-from grupo_andrade.utils.email_utils import enviar_email_em_background
-from grupo_andrade.utils.email_utils import verificar_email
 from grupo_andrade.atividade.services import registrar_atividade
-from datetime import datetime, timedelta
+from google.oauth2 import id_token
+from google.auth.transport import requests as google_requests
+import requests
+import os
+
 
 auth = Blueprint('auth', __name__)
 
 @auth.route("/login", methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
-    if current_user.is_authenticated:
-        flash(f'{current_user.username} voce ja esta logado e no Home page', 'success')
+    google_auth_url = get_google_auth_url()
+    return render_template('auth/login.html', google_auth_url=google_auth_url)
+
+@auth.route('/login/callback')
+def login_callback():
+    code = request.args.get('code')
+    
+    if not code:
+        flash('Falha na autenticação')
+        return redirect(url_for('auth.login'))
+    
+    try:
+        # Troca o código por um token
+        token_response = exchange_code_for_token(code)
+        
+        # Valida o token e obtém informações do usuário
+        user_info = validate_google_token(token_response['id_token'])
+        # Obtém ou cria o usuário no banco de dados
+        user = User.get_or_create(
+            google_id=user_info['sub'],
+            name=user_info['name'],
+            email=user_info['email'],
+            profile_pic=user_info.get('picture')
+            
+        )
+
+        registrar_atividade(
+            user.id,
+            'LOGIN',
+            f'Usuario {user.username.upper()} logado'
+        )
+        # Faz login do usuário
+        login_user(user)
+        
+        flash('Login realizado com sucesso!', 'success')
         return redirect(url_for('placas.solicitar_placas'))
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user)
-            session.permanent = False
-            next_page = request.args.get('next')
+        
+    except Exception as e:
+        print(f"Erro na autenticação: {e}")
+        flash('Erro na autenticação')
+        return redirect(url_for('auth.login'))
 
-            registrar_atividade(
-                usuario_id=user.id,
-                acao="LOGIN",
-                descricao=f"{user.username.upper()} esta conectado!"
-            )
+# funcoes auxiliares 
+def get_google_auth_url():
+    base_url = "https://accounts.google.com/o/oauth2/v2/auth"
+    
+    params = {
+        'client_id': os.environ.get('GOOGLE_CLIENT_ID'),
+        'redirect_uri': os.environ.get('GOOGLE_REDIRECT_URI'),
+        'response_type': 'code',
+        'scope': 'openid email profile',
+        'access_type': 'offline',
+        'prompt': 'consent'
+    }
+    
+    import urllib.parse
+    return f"{base_url}?{urllib.parse.urlencode(params)}"
 
-            flash(f'User {user.username.title()} connected online', 'success')
-            return redirect(next_page or url_for('placas.solicitar_placas'))
-        else:
-            flash('email e senha invalido', 'danger')
-    return render_template('auth/login.html', form=form, titulo='login')
+def exchange_code_for_token(code):
+    token_url = "https://oauth2.googleapis.com/token"
+    
+    data = {
+        'client_id': os.environ.get('GOOGLE_CLIENT_ID'),
+        'client_secret': os.environ.get('GOOGLE_CLIENT_SECRET'),
+        'code': code,
+        'grant_type': 'authorization_code',
+        'redirect_uri': os.environ.get('GOOGLE_REDIRECT_URI')
+    }
+    
+    response = requests.post(token_url, data=data)
+    return response.json()
+
+def validate_google_token(id_token_str):
+    idinfo = id_token.verify_oauth2_token(
+        id_token_str,
+        google_requests.Request(),
+        os.environ.get('GOOGLE_CLIENT_ID')
+    )
+    
+    return idinfo
+
 
 @auth.route("/logout")
 def logout():
     logout_user()
+    session.clear()
     flash(f'Voce esta desconectado', category='warning')
     return redirect(url_for('auth.login'))
-
-@auth.route("/register", methods=['GET', 'POST'])
-def register():
-    form = RegistrationForm()
-    if request.method == "POST":
-        if not verificar_email(form.email.data):
-            flash(f'Email nao valido use um email exitente', 'info')
-            return redirect(url_for('auth.register'))
-    if current_user.is_authenticated:
-        flash(f'{current_user.username} Voce ja esta logado e resgristrado pode postar', 'info')
-        return redirect(url_for('placas.solicitar_placas'))
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password, data_criacao=datetime.now(), rg=form.rg.data, cpf_cnpj=form.cpf_cnpj.data)
-        print(form.username.data, form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash(f'Account created for {user.username} Success!', 'success')
-        return redirect(url_for('auth.login'))
-    return render_template('auth/register.html', form=form, titulo='register')
-
-@auth.route("/reset_password", methods=['GET', 'POST'])
-def reset_request():
-    if current_user.is_authenticated:
-        return redirect(url_for('placas.solicitar_placas'))
-    form = RequestResetForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user:        
-            token = user.get_reset_token()
-            link_reset = url_for(
-            'auth.reset_token',
-            token=token,
-            _external=True
-        )
-            enviar_email_em_background(user, link_reset)
-            flash('Um e-mail foi enviado com instrucoes para redefinir sua senha.', 'info')
-            return redirect(url_for('auth.login'))
-        else:
-            flash('usuario nao encontrado ', 'info')
-            return redirect(url_for(request.url))
-    return render_template('auth/reset_request.html', title='Reset Password', form=form)
-
-@auth.route("/reset_password/<token>", methods=['GET', 'POST'])
-def reset_token(token):
-    if current_user.is_authenticated:
-        return redirect(url_for('placas.solicitar_placas'))
-    user = User.verify_reset_token(token)
-    if user is None:
-        flash('That is an invalid or expired token', 'warning')
-        return redirect(url_for('auth.reset_request'))
-    form = ResetPasswordForm()
-    if form.validate_on_submit():
-        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user.password = hashed_password
-        db.session.commit()
-        flash('Sua senha foi atualizada! Agora voce pode fazer login', 'success')
-        return redirect(url_for('auth.login'))
-    return render_template('auth/reset_token.html', title='Reset Password', form=form)

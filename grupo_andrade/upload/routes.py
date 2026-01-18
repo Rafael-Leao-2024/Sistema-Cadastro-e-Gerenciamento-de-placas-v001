@@ -12,10 +12,11 @@ from grupo_andrade.main import db
 from grupo_andrade.placas.routes import injetar_notificacao
 from grupo_andrade.upload.funcoes_aws import enviar_arquivo_s3, ver_arquivo
 from dotenv import load_dotenv
-from grupo_andrade.upload.funcoesIA import ler_pdf, gerador_saida_estruturada
+from grupo_andrade.upload.funcoesIA import ler_pdf, leitor_crlv_ia
 from grupo_andrade.upload.funcao_taxa_ia import extrator_taxa_ia
 from grupo_andrade.upload.leitor_atpv import leitor_atpv_ia
 from grupo_andrade.atividade.services import registrar_atividade
+from grupo_andrade.procuracao.funcao_ia import leito_nota_fiscal_ia
 
 load_dotenv()
 
@@ -56,13 +57,12 @@ def upload_file_anexo(id_placa):
                 filename = secure_filename(file.filename)
                 
                 try:
-                    saida_texto = ler_pdf(file)
                     reader = PdfReader(file)
                     for page in reader.pages:
-                        saida_texto_boleto = page.extract_text()
+                        saida_texto = page.extract_text()
                     
-                        if "valor cobrado" in saida_texto_boleto.lower():
-                            taxas_estruturadas = extrator_taxa_ia(saida_texto_boleto)
+                        if "valor cobrado" in saida_texto.lower():
+                            taxas_estruturadas = extrator_taxa_ia(saida_texto)
                             # taxas_estruturadas.taxas = deduplicar_taxas(taxas_estruturadas.taxas)
 
                             if not taxas_estruturadas.taxas:
@@ -84,23 +84,30 @@ def upload_file_anexo(id_placa):
                                 db.session.add(taxa_db)
                             db.session.commit()
 
-                    if "assinatura do comprador" in saida_texto.lower():
-                        veiculo = leitor_atpv_ia(saida_texto)
-                        print(veiculo)
-                        placa.chassi = veiculo.chassi
-                        placa.nome_proprietario = veiculo.comprador.nome_comprador
+                        if "nota fiscal" in saida_texto.lower():
+                            estrutura = leito_nota_fiscal_ia(saida_texto)
+                            print(estrutura)
+                            placa.endereco_placa = estrutura.destinatario.endereco_destinatario
+                            placa.chassi = estrutura.produto.chassi
+                            placa.nome_proprietario = estrutura.destinatario.nome_destinatario
+        
 
-                        
+                        if "assinatura do comprador" in saida_texto.lower():
+                            veiculo = leitor_atpv_ia(saida_texto)
+                            placa.chassi = veiculo.chassi
+                            placa.nome_proprietario = veiculo.comprador.nome_comprador
 
-                    if "categoria" in saida_texto.lower():
-                        saida_estruturada = gerador_saida_estruturada(saida_texto)
-                        print(saida_estruturada.veiculo)
-                        placa.placa = saida_estruturada.veiculo.placa
-                        placa.chassi = saida_estruturada.veiculo.chassi
-                        placa.renavan = saida_estruturada.veiculo.codigo_renavam
-                        placa.crlv = saida_estruturada.veiculo.numero_do_crv
-                        placa.nome_proprietario = saida_estruturada.proprietario.nome
                     
+
+                        if "categoria" in saida_texto.lower():
+                            saida_estruturada = leitor_crlv_ia(saida_texto)
+                            print(saida_estruturada.veiculo)
+                            placa.placa = saida_estruturada.veiculo.placa
+                            placa.chassi = saida_estruturada.veiculo.chassi
+                            placa.renavan = saida_estruturada.veiculo.codigo_renavam
+                            placa.crlv = saida_estruturada.veiculo.numero_do_crv
+                            placa.nome_proprietario = saida_estruturada.proprietario.nome
+                        
                     # RESET do cursor do arquivo para o início antes de enviar para AWS
                     file.seek(0)
                     

@@ -30,10 +30,14 @@ Flask-Migrate==4.0.7
 Flask-SQLAlchemy==3.1.1
 Flask-WTF==1.2.2
 frozenlist==1.7.0
+google-auth==2.47.0
+google-auth-httplib2==0.3.0
+google-auth-oauthlib==1.2.4
 greenlet==3.1.1
 gunicorn==23.0.0
 h11==0.16.0
 httpcore==1.0.9
+httplib2==0.31.1
 httpx==0.28.1
 httpx-sse==0.4.1
 idna==3.10
@@ -56,6 +60,7 @@ mercadopago==2.2.3
 multidict==6.6.3
 mypy_extensions==1.1.0
 numpy==2.3.2
+oauthlib==3.3.1
 odict==1.9.0
 openai==1.98.0
 orjson==3.11.1
@@ -65,10 +70,13 @@ plumber==1.7
 propcache==0.3.2
 psycopg2==2.9.10
 psycopg2-binary==2.9.10
+pyasn1==0.6.2
+pyasn1_modules==0.4.2
 pycparser==2.23
 pydantic==2.11.7
 pydantic-settings==2.10.1
 pydantic_core==2.33.2
+pyparsing==3.3.1
 pypdf==5.9.0
 PyPDF2==3.0.1
 python-dateutil==2.9.0.post0
@@ -79,7 +87,9 @@ PyYAML==6.0.2
 redmail==0.6.0
 regex==2025.7.34
 requests==2.32.3
+requests-oauthlib==2.0.0
 requests-toolbelt==1.0.0
+rsa==4.9.1
 s3transfer==0.14.0
 sendgrid==6.12.5
 setuptools==80.9.0

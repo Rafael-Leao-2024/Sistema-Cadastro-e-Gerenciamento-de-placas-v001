@@ -8,7 +8,9 @@ from grupo_andrade.users.forms import EnderecoForm, UpdateAccountForm
 from grupo_andrade.models import User, Endereco
 from grupo_andrade.main import db
 
+
 users = Blueprint('users', __name__)
+
 
 @users.route('/endereco', methods=['GET', 'POST'])
 @login_required
@@ -36,6 +38,7 @@ def endereco():
 
     return render_template('users/endereco.html', form=form, endereco=endereco)
 
+
 @users.route('/usuarios')
 @login_required
 def listar_usuarios():
@@ -43,7 +46,7 @@ def listar_usuarios():
     usuarios_clientes = usuarios.filter(User.despachante == current_user.id).all()
     return render_template('users/listar_usuarios.html', usuarios=usuarios_clientes)
 
-
+# funcao auxiliar 
 def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
@@ -54,6 +57,7 @@ def save_picture(form_picture):
     imagem.thumbnail(output_size)
     imagem.save(picture_path)
     return picture_fn
+
 
 @users.route("/account", methods=['GET', 'POST'])
 @login_required

@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, flash, redirect
 from flask_login import login_required, current_user
 import os
 from werkzeug.utils import secure_filename
-from grupo_andrade.procuracao.funcao_ia import ler_pdf, gerador_saida_estruturada
+from grupo_andrade.procuracao.funcao_ia import ler_pdf, leito_nota_fiscal_ia
 from grupo_andrade.models import User
 
 
@@ -52,7 +52,7 @@ def veiculos_novos():
                 texto_saida = ler_pdf(file)
                 
                 if "nota fiscal" in texto_saida.lower():
-                    resultado_estruturado = gerador_saida_estruturada(texto=texto_saida)
+                    resultado_estruturado = leito_nota_fiscal_ia(texto=texto_saida)
                     print(resultado_estruturado)
                 else:
                     flash('Selecione uma nota fiscal para criar a procuraçao', 'info')
@@ -88,14 +88,9 @@ def transferencia():
         
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            # Aqui você salvaria o arquivo e processaria os dados
-            
-            # file.save(os.path.join(UPLOAD_FOLDER, filename))
-            
-            # Simulando dados processados do arquivo
             
             texto_saida = ler_pdf(file)
-            resultado_estruturado = gerador_saida_estruturada(texto=texto_saida)
+            resultado_estruturado = leito_nota_fiscal_ia(texto=texto_saida)
             
             flash('Documento processado com sucesso!', 'success')
             return render_template('procuracao/procuracao_pronta.html',
@@ -104,6 +99,7 @@ def transferencia():
                                     dados=resultado_estruturado)
     
     return render_template("procuracao/form_transferencia.html")
+
 
 @procuracao.route("/procuracao/padrao")
 @login_required

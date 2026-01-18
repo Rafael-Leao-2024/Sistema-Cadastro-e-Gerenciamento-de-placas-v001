@@ -14,14 +14,13 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=False, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
-    password = db.Column(db.String(100), nullable=False)
+    image_file = db.Column(db.String(200), nullable=False, default='https://img.freepik.com/vetores-premium/icone-de-adesao-prateada-icone-de-perfil-de-avatar-padrao-icone-de-associacao-imagem-de-usuario-de-midia-social-ilustracao-vetorial_561158-4195.jpg?semt=ais_hybrid&w=740&q=80')
     is_admin = db.Column(db.Boolean, default=False)
     data_criacao = db.Column(db.DateTime, default=datetime.now)
-    despachante = db.Column(db.Integer, default=None)
+    despachante = db.Column(db.Integer, default=0)
 
-    cpf_cnpj = db.Column(db.String(100), nullable=True)
-    rg = db.Column(db.String(100), nullable=True)
+    cpf_cnpj = db.Column(db.String(100), nullable=False, default='00.000.000.0000/00 ou 000.000.000-00')
+    rg = db.Column(db.String(100), nullable=False, default='71.69553 SDS-PE')
 
     placas = db.relationship('Placa', backref='author', lazy=True, cascade='all, delete-orphan')
     uploads = db.relationship('UploadFile', backref='author', lazy=True, cascade='all, delete-orphan')
@@ -47,7 +46,7 @@ class User(db.Model, UserMixin):
         honorarios = [placa.honorario for placa in self.placas if placa.honorario]
         total = sum(honorarios)
         return total
-
+    
     @staticmethod
     def verify_reset_token(token):
         s = Serializer(current_app.config['SECRET_KEY'])
@@ -57,7 +56,19 @@ class User(db.Model, UserMixin):
             return None
         return User.query.get(user_id)
     
-    
+    @staticmethod
+    def get_or_create(google_id, name, email, profile_pic):
+        user = User.query.get(google_id[-4:])
+        if not user:
+            user = User(
+                id=google_id[-4:],
+                username=name,
+                email=email,
+                image_file=profile_pic,
+            )
+            db.session.add(user)
+            db.session.commit()
+        return user
 
     def __repr__(self):
         return f"User(username={self.username}, email={self.email}, admin={self.is_admin})"

@@ -29,11 +29,9 @@
           {% for usuario in usuarios %}
           <tr class="border-b border-cyan-500/10 hover:bg-cyan-500/5 transition-colors duration-200">
             <td class="px-6 py-4 text-cyan-200 font-mono text-sm">{{ usuario.id }}</td>
-            {% if current_user.username == usuario.username %}
-            <td class="px-6 py-4 text-cyan-100">Eu</td>
-            {% else %}
+            
             <td class="px-6 py-4 text-cyan-100">{{ usuario.username.title() }}</td>
-            {% endif %}
+
             <td class="px-6 py-4 text-cyan-200">{{ usuario.email }}</td>
             <td class="px-6 py-4 text-cyan-300 text-sm">{{ usuario.data_criacao }}</td>
             <td class="px-6 py-4">
