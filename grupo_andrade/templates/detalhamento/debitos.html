@@ -1,172 +1,234 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<div class="container mx-auto px-4">
-    <div class="flex justify-between items-center mb-8">
-        <h1 class="text-3xl font-bold text-white">Detalhamento de Debito</h1>
-        <div class="space-x-4">
-            <a href="{{ url_for('placas.homepage') }}" class="btn-futuristic">
-                <i class="fas fa-home mr-2"></i>Volta ao Início
-            </a>
-            <a href="{{ url_for('placas.todas') }}" class="btn-futuristic" id="btnNovaSolicitacao">
-                <i class="fas fa-plus-circle mr-2"></i>Todas Solicitaçoes
-            </a>
+<div class="min-h-[70vh] py-8 px-4">
+    <div class="max-w-7xl mx-auto">
+        <!-- Cabeçalho simples -->
+        <div class="mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-100 mb-2">Débitos</h1>
+                    <p class="text-gray-400">Boletos pendentes por placa</p>
+                </div>
+                <div class="flex gap-2">
+                    <a href="{{ url_for('placas.homepage') }}" 
+                       class="px-3 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors text-sm">
+                        Início
+                    </a>
+                    <a href="{{ url_for('placas.todas') }}" 
+                       class="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                        Solicitações
+                    </a>
+                </div>
+            </div>
+
+            <!-- Contador -->
+            {% set placas_com_boletos = placas|selectattr('boletos')|list %}
+            <div class="text-gray-400 text-sm mb-4">
+                {{ placas_com_boletos|length }} placa(s) com débitos
+            </div>
         </div>
-    </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for placa in placas %}
-        {% if placa.boletos %}
-        <div class="card-futuristic">
-            <div class="card-header">
-                <h3 class="text-xl font-bold text-cyan-300">ID: {{ placa.id }}</h3>
-                <p class="text-gray-300">
-                    <i class="fas fa-car mr-2"></i>Placa: <span class="font-mono">{{ placa.placa }}</span>
-                </p>
-                <p class="text-gray-300">
-                    <i class="fas fa-barcode mr-2"></i>Chassi: <span class="font-mono">{{ placa.chassi }}</span>
-                </p>
-            </div>
-
-            <div class="card-body">
-                {% if placa.boletos %}
-                <div class="space-y-4">
-                    {% for boleto in placa.boletos %}
-                    <div class="bg-slate-800/50 rounded-lg p-4">
-                        <div class="flex justify-between items-start mb-3">
-                            <span class="text-sm text-cyan-400">Boleto ID: {{ boleto.id }}</span>
-                            <span class="text-xs text-gray-400">{{ boleto.data_criacao.strftime('%d/%m/%Y %H:%M') }}</span>
-                        </div>
-                        
-                        <div class="mb-3">
-                            {% for taxa in boleto.taxas %}
-                            <div class="flex justify-between py-1 border-b border-slate-700">
-                                <span class="text-gray-300">{{ taxa.descricao }}</span>
-                                <span class="text-green-400 font-medium">R$ {{ "%.2f"|format(taxa.valor) }}</span>
+        <!-- Grid de placas -->
+        {% if placas_com_boletos %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for placa in placas_com_boletos %}
+            <div class="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+                <!-- Cabeçalho da placa -->
+                <div class="p-4 border-b border-gray-700">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <div class="text-lg font-semibold text-gray-100 mb-1">
+                                {{ placa.placa }}
                             </div>
-                            {% endfor %}
+                            <div class="text-gray-500 text-sm">
+                                Chassi: {{ placa.chassi }}
+                            </div>
                         </div>
-                        
-                        <div class="flex justify-between items-center pt-3 border-t border-slate-700">
-                            <span class="text-white font-bold">Total:</span>
-                            <span class="text-xl font-bold text-green-400">R$ {{ "%.2f"|format(boleto.total_taxas()) }}</span>
+                        <div class="text-gray-400 text-sm">
+                            ID: {{ placa.id }}
                         </div>
-                        
-                        <p class="text-sm text-gray-400 mt-3">
-                            <i class="fas fa-user mr-1"></i>
-                            Inserido por: {{ boleto.author.username }}
-                        </p>
                     </div>
-                    {% endfor %}
                 </div>
-                {% endif %}
-            </div>
 
-            <div class="card-footer">
-                <div class="flex flex-wrap gap-2">
-                    <a href="{{ url_for('documentos.download_anexos', id_placa=placa.id) }}"  class="btn-sm btn-outline" id="btnVerDocs{{ placa.id }}">
-                        <i class="fas fa-file-alt mr-1"></i>Ver Documentos
-                    </a>
-                    <a href="{{ url_for('detalhamento.detalhamento_debito_placa', id_placa=placa.id) }}" class="btn-sm btn-outline" id="btnEditar{{ placa.id }}">
-                        <i class="fas fa-edit mr-1"></i>Editar
-                    </a>
-                    <a href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}" class="btn-sm btn-outline" id="btnDetalhes{{ placa.id }}">
-                        <i class="fas fa-info-circle mr-1"></i>Detalhes
-                    </a>
-                    <a href="{{ url_for('documentos.upload_file_anexo', id_placa=placa.id) }}" class="btn-sm btn-outline" id="btnAnexar{{ placa.id }}">
-                        <i class="fas fa-paperclip mr-1"></i>Anexar Arquivo
-                    </a>
+                <!-- Lista de boletos -->
+                <div class="p-4">
+                    <div class="text-gray-400 text-sm mb-3">
+                        {{ placa.boletos|length }} boleto(s)
+                    </div>
+                    
+                    <div class="space-y-3">
+                        {% for boleto in placa.boletos %}
+                        <div class="bg-gray-900/50 rounded border border-gray-700 p-3">
+                            <!-- Cabeçalho do boleto -->
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="text-gray-300 text-sm">
+                                    Boleto #{{ boleto.id }}
+                                </div>
+                                <div class="text-gray-500 text-xs">
+                                    {{ boleto.data_criacao.strftime('%d/%m/%y') }}
+                                </div>
+                            </div>
+
+                            <!-- Taxas -->
+                            <div class="space-y-2 mb-3">
+                                {% for taxa in boleto.taxas %}
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-300 truncate pr-2">{{ taxa.descricao }}</span>
+                                    <span class="text-green-400 whitespace-nowrap">
+                                        R$ {{ "%.2f"|format(taxa.valor) }}
+                                    </span>
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Total e autor -->
+                            <div class="pt-2 border-t border-gray-700">
+                                <div class="flex justify-between items-center mb-1">
+                                    <div class="text-gray-400 text-xs">
+                                        Total
+                                    </div>
+                                    <div class="text-green-400 font-semibold">
+                                        R$ {{ "%.2f"|format(boleto.total_taxas()) }}
+                                    </div>
+                                </div>
+                                <div class="text-gray-500 text-xs">
+                                    Por: {{ boleto.author.username }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Ações -->
+                <div class="p-4 border-t border-gray-700 bg-gray-900/30">
+                    <div class="grid grid-cols-2 gap-2">
+                        <a href="{{ url_for('detalhamento.detalhamento_debito_placa', id_placa=placa.id) }}"
+                           class="px-3 py-1.5 border border-gray-600 text-gray-300 rounded hover:bg-gray-700 transition-colors text-xs text-center">
+                            Detalhamento
+                        </a>
+                        <a href="{{ url_for('detalhamento.criar_boleto', id_placa=placa.id) }}"
+                           class="px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-xs text-center">
+                            Criar taxa
+                        </a>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <!-- Sem débitos -->
+        <div class="bg-gray-800 rounded-lg border border-gray-700 p-8 text-center">
+            <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-gray-700 flex items-center justify-center">
+                <i class="fas fa-file-invoice text-gray-400"></i>
+            </div>
+            <h3 class="text-gray-300 mb-2">Nenhum débito encontrado</h3>
+            <p class="text-gray-500 text-sm">Não há boletos pendentes no momento</p>
         </div>
         {% endif %}
-        {% endfor %}
     </div>
-
 </div>
 
 <style>
-.card-futuristic {
-    background: linear-gradient(145deg, #0f172a, #1e293b);
-    border: 1px solid #334155;
-    border-radius: 12px;
-    padding: 1.5rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.card-futuristic:hover {
-    border-color: #06b6d4;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 15px -3px rgba(6, 182, 212, 0.1), 0 4px 6px -2px rgba(6, 182, 212, 0.05);
-}
-
-.card-header {
-    border-bottom: 1px solid #334155;
-    padding-bottom: 1rem;
-    margin-bottom: 1rem;
-}
-
-.card-body {
-    min-height: 150px;
-    margin-bottom: 1.5rem;
-}
-
-.card-footer {
-    border-top: 1px solid #334155;
-    padding-top: 1rem;
-}
-
-.btn-futuristic {
-    display: inline-flex;
-    align-items: center;
-    background: linear-gradient(135deg, #06b6d4, #3b82f6);
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-}
-
-.btn-futuristic:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 10px 20px -10px #06b6d4;
-}
-
-.btn-sm {
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-size: 0.875rem;
-    text-decoration: none;
-    transition: all 0.2s ease;
-}
-
-.btn-outline {
-    background: transparent;
-    border: 1px solid #475569;
-    color: #cbd5e1;
-}
-
-.btn-outline:hover {
-    border-color: #06b6d4;
-    color: #06b6d4;
-    background: rgba(6, 182, 212, 0.1);
-}
-
-.alert-futuristic {
-    background: rgba(15, 23, 42, 0.9);
-    border: 1px solid #334155;
-    border-left: 4px solid #06b6d4;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-}
+    /* Animações sutis */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .grid > div {
+        animation: fadeIn 0.3s ease-out forwards;
+        opacity: 0;
+    }
+    
+    /* Delay para as colunas */
+    .grid > div:nth-child(1) { animation-delay: 0.1s; }
+    .grid > div:nth-child(2) { animation-delay: 0.2s; }
+    .grid > div:nth-child(3) { animation-delay: 0.3s; }
+    .grid > div:nth-child(4) { animation-delay: 0.4s; }
+    .grid > div:nth-child(5) { animation-delay: 0.5s; }
+    
+    /* Responsividade extra */
+    @media (max-width: 768px) {
+        .grid-cols-2 {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    @media (max-width: 640px) {
+        .lg\:grid-cols-3 {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    /* Limitar altura do conteúdo de boletos */
+    .space-y-3 {
+        max-height: 300px;
+        overflow-y: auto;
+        padding-right: 4px;
+    }
+    
+    .space-y-3::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    .space-y-3::-webkit-scrollbar-track {
+        background: #1f2937;
+    }
+    
+    .space-y-3::-webkit-scrollbar-thumb {
+        background: #4b5563;
+        border-radius: 2px;
+    }
 </style>
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tooltip para descrições longas
+        const taxas = document.querySelectorAll('.truncate');
+        taxas.forEach(taxa => {
+            taxa.addEventListener('mouseenter', function(e) {
+                if (this.scrollWidth > this.clientWidth) {
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'fixed z-50 px-2 py-1 text-xs bg-gray-900 text-gray-100 rounded shadow-lg';
+                    tooltip.textContent = this.textContent;
+                    document.body.appendChild(tooltip);
+                    
+                    const rect = this.getBoundingClientRect();
+                    tooltip.style.top = (rect.top - 25) + 'px';
+                    tooltip.style.left = (rect.left + rect.width/2 - tooltip.offsetWidth/2) + 'px';
+                    
+                    this._tooltip = tooltip;
+                }
+            });
+            
+            taxa.addEventListener('mouseleave', function() {
+                if (this._tooltip) {
+                    this._tooltip.remove();
+                    delete this._tooltip;
+                }
+            });
+        });
+        
+        // Ajustar altura do scroll com base no conteúdo
+        function adjustScrollHeights() {
+            const containers = document.querySelectorAll('.space-y-3');
+            containers.forEach(container => {
+                const maxHeight = window.innerWidth < 640 ? 200 : 300;
+                container.style.maxHeight = maxHeight + 'px';
+            });
+        }
+        
+        adjustScrollHeights();
+        window.addEventListener('resize', adjustScrollHeights);
+    });
 </script>
 
 {% endblock content %}

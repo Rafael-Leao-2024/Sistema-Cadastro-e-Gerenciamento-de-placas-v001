@@ -19,6 +19,7 @@ def injetar_notificacao():
     g.notificacoes_nao_lidas = 0
     if current_user.is_authenticated:
         g.notificacoes_nao_lidas = Notificacao.query.filter_by(id_usuario=current_user.id ,lida=False).count()
+    print(g.notificacoes_nao_lidas)
     return (dict(notificacoes_nao_lidas=g.notificacoes_nao_lidas))
 
 

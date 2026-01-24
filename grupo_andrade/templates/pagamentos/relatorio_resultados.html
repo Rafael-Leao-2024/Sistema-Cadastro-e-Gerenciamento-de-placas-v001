@@ -2,246 +2,334 @@
 {% block title %}Relatório de Pagamento{% endblock %}
 
 {% block content %}
-<div class="animate-fadeIn">
-  <div class="flex flex-col lg:flex-row gap-6">
-    <!-- Coluna Principal -->
-    <div class="lg:w-2/3">
-      <!-- Header do Relatório -->
-      <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-hidden mb-6">
-        <div class="bg-gradient-to-r from-cyan-900/40 to-blue-900/40 border-b border-cyan-500/20 px-6 py-4">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-4">
-              <div class="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
-                <i class="fas fa-chart-bar text-white text-lg"></i>
-              </div>
-              <div>
-                <h2 class="text-2xl font-bold text-cyan-100">Relatório de Pagamento</h2>
-                <p class="text-cyan-300/80 text-sm">Período: {{ mes }}/{{ ano }}</p>
-                {% if pagador_selecionado %}
-                <p class="text-cyan-300/80 text-sm">Pagador: {{ pagador_selecionado.username }}</p>
-                {% else %}
-                <p class="text-cyan-300/80 text-sm">Pagador: Todos os Pagadores</p>
-                {% endif %}
-              </div>
+<div class="min-h-[70vh] py-8 px-4">
+    <div class="max-w-7xl mx-auto">
+        <!-- Cabeçalho -->
+        <div class="mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-100 mb-2 flex items-center">
+                        <i class="fas fa-file-invoice-dollar text-blue-400 mr-3"></i>
+                        Relatório de Pagamento
+                    </h1>
+                    <div class="text-gray-400 text-sm space-y-1">
+                        <div>Período: {{ mes }}/{{ ano }}</div>
+                        <div>
+                            Pagador: {% if pagador_selecionado %}{{ pagador_selecionado.username }}{% else %}Todos{% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="px-3 py-1.5 bg-gray-700 text-gray-300 rounded-lg text-sm">
+                        {{ quantidade }} placa(s)
+                    </div>
+                </div>
             </div>
-            <div class="text-right">
-              <div class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm font-medium border border-cyan-500/30">
-                {{ quantidade }} placa(s)
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Cards de Métricas -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-6 text-center">
-          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-cyan-500/20 flex items-center justify-center">
-            <i class="fas fa-layer-group text-cyan-400 text-xl"></i>
-          </div>
-          <p class="text-cyan-300 text-sm mb-1">Quantidade</p>
-          <p class="text-3xl font-bold text-cyan-100">{{ quantidade }}</p>
-          <p class="text-cyan-400/60 text-xs mt-1">placas no período</p>
-        </div>
-        
-        <div class="glass-effect-advanced rounded-xl border border-green-500/20 p-6 text-center">
-          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-green-500/20 flex items-center justify-center">
-            <i class="fas fa-dollar-sign text-green-400 text-xl"></i>
-          </div>
-          <p class="text-green-300 text-sm mb-1">Valor Total</p>
-          <p class="text-3xl font-bold text-green-100">R$ {{ valor_total }}</p>
-          <p class="text-green-400/60 text-xs mt-1">valor a pagar</p>
         </div>
 
-        <!-- Novo Card do Pagador -->
-        <div class="glass-effect-advanced rounded-xl border border-purple-500/20 p-6 text-center">
-          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-purple-500/20 flex items-center justify-center">
-            <i class="fas fa-user text-purple-400 text-xl"></i>
-          </div>
-          <p class="text-purple-300 text-sm mb-1">Pagador</p>
-          <p class="text-lg font-bold text-purple-100 truncate">
-            {% if pagador_selecionado %}
-              {{ pagador_selecionado.username }}
-            {% else %}
-              Todos
-            {% endif %}
-          </p>
-          <p class="text-purple-400/60 text-xs mt-1">
-            {% if pagador_selecionado %}
-              {{ pagador_selecionado.username }}
-            {% else %}
-              Todos os pagadores
-            {% endif %}
-          </p>
-        </div>
-      </div>
-
-      <!-- Tabela de Placas -->
-      <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-hidden">
-        <div class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-b border-cyan-500/20 px-6 py-4">
-          <h3 class="text-xl font-semibold text-cyan-100 flex items-center">
-            <i class="fas fa-list-ul mr-3"></i>
-            Placas Incluídas no Relatório
-          </h3>
-        </div>
-        
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead>
-              <tr class="border-b border-cyan-500/20">
-                <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Placa</th>
-                <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Data</th>
-                <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Status</th>
-                <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Honorario</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for placa in placas %}
-              <tr class="border-b border-cyan-500/10 hover:bg-cyan-500/5 transition-colors duration-200">
-                <td class="px-6 py-4">
-                  <span class="font-mono text-cyan-100 bg-cyan-500/10 px-3 py-1 rounded-lg border border-cyan-500/20">
-                    {{ placa.placa }}
-                  </span>
-                </td>
-                <td class="px-6 py-4 text-cyan-300 text-sm">
-                  {{ placa.date_create.strftime('%d/%m/%Y') }}
-                </td>
-                <td class="px-6 py-4">
-                  {% if placa.received %}
-                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
-                    <i class="fas fa-check-circle mr-1"></i> Recebida
-                  </span>
-                  {% elif placa.placa_a_caminho %}
-                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
-                    <i class="fas fa-truck mr-1"></i> A caminho
-                  </span>
-                  {% elif placa.placa_confeccionada %}
-                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                    <i class="fas fa-hammer mr-1"></i> Confeccionada
-                  </span>
-                  {% else %}
-                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
-                    <i class="fas fa-clock mr-1"></i> Pendente
-                  </span>
-                  {% endif %}
-                </td>
-                <td class="px-6 py-4">
-                    <a href="{{ url_for('placas.editar_placa', placa_id=placa.id) }}">
-                      <span class="font-mono text-cyan-100 bg-cyan-500/10 px-3 py-1 rounded-lg border border-cyan-500/20">
-                        R$ {{ placa.honorario }}
-                      </span>
-                    </a>
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sidebar de Pagamento -->
-    <div class="lg:w-1/3">
-      <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-hidden">
-        <div class="bg-gradient-to-r from-cyan-900/40 to-blue-900/40 border-b border-cyan-500/20 px-6 py-4">
-          <h3 class="text-xl font-semibold text-cyan-100 flex items-center">
-            <i class="fas fa-credit-card mr-3"></i>
-            Resumo do Pagamento
-          </h3>
-        </div>
-        
-        <div class="p-6">
-          <!-- Informações do Pagamento -->
-          <div class="space-y-4 mb-6">
-            <div class="flex justify-between items-center p-3 bg-cyan-500/5 rounded-lg border border-cyan-500/10">
-              <span class="text-cyan-300">Quantidade:</span>
-              <span class="text-cyan-100 font-bold text-lg">{{ quantidade }}</span>
+        <!-- Cards de Métricas -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-3">
+                        <i class="fas fa-list text-blue-400"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-400 text-sm">Quantidade</p>
+                        <p class="text-xl font-semibold text-gray-100">{{ quantidade }}</p>
+                    </div>
+                </div>
             </div>
             
-            <div class="flex justify-between items-center p-3 bg-green-500/5 rounded-lg border border-green-500/10">
-              <span class="text-green-300">Valor Total:</span>
-              <span class="text-green-100 font-bold text-lg">R$ {{ valor_total }}</span>
+            <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-3">
+                        <i class="fas fa-dollar-sign text-green-400"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-400 text-sm">Valor Total</p>
+                        <p class="text-xl font-semibold text-gray-100">R$ {{ valor_total }}</p>
+                    </div>
+                </div>
             </div>
-          </div>
 
-          <!-- Botão de Pagamento -->
-          {% if quantidade > 0 %}
-          <a href="{{ init_point }}" class="futuristic-btn-success w-full group relative overflow-hidden mb-4">
-            <span class="relative z-10 flex items-center justify-center">
-              <i class="fas fa-lock mr-3 group-hover:scale-110 transition-transform duration-200"></i>
-              Pagar com Mercado Pago
-            </span>
-          </a>
-          {% else %}
-          <button class="w-full bg-gray-500/50 text-gray-300 py-3 px-4 rounded-lg font-medium cursor-not-allowed flex items-center justify-center gap-2" disabled>
-            <i class="fas fa-ban"></i>
-            Nenhuma placa para pagar
-          </button>
-          {% endif %}
-
-          <!-- Botão Voltar -->
-          <a
-            href="{{ url_for('pagamentos.relatorio') }}"
-            class="futuristic-nav-btn w-full text-center group"
-          >
-            <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform duration-200"></i>
-            Voltar
-          </a>
-
-          <!-- Informações Adicionais -->
-          <div class="mt-6 pt-6 border-t border-cyan-500/20">
-            <div class="text-center text-cyan-400/60 text-sm">
-              <p class="flex items-center justify-center gap-2 mb-2">
-                <i class="fas fa-shield-alt"></i>
-                Pagamento 100% seguro
-              </p>
-              <p class="flex items-center justify-center gap-2">
-                <i class="fas fa-bolt"></i>
-                Processamento instantâneo
-              </p>
+            <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-3">
+                        <i class="fas fa-user text-purple-400"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-400 text-sm">Pagador</p>
+                        <p class="text-sm font-medium text-gray-100 truncate">
+                            {% if pagador_selecionado %}
+                                {{ pagador_selecionado.username }}
+                            {% else %}
+                                Todos
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
+
+        <!-- Layout de duas colunas em desktop -->
+        <div class="lg:grid lg:grid-cols-3 lg:gap-6">
+            <!-- Lista de Placas -->
+            <div class="lg:col-span-2 mb-6 lg:mb-0">
+                <div class="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-700 bg-gray-900/50">
+                        <h2 class="font-medium text-gray-300">Placas no Relatório</h2>
+                    </div>
+                    
+                    {% if placas %}
+                    <div class="divide-y divide-gray-700 max-h-[500px] overflow-y-auto">
+                        {% for placa in placas %}
+                        <div class="p-4 hover:bg-gray-750 transition-colors">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <div class="font-mono text-gray-100 text-sm bg-gray-700 px-2 py-1 rounded border border-gray-600 inline-block mb-2">
+                                        {{ placa.placa }}
+                                    </div>
+                                    <div class="flex items-center text-gray-400 text-xs mb-1">
+                                        <i class="fas fa-calendar mr-1.5"></i>
+                                        {{ placa.date_create.strftime('%d/%m/%Y') }}
+                                    </div>
+                                </div>
+                                
+                                <div class="flex gap-2">
+                                    <!-- Status -->
+                                    {% if placa.received %}
+                                    <span class="px-2 py-1 bg-green-900/30 text-green-400 rounded text-xs">
+                                        <i class="fas fa-check mr-1"></i>
+                                        Recebida
+                                    </span>
+                                    {% elif placa.placa_a_caminho %}
+                                    <span class="px-2 py-1 bg-yellow-900/30 text-yellow-400 rounded text-xs">
+                                        <i class="fas fa-truck mr-1"></i>
+                                        A caminho
+                                    </span>
+                                    {% elif placa.placa_confeccionada %}
+                                    <span class="px-2 py-1 bg-blue-900/30 text-blue-400 rounded text-xs">
+                                        <i class="fas fa-hammer mr-1"></i>
+                                        Confeccionada
+                                    </span>
+                                    {% else %}
+                                    <span class="px-2 py-1 bg-gray-700 text-gray-400 rounded text-xs">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        Pendente
+                                    </span>
+                                    {% endif %}
+                                    
+                                    <!-- Honorário -->
+                                    <a href="{{ url_for('placas.editar_placa', placa_id=placa.id) }}"
+                                       class="px-2 py-1 bg-cyan-900/30 text-cyan-400 rounded text-xs hover:bg-cyan-900/50 transition-colors"
+                                       title="Editar honorário">
+                                        R$ {{ placa.honorario }}
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Informações adicionais -->
+                            <div class="text-xs text-gray-500">
+                                ID: {{ placa.id }}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="p-8 text-center">
+                        <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-gray-700 flex items-center justify-center">
+                            <i class="fas fa-inbox text-gray-400"></i>
+                        </div>
+                        <p class="text-gray-400">Nenhuma placa encontrada</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Resumo do Pagamento -->
+            <div class="lg:col-span-1">
+                <div class="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+                    <div class="px-4 py-3 border-b border-gray-700 bg-gray-900/50">
+                        <h2 class="font-medium text-gray-300">Resumo</h2>
+                    </div>
+                    
+                    <div class="p-4">
+                        <!-- Valores -->
+                        <div class="space-y-3 mb-6">
+                            <div class="flex justify-between items-center p-3 bg-gray-700/50 rounded border border-gray-600">
+                                <span class="text-gray-300">Quantidade:</span>
+                                <span class="text-gray-100 font-semibold">{{ quantidade }}</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-3 bg-gray-700/50 rounded border border-gray-600">
+                                <span class="text-gray-300">Valor Total:</span>
+                                <span class="text-green-400 font-semibold">R$ {{ valor_total }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Botão de Pagamento -->
+                        {% if quantidade > 0 and init_point %}
+                        <a href="{{ init_point }}" 
+                           class="w-full block bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors mb-3 text-center">
+                            <i class="fas fa-lock mr-2"></i>
+                            Pagar com Mercado Pago
+                        </a>
+                        {% elif quantidade > 0 %}
+                        <div class="w-full bg-gray-600 text-gray-300 py-3 px-4 rounded-lg font-medium text-center mb-3">
+                            <i class="fas fa-exclamation-circle mr-2"></i>
+                            Link de pagamento indisponível
+                        </div>
+                        {% else %}
+                        <div class="w-full bg-gray-600 text-gray-400 py-3 px-4 rounded-lg font-medium text-center mb-3">
+                            <i class="fas fa-ban mr-2"></i>
+                            Nenhuma placa para pagar
+                        </div>
+                        {% endif %}
+
+                        <!-- Botão Voltar -->
+                        <a href="{{ url_for('pagamentos.relatorio') }}"
+                           class="w-full block border border-gray-600 text-gray-300 py-2.5 px-4 rounded-lg hover:bg-gray-700 transition-colors text-center text-sm">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Voltar
+                        </a>
+
+                        <!-- Informações de Segurança -->
+                        <div class="mt-6 pt-4 border-t border-gray-700">
+                            <div class="space-y-2 text-xs text-gray-500">
+                                <div class="flex items-center">
+                                    <i class="fas fa-shield-alt mr-2 text-blue-400"></i>
+                                    <span>Pagamento 100% seguro</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-bolt mr-2 text-yellow-400"></i>
+                                    <span>Processamento rápido</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-receipt mr-2 text-green-400"></i>
+                                    <span>Comprovante automático</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <style>
-  .futuristic-btn-success {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    padding: 1rem 2rem;
-    border-radius: 0.75rem;
-    font-weight: 600;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-    transform: scale(1);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .futuristic-btn-success:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 2rem rgba(16, 185, 129, 0.4);
-  }
-
-  .futuristic-btn-success::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.6s;
-  }
-
-  .futuristic-btn-success:hover::before {
-    left: 100%;
-  }
+    .bg-gray-750 {
+        background-color: #2d3748;
+    }
+    
+    /* Scrollbar customizada */
+    .overflow-y-auto::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .overflow-y-auto::-webkit-scrollbar-track {
+        background: #1f2937;
+    }
+    
+    .overflow-y-auto::-webkit-scrollbar-thumb {
+        background: #4b5563;
+        border-radius: 3px;
+    }
+    
+    .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+        background: #6b7280;
+    }
+    
+    /* Animações */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .divide-y > div {
+        animation: slideIn 0.3s ease-out forwards;
+        opacity: 0;
+    }
+    
+    .divide-y > div:nth-child(1) { animation-delay: 0.1s; }
+    .divide-y > div:nth-child(2) { animation-delay: 0.2s; }
+    .divide-y > div:nth-child(3) { animation-delay: 0.3s; }
+    .divide-y > div:nth-child(4) { animation-delay: 0.4s; }
+    .divide-y > div:nth-child(5) { animation-delay: 0.5s; }
+    
+    /* Responsividade extra */
+    @media (max-width: 1024px) {
+        .lg\:grid-cols-3 {
+            grid-template-columns: 1fr;
+        }
+        
+        .lg\:col-span-2 {
+            grid-column: span 1;
+        }
+    }
+    
+    @media (max-width: 640px) {
+        .sm\:grid-cols-3 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .sm\:grid-cols-3 {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tooltip simples para honorário
+        const honorarioLinks = document.querySelectorAll('a[title="Editar honorário"]');
+        honorarioLinks.forEach(link => {
+            link.addEventListener('mouseenter', function(e) {
+                const tooltip = document.createElement('div');
+                tooltip.className = 'fixed z-50 px-2 py-1 text-xs bg-gray-900 text-gray-100 rounded shadow-lg';
+                tooltip.textContent = 'Clique para editar o valor';
+                document.body.appendChild(tooltip);
+                
+                const rect = this.getBoundingClientRect();
+                tooltip.style.top = (rect.top - 25) + 'px';
+                tooltip.style.left = (rect.left + rect.width/2 - tooltip.offsetWidth/2) + 'px';
+                
+                this._tooltip = tooltip;
+            });
+            
+            link.addEventListener('mouseleave', function() {
+                if (this._tooltip) {
+                    this._tooltip.remove();
+                    delete this._tooltip;
+                }
+            });
+        });
+        
+        // Ajustar altura da lista de placas
+        function adjustListHeight() {
+            const listContainer = document.querySelector('.overflow-y-auto');
+            if (listContainer) {
+                const windowHeight = window.innerHeight;
+                const containerTop = listContainer.getBoundingClientRect().top;
+                const availableHeight = windowHeight - containerTop - 32; // 32px de margem
+                
+                if (availableHeight > 300) {
+                    listContainer.style.maxHeight = availableHeight + 'px';
+                }
+            }
+        }
+        
+        adjustListHeight();
+        window.addEventListener('resize', adjustListHeight);
+    });
+</script>
 {% endblock %}

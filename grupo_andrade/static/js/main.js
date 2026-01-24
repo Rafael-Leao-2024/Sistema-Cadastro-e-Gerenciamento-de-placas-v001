@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const marcarTodasLidas = document.getElementById('marcarTodasLidas');
     const urlMinhasPlacas = document.getElementById('notificacoesLista').dataset.urlMinhasPlacas;
 
-
+// 
     // Alternar dropdown
     notificacaoBtn.addEventListener('click', function() {
         notificacaoDropdown.classList.toggle('hidden');

@@ -58,10 +58,11 @@ def detalhamento_debito():
 def detalhamento_debito_placa(id_placa):
     placa = Placa.query.filter(Placa.id==id_placa).first()
     if not placa:
+        flash('Processo nao encontrado', 'info')
         return redirect(url_for("detalhamento.detalhamento_debito"))
     # Verificar permissão
     if not current_user.is_admin:
-        flash("Usuario nao permitido")
+        flash("Usuario nao permitido", "danger")
         return redirect(url_for("detalhamento.detalhamento_debito"))
         
     return render_template("/detalhamento/boleto_debito_unico.html", placa=placa)
@@ -79,6 +80,6 @@ def deletar_boleto(id_boleto):
         return redirect(url_for("detalhamento.detalhamento_debito"))
     db.session.delete(boleto)
     db.session.commit()
-    flash("Boleto Deletado com sucesso!")
+    flash("Boleto Deletado com sucesso!", "success")
     return redirect(url_for("detalhamento.detalhamento_debito"))
 

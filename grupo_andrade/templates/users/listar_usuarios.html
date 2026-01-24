@@ -1,53 +1,350 @@
 {% extends "layout.html" %}
-
-{% block title %}Lista de Usuários{% endblock %}
+{% block title %}Clientes Cadastrados{% endblock %}
 
 {% block content %}
-<div class="animate-fadeIn">
-  <div class="flex justify-between items-center mb-8">
-    <h2 class="text-2xl font-bold text-cyan-100">
-      <i class="fas fa-users mr-3"></i>Clientes Cadastrados
-    </h2>
-    <a href="{{ url_for('placas.homepage') }}" class="futuristic-nav-btn">
-      <i class="fas fa-arrow-left mr-2"></i> Voltar
-    </a>
+<div class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-950">
+  <!-- Header -->
+  <div class="bg-gray-800/50 border-b border-gray-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="py-6">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <div class="p-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
+              <i class="fas fa-users text-white text-xl"></i>
+            </div>
+            <div>
+              <h1 class="text-2xl font-bold text-white">Clientes Cadastrados</h1>
+              <p class="text-gray-400 text-sm mt-1">Lista completa de usuários do sistema</p>
+            </div>
+          </div>
+          <a href="{{ url_for('placas.homepage') }}" 
+             class="flex items-center px-5 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors duration-200 font-medium">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Voltar
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-lg shadow-cyan-500/5 overflow-hidden">
-    <div class="overflow-x-auto">
-      <table class="w-full">
-        <thead>
-          <tr class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-b border-cyan-500/20">
-            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">ID</th>
-            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Nome</th>
-            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Email</th>
-            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Data Cadastro</th>
-            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Informações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for usuario in usuarios %}
-          <tr class="border-b border-cyan-500/10 hover:bg-cyan-500/5 transition-colors duration-200">
-            <td class="px-6 py-4 text-cyan-200 font-mono text-sm">{{ usuario.id }}</td>
-            
-            <td class="px-6 py-4 text-cyan-100">{{ usuario.username.title() }}</td>
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div class="bg-gray-800/50 rounded-xl border border-gray-700 p-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-400 text-sm font-medium">Total de Clientes</p>
+            <p class="text-3xl font-bold text-white mt-2">{{ usuarios|length }}</p>
+          </div>
+          <div class="p-3 bg-blue-500/20 rounded-lg">
+            <i class="fas fa-user-friends text-blue-400 text-xl"></i>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-gray-800/50 rounded-xl border border-gray-700 p-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-400 text-sm font-medium">Administradores</p>
+            <p class="text-3xl font-bold text-white mt-2">
+              {{ usuarios|selectattr('is_admin')|list|length }}
+            </p>
+          </div>
+          <div class="p-3 bg-green-500/20 rounded-lg">
+            <i class="fas fa-user-shield text-green-400 text-xl"></i>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-gray-800/50 rounded-xl border border-gray-700 p-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-400 text-sm font-medium">Usuários Comuns</p>
+            <p class="text-3xl font-bold text-white mt-2">
+              {{ usuarios|rejectattr('is_admin')|list|length }}
+            </p>
+          </div>
+          <div class="p-3 bg-purple-500/20 rounded-lg">
+            <i class="fas fa-user text-purple-400 text-xl"></i>
+          </div>
+        </div>
+      </div>
+    </div>
 
-            <td class="px-6 py-4 text-cyan-200">{{ usuario.email }}</td>
-            <td class="px-6 py-4 text-cyan-300 text-sm">{{ usuario.data_criacao }}</td>
-            <td class="px-6 py-4">
-              <a
-                href="{{ url_for('users.info_user', user_id=usuario.id) }}"
-                class="inline-flex items-center px-3 py-2 rounded-lg border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/10 hover:border-cyan-400/50 transition-all duration-200"
-              >
-                <i class="fas fa-eye mr-2 text-sm"></i>
-                Ver
-              </a>
-            </td>
-          </tr>
+    <!-- Users List -->
+    <div class="bg-gray-800/30 border border-gray-700 rounded-xl overflow-hidden shadow-xl">
+      <!-- Desktop Table -->
+      <div class="hidden lg:block">
+        <div class="grid grid-cols-12 gap-4 p-6 border-b border-gray-700 bg-gray-800/50">
+          <div class="col-span-1">
+            <span class="text-gray-400 font-medium text-sm">ID</span>
+          </div>
+          <div class="col-span-3">
+            <span class="text-gray-400 font-medium text-sm">Nome</span>
+          </div>
+          <div class="col-span-3">
+            <span class="text-gray-400 font-medium text-sm">Email</span>
+          </div>
+          <div class="col-span-3">
+            <span class="text-gray-400 font-medium text-sm">Data de Cadastro</span>
+          </div>
+          <div class="col-span-2">
+            <span class="text-gray-400 font-medium text-sm">Ações</span>
+          </div>
+        </div>
+
+        <div class="divide-y divide-gray-700">
+          {% for usuario in usuarios %}
+          <div class="user-row grid grid-cols-12 gap-4 p-6 hover:bg-gray-700/20 transition-colors">
+            <div class="col-span-1">
+              <span class="font-mono text-gray-300">#{{ usuario.id }}</span>
+            </div>
+            
+            <div class="col-span-3">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+                  <i class="fas fa-user text-white text-sm"></i>
+                </div>
+                <div>
+                  <p class="font-medium text-white">{{ usuario.username.title() }}</p>
+                  {% if usuario.is_admin %}
+                  <span class="inline-flex items-center px-2 py-0.5 bg-green-500/20 text-green-400 rounded text-xs">
+                    <i class="fas fa-crown mr-1 text-xs"></i>
+                    Admin
+                  </span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-span-3">
+              <div class="flex items-center space-x-2">
+                <i class="fas fa-envelope text-gray-500 text-sm"></i>
+                <span class="text-gray-300 truncate">{{ usuario.email }}</span>
+              </div>
+            </div>
+            
+            <div class="col-span-3">
+              <div class="space-y-1">
+                {% if usuario.data_criacao %}
+                  {% if usuario.data_criacao is string %}
+                    <p class="text-gray-300">{{ usuario.data_criacao }}</p>
+                  {% else %}
+                    <p class="text-gray-300">{{ usuario.data_criacao.strftime('%d/%m/%Y') }}</p>
+                    <p class="text-gray-500 text-xs">{{ usuario.data_criacao.strftime('%H:%M') }}</p>
+                  {% endif %}
+                {% else %}
+                  <p class="text-gray-500">N/A</p>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-span-2">
+              <div class="flex space-x-2">
+                <a href="{{ url_for('users.info_user', user_id=usuario.id) }}"
+                   class="flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium text-sm">
+                  <i class="fas fa-eye mr-2"></i>
+                  Ver
+                </a>
+              </div>
+            </div>
+          </div>
           {% endfor %}
-        </tbody>
-      </table>
+        </div>
+      </div>
+
+      <!-- Mobile Cards -->
+      <div class="lg:hidden">
+        <div class="p-4 space-y-4">
+          {% for usuario in usuarios %}
+          <div class="bg-gray-800/50 border border-gray-700 rounded-xl p-5">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+                  <i class="fas fa-user text-white"></i>
+                </div>
+                <div>
+                  <h3 class="font-bold text-white">{{ usuario.username.title() }}</h3>
+                  <div class="flex items-center space-x-2 mt-1">
+                    <span class="font-mono text-gray-400 text-sm">#{{ usuario.id }}</span>
+                    {% if usuario.is_admin %}
+                    <span class="inline-flex items-center px-2 py-0.5 bg-green-500/20 text-green-400 rounded text-xs">
+                      <i class="fas fa-crown mr-1"></i>
+                      Admin
+                    </span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-3 mb-4">
+              <div class="flex items-center space-x-3">
+                <div class="p-2 bg-gray-700 rounded-lg">
+                  <i class="fas fa-envelope text-gray-400"></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="text-gray-400 text-xs mb-1">Email</p>
+                  <p class="text-white truncate">{{ usuario.email }}</p>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-3">
+                <div class="p-2 bg-gray-700 rounded-lg">
+                  <i class="fas fa-calendar text-gray-400"></i>
+                </div>
+                <div>
+                  <p class="text-gray-400 text-xs mb-1">Data de Cadastro</p>
+                  <p class="text-white">
+                    {% if usuario.data_criacao %}
+                      {% if usuario.data_criacao is string %}
+                        {{ usuario.data_criacao }}
+                      {% else %}
+                        {{ usuario.data_criacao.strftime('%d/%m/%Y') }}
+                      {% endif %}
+                    {% else %}
+                      N/A
+                    {% endif %}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <a href="{{ url_for('users.info_user', user_id=usuario.id) }}"
+               class="block w-full text-center px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium">
+              <i class="fas fa-eye mr-2"></i>
+              Ver Detalhes do Cliente
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="border-t border-gray-700 p-4 bg-gray-800/50">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="text-gray-400 text-sm">
+            Mostrando <span class="text-white font-medium">{{ usuarios|length }}</span> clientes
+          </div>
+          <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <span class="text-gray-300 text-sm">
+                {{ usuarios|selectattr('is_admin')|list|length }} Administradores
+              </span>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+              <span class="text-gray-300 text-sm">
+                {{ usuarios|rejectattr('is_admin')|list|length }} Usuários
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Card -->
+    <div class="mt-6 bg-gray-800/30 border border-gray-700 rounded-xl p-5">
+      <div class="flex items-start space-x-3">
+        <div class="p-2 bg-blue-500/20 rounded-lg">
+          <i class="fas fa-info-circle text-blue-400"></i>
+        </div>
+        <div class="flex-1">
+          <h4 class="font-medium text-white mb-2">Como usar</h4>
+          <p class="text-gray-300 text-sm">
+            Clique em "Ver" para acessar informações detalhadas de cada cliente, incluindo histórico de atividades,
+            placas cadastradas e dados financeiros.
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
+<style>
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.7);
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Card hover effects */
+.bg-gray-800\/50:hover {
+  background-color: rgba(31, 41, 55, 0.7);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .text-3xl {
+    font-size: 1.875rem;
+  }
+  
+  .p-5 {
+    padding: 1.25rem;
+  }
+}
+</style>
+
+<script>
+// Simple search functionality
+function setupSearch() {
+  const searchInput = document.createElement('input');
+  searchInput.type = 'text';
+  searchInput.placeholder = 'Buscar por nome ou email...';
+  searchInput.className = 'w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500';
+  searchInput.id = 'searchInput';
+  
+  // Insert search input before the users list
+  const usersList = document.querySelector('.bg-gray-800\\/30');
+  const parent = usersList.parentElement;
+  const searchContainer = document.createElement('div');
+  searchContainer.className = 'mb-4';
+  searchContainer.appendChild(searchInput);
+  parent.insertBefore(searchContainer, usersList);
+  
+  // Add search functionality
+  searchInput.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    const userRows = document.querySelectorAll('.user-row');
+    
+    userRows.forEach(row => {
+      const userName = row.querySelector('.font-medium.text-white')?.textContent.toLowerCase() || '';
+      const userEmail = row.querySelector('.text-gray-300')?.textContent.toLowerCase() || '';
+      
+      if (userName.includes(searchTerm) || userEmail.includes(searchTerm)) {
+        row.style.display = 'grid';
+        if (row.parentElement.classList.contains('space-y-4')) {
+          row.style.display = 'block';
+        }
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  });
+}
+
+// Initialize search on page load
+document.addEventListener('DOMContentLoaded', setupSearch);
+</script>
 {% endblock %}

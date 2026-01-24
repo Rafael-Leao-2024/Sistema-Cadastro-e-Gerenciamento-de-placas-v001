@@ -2,334 +2,260 @@
 {% block title %}Editar Placa{% endblock %}
 
 {% block content %}
-<div class="animate-fadeIn">
+<div class="min-h-screen bg-gray-900">
   <!-- Header -->
-  <div class="flex justify-between items-center mb-8">
-    <div class="flex items-center space-x-4">
-      <div class="w-12 h-12 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
-        <i class="fas fa-edit text-white text-lg"></i>
-      </div>
-      <div>
-        <h2 class="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-          Editar Placa
-        </h2>
-        <p class="text-cyan-300/70 text-sm mt-1">Atualize os dados da placa: {{ placa.placa }}</p>
+  <div class="bg-gray-800 border-b border-gray-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="py-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-center space-x-3">
+            <div class="p-2 bg-blue-600 rounded-lg">
+              <i class="fas fa-edit text-white"></i>
+            </div>
+            <div>
+              <h1 class="text-xl sm:text-2xl font-bold text-white">Editar Placa</h1>
+              <p class="text-gray-400 text-sm mt-1">Atualize os dados da placa: {{ placa.placa }}</p>
+            </div>
+          </div>
+          <a href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}"
+             class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg font-medium">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Voltar
+          </a>
+        </div>
       </div>
     </div>
-    <a
-      href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}"
-      class="futuristic-nav-btn group"
-    >
-      <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform duration-200"></i>
-      Voltar aos Detalhes
-    </a>
   </div>
 
-  <!-- Formulário de Edição -->
-  <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-hidden">
-    <div class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-b border-cyan-500/20 px-6 py-4">
-      <h3 class="text-xl font-semibold text-cyan-100 flex items-center">
-        <i class="fas fa-car mr-3"></i>
-        Dados da Placa
-      </h3>
-    </div>
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Form Column (2/3) -->
+      <div class="lg:col-span-2">
+        <div class="bg-gray-800 border border-gray-700 rounded-lg p-6">
+          <h2 class="text-xl font-bold text-white mb-6 flex items-center">
+            <i class="fas fa-car text-blue-400 mr-3"></i>
+            Dados da Placa
+          </h2>
 
-    <form method="POST" action="{{ url_for('placas.editar_placa', placa_id=placa.id) }}">
-      {{ form.hidden_tag() }}
-      
-      <div class="p-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Campo Placa -->
-          <div class="form-group">
-            <label class="block text-cyan-300 font-medium mb-3 flex items-center">
-              <i class="fas fa-car-side mr-2 text-cyan-400"></i>
-              Placa
-            </label>
-            <div class="relative">
-              <input
-                type="text"
-                name="placa"
-                value="{{ placa.placa }}"
-                class="futuristic-input uppercase pl-12"
-                placeholder="ABC1B34"
-                required
-              />
-              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <i class="fas fa-id-card text-cyan-400/80"></i>
+          <form method="POST" action="{{ url_for('placas.editar_placa', placa_id=placa.id) }}">
+            {{ form.hidden_tag() }}
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Placa -->
+              <div>
+                <label class="block text-gray-400 text-sm mb-2">Placa</label>
+                <input
+                  type="text"
+                  name="placa"
+                  value="{{ placa.placa }}"
+                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-blue-500 uppercase"
+                  placeholder="ABC1B34"
+                  required
+                />
+              </div>
+
+              <!-- Renavan -->
+              <div>
+                <label class="block text-gray-400 text-sm mb-2">Renavan</label>
+                <input
+                  type="text"
+                  name="renavan"
+                  value="{{ placa.renavan }}"
+                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-blue-500"
+                  placeholder="Número do Renavan"
+                />
+              </div>
+
+              <!-- Chassi -->
+              <div>
+                <label class="block text-gray-400 text-sm mb-2">Chassi</label>
+                <input
+                  type="text"
+                  name="chassi"
+                  value="{{ placa.chassi }}"
+                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-blue-500 uppercase"
+                  placeholder="9BWZZZ377VT004251"
+                  required
+                />
+              </div>
+
+              <!-- CRLV -->
+              <div>
+                <label class="block text-gray-400 text-sm mb-2">CRLV</label>
+                <input
+                  type="text"
+                  name="crlv"
+                  value="{{ placa.crlv }}"
+                  class="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-blue-500"
+                  placeholder="Número do CRLV"
+                />
               </div>
             </div>
-          </div>
 
-          <!-- Campo Renavan -->
-          <div class="form-group">
-            <label class="block text-cyan-300 font-medium mb-3 flex items-center">
-              <i class="fas fa-file-alt mr-2 text-cyan-400"></i>
-              Renavan
-            </label>
-            <div class="relative">
-              <input
-                type="text"
-                name="renavan"
-                value="{{ placa.renavan }}"
-                class="futuristic-input pl-12"
-                placeholder="Número do Renavan"
-              />
-              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <i class="fas fa-barcode text-cyan-400/80"></i>
-              </div>
-            </div>
-          </div>
-
-          <!-- Campo Chassi -->
-          <div class="form-group">
-            <label class="block text-cyan-300 font-medium mb-3 flex items-center">
-              <i class="fas fa-fingerprint mr-2 text-cyan-400"></i>
-              Chassi
-            </label>
-            <div class="relative">
-              <input
-                type="text"
-                name="chassi"
-                value="{{ placa.chassi }}"
-                class="futuristic-input uppercase pl-12"
-                placeholder="9BWZZZ377VT004251"
-                required
-              />
-              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <i class="fas fa-qrcode text-cyan-400/80"></i>
-              </div>
-            </div>
-          </div>
-
-          <!-- Campo CRLV -->
-          <div class="form-group">
-            <label class="block text-cyan-300 font-medium mb-3 flex items-center">
-              <i class="fas fa-file-contract mr-2 text-cyan-400"></i>
-              CRLV
-            </label>
-            <div class="relative">
-              <input
-                type="text"
-                name="crlv"
-                value="{{ placa.crlv }}"
-                class="futuristic-input pl-12"
-                placeholder="Número do CRLV"
-              />
-              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <i class="fas fa-file-invoice text-cyan-400/80"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Campo honorario  -->
-        <div class="form-group">
-            <label class="block text-cyan-300 font-medium mb-3 flex items-center">
-              <i class="fas fa-file-contract mr-2 text-cyan-400"></i>
-              Honorario do Serviço
-            </label>
-            <div class="relative">
+            <!-- Honorário -->
+            <div class="mt-6">
+              <label class="block text-gray-400 text-sm mb-2">Honorário do Serviço</label>
               <input
                 type="number"
                 name="honorario"
                 value="{{ placa.honorario }}"
-                class="futuristic-input pl-12"
+                class="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-blue-500"
                 placeholder="Valor do honorário"
-                step="0.01"         
-                min="0"             
-                oninput="validity.valid||(value='');"
+                step="0.01"
+                min="0"
                 required
               />
-              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <i class="fas fa-file-invoice text-cyan-400/80"></i>
+            </div>
+
+            <!-- Endereço -->
+            <div class="mt-6">
+              <label class="block text-gray-400 text-sm mb-2">Endereço para Entrega</label>
+              <textarea
+                name="endereco_placa"
+                class="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-blue-500"
+                rows="3"
+                placeholder="Digite o endereço completo para entrega"
+              >{{ placa.endereco_placa.title() if placa.endereco_placa else '' }}</textarea>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="mt-8 pt-6 border-t border-gray-700">
+              <div class="flex flex-col sm:flex-row gap-3">
+                <button type="submit"
+                        class="flex-1 sm:flex-none px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium">
+                  <i class="fas fa-save mr-2"></i>
+                  Salvar Alterações
+                </button>
+                <a href="{{ url_for('placas.delete', placa_id=placa.id) }}"
+                   class="flex-1 sm:flex-none px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium text-center"
+                   onclick="return confirm('Tem certeza que deseja deletar esta placa?')">
+                  <i class="fas fa-trash mr-2"></i>
+                  Deletar
+                </a>
               </div>
             </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Info Column (1/3) -->
+      <div class="space-y-6">
+        <!-- Info Card -->
+        <div class="bg-gray-800 border border-gray-700 rounded-lg p-6">
+          <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+            <i class="fas fa-info-circle text-blue-400 mr-3"></i>
+            Informações
+          </h3>
+          
+          <div class="space-y-4">
+            <div>
+              <p class="text-gray-400 text-sm mb-1">ID da Solicitação</p>
+              <p class="font-mono text-white">#{{ placa.id }}</p>
+            </div>
+            
+            <div>
+              <p class="text-gray-400 text-sm mb-1">Criado em</p>
+              <p class="text-white">{{ placa.date_create.strftime('%d/%m/%Y %H:%M') }}</p>
+            </div>
+            
+            {% if placa.received_at %}
+            <div>
+              <p class="text-gray-400 text-sm mb-1">Recebido em</p>
+              <p class="text-white">{{ placa.received_at.strftime('%d/%m/%Y %H:%M') }}</p>
+            </div>
+            {% endif %}
           </div>
         </div>
 
-        <!-- Campo Endereço -->
-        <div class="form-group mt-6">
-          <label class="block text-cyan-300 font-medium mb-3 flex items-center">
-            <i class="fas fa-map-marker-alt mr-2 text-cyan-400"></i>
-            Endereço para Entrega
-          </label>
-          <div class="relative">
-            <input
-              name="endereco_placa"
-              class="futuristic-textarea pl-12"
-              rows="3"
-              placeholder="Digite o endereço completo para entrega"
-              
-            value="{{ placa.endereco_placa.title() }}"/>
-            <div class="absolute top-3 left-3 flex items-start pointer-events-none">
-              <i class="fas fa-home text-cyan-400/80 mt-1"></i>
+        <!-- Status Card -->
+        <div class="bg-gray-800 border border-gray-700 rounded-lg p-6">
+          <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+            <i class="fas fa-tasks text-blue-400 mr-3"></i>
+            Status Atual
+          </h3>
+          
+          <div class="space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-400">Confeccionada</span>
+              {% if placa.placa_confeccionada %}
+              <span class="px-2 py-1 bg-green-900/30 text-green-400 rounded text-xs">
+                Sim
+              </span>
+              {% else %}
+              <span class="px-2 py-1 bg-gray-700 text-gray-300 rounded text-xs">
+                Não
+              </span>
+              {% endif %}
+            </div>
+            
+            <div class="flex justify-between items-center">
+              <span class="text-gray-400">A Caminho</span>
+              {% if placa.placa_a_caminho %}
+              <span class="px-2 py-1 bg-yellow-900/30 text-yellow-400 rounded text-xs">
+                Sim
+              </span>
+              {% else %}
+              <span class="px-2 py-1 bg-gray-700 text-gray-300 rounded text-xs">
+                Não
+              </span>
+              {% endif %}
+            </div>
+            
+            <div class="flex justify-between items-center">
+              <span class="text-gray-400">Recebida</span>
+              {% if placa.received %}
+              <span class="px-2 py-1 bg-green-900/30 text-green-400 rounded text-xs">
+                Sim
+              </span>
+              {% else %}
+              <span class="px-2 py-1 bg-gray-700 text-gray-300 rounded text-xs">
+                Não
+              </span>
+              {% endif %}
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- Footer com Botões -->
-      <div class="border-t border-cyan-500/20 px-6 py-6 bg-cyan-900/10">
-        <div class="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-          <div class="text-cyan-300/70 text-sm">
-            <i class="fas fa-info-circle mr-2"></i>
-            ID da Solicitação: <span class="font-mono text-cyan-100">#{{ placa.id }}</span>
-          </div>
-          
-          <div class="flex space-x-3">
-            <!-- Botão Deletar -->
-            <a 
-              href="{{ url_for('placas.delete', placa_id=placa.id) }}" 
-              class="futuristic-btn-danger group relative overflow-hidden"
-              onclick="return confirm('Tem certeza que deseja deletar esta placa permanentemente? Esta ação não pode ser desfeita.')"
-            >
-              <span class="relative z-10 flex items-center">
-                <i class="fas fa-trash-alt mr-3 group-hover:scale-110 transition-transform duration-200"></i>
-                Deletar
-              </span>
-            </a>
-            
-            <!-- Botão Salvar -->
-            <button 
-              type="submit" 
-              class="futuristic-btn group relative overflow-hidden px-3 py-3"
-            >
-              <span class="relative z-10 flex items-center">
-                <i class="fas fa-save mr-3 group-hover:scale-110 transition-transform duration-200"></i>
-                Salvar Alterações
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
-
-  <!-- Card de Informações Adicionais -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-    <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-6">
-      <h4 class="text-lg font-semibold text-cyan-100 mb-4 flex items-center">
-        <i class="fas fa-history mr-3"></i>
-        Histórico
-      </h4>
-      <div class="space-y-2 text-sm">
-        <div class="flex justify-between text-cyan-300">
-          <span>Criado em:</span>
-          <span class="text-cyan-100">{{ placa.date_create.strftime('%d/%m/%Y %H:%M') }}</span>
-        </div>
-        {% if placa.received_at %}
-        <div class="flex justify-between text-cyan-300">
-          <span>Recebido em:</span>
-          <span class="text-cyan-100">{{ placa.received_at.strftime('%d/%m/%Y %H:%M') }}</span>
-        </div>
-        {% endif %}
-      </div>
-    </div>
-
-    <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-6">
-      <h4 class="text-lg font-semibold text-cyan-100 mb-4 flex items-center">
-        <i class="fas fa-info-circle mr-3"></i>
-        Status Atual
-      </h4>
-      <div class="space-y-3">
-        <div class="flex items-center justify-between">
-          <span class="text-cyan-300">Confeccionada:</span>
-          <span class="{% if placa.placa_confeccionada %}text-green-400{% else %}text-cyan-400{% endif %}">
-            {% if placa.placa_confeccionada %}<i class="fas fa-check-circle"></i>{% else %}<i class="fas fa-clock"></i>{% endif %}
-          </span>
-        </div>
-        <div class="flex items-center justify-between">
-          <span class="text-cyan-300">A Caminho:</span>
-          <span class="{% if placa.placa_a_caminho %}text-yellow-400{% else %}text-cyan-400{% endif %}">
-            {% if placa.placa_a_caminho %}<i class="fas fa-check-circle"></i>{% else %}<i class="fas fa-clock"></i>{% endif %}
-          </span>
-        </div>
-        <div class="flex items-center justify-between">
-          <span class="text-cyan-300">Recebida:</span>
-          <span class="{% if placa.received %}text-green-400{% else %}text-cyan-400{% endif %}">
-            {% if placa.received %}<i class="fas fa-check-circle"></i>{% else %}<i class="fas fa-clock"></i>{% endif %}
-          </span>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Converter para maiúsculas
-    const uppercaseInputs = document.querySelectorAll('.uppercase');
-    uppercaseInputs.forEach((input) => {
-      input.addEventListener('input', function () {
-        this.value = this.value.toUpperCase();
-      });
-    });
-
-    // Validação do formulário
-    const form = document.querySelector('form');
-    form.addEventListener('submit', function (e) {
-      const placaInput = document.querySelector('input[name="placa"]');
-      const chassiInput = document.querySelector('input[name="chassi"]');
-      const enderecoInput = document.querySelector('textarea[name="endereco_placa"]');
-      
-      let isValid = true;
-      
-      // Validação básica
-      if (!placaInput.value.trim()) {
-        isValid = false;
-        showValidationError(placaInput, 'Placa é obrigatória');
-      }
-      
-      if (!chassiInput.value.trim()) {
-        isValid = false;
-        showValidationError(chassiInput, 'Chassi é obrigatório');
-      }
-      
-      if (!enderecoInput.value.trim()) {
-        isValid = false;
-        showValidationError(enderecoInput, 'Endereço é obrigatório');
-      }
-      
-      if (!isValid) {
-        e.preventDefault();
-        // Efeito visual de erro
-        document.querySelector('button[type="submit"]').classList.add('shake-animation');
-        setTimeout(() => {
-          document.querySelector('button[type="submit"]').classList.remove('shake-animation');
-        }, 500);
-      }
-    });
-
-    function showValidationError(input, message) {
-      // Remove erros anteriores
-      const existingError = input.parentNode.querySelector('.validation-error');
-      if (existingError) {
-        existingError.remove();
-      }
-      
-      // Adiciona novo erro
-      const errorElement = document.createElement('p');
-      errorElement.className = 'validation-error text-red-400 text-sm mt-2 flex items-center';
-      errorElement.innerHTML = `<i class="fas fa-exclamation-circle mr-1"></i> ${message}`;
-      input.parentNode.appendChild(errorElement);
-      
-      // Efeito visual no input
-      input.classList.add('border-red-400');
-      setTimeout(() => {
-        input.classList.remove('border-red-400');
-      }, 2000);
-    }
-  });
-</script>
-
 <style>
-  .shake-animation {
-    animation: shake 0.5s ease-in-out;
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.7);
+}
+
+/* Form input focus */
+input:focus, textarea:focus, select:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .p-6 {
+    padding: 1rem;
   }
   
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+  .gap-6 {
+    gap: 1rem;
   }
+}
 </style>
 {% endblock %}

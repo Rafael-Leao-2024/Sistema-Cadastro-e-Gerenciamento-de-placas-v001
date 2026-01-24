@@ -2,197 +2,363 @@
 {% block title %}Minhas Placas{% endblock %}
 
 {% block content %}
-<div class="animate-fadeIn">
+<div class="min-h-screen bg-gray-900">
   <!-- Header -->
-  <div class="flex justify-between items-center mb-8">
-    <div class="flex items-center space-x-4">
-      <div class="w-12 h-12 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
-        <i class="fas fa-car text-white text-lg"></i>
+  <div class="bg-gray-800 border-b border-gray-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="py-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-center space-x-3">
+            <div class="p-2 bg-blue-600 rounded-lg">
+              <i class="fas fa-car text-white"></i>
+            </div>
+            <div>
+              <h1 class="text-xl sm:text-2xl font-bold text-white">Minhas Solicitações</h1>
+              <p class="text-gray-400 text-sm mt-1">Acompanhe o status das suas placas</p>
+            </div>
+          </div>
+          <a href="{{ url_for('placas.solicitar_placas') }}"
+             class="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center">
+            <i class="fas fa-plus mr-2"></i>
+            Nova Solicitação
+          </a>
+        </div>
       </div>
-      <div>
-        <h2 class="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-          Minhas Solicitações
-        </h2>
-        <p class="text-cyan-300/70 text-sm mt-1">Acompanhe o status das suas placas</p>
-      </div>
-    </div>
-    <a href="{{ url_for('placas.solicitar_placas') }}" class="futuristic-btn px-8 py-3 group">
-      <i class="fas fa-plus mr-3 group-hover:scale-110 transition-transform duration-200"></i>
-      Nova Solicitação
-    </a>
-  </div>
-
-  <!-- Cards de Resumo -->
-  <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-    <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-4 text-center">
-      <div class="text-cyan-300 text-sm mb-1">Total</div>
-      <div class="text-2xl font-bold text-cyan-100">{{ placas.total }}</div>
-    </div>
-    <div class="glass-effect-advanced rounded-xl border border-green-500/20 p-4 text-center">
-      <div class="text-green-300 text-sm mb-1">Recebidas</div>
-      <div class="text-2xl font-bold text-green-100">{{ placas.items|selectattr('received')|list|length }}</div>
-    </div>
-    <div class="glass-effect-advanced rounded-xl border border-yellow-500/20 p-4 text-center">
-      <div class="text-yellow-300 text-sm mb-1">A Caminho</div>
-      <div class="text-2xl font-bold text-yellow-100">{{ placas.items|selectattr('placa_a_caminho')|list|length }}</div>
-    </div>
-    <div class="glass-effect-advanced rounded-xl border border-blue-500/20 p-4 text-center">
-      <div class="text-blue-300 text-sm mb-1">Confeccionadas</div>
-      <div class="text-2xl font-bold text-blue-100">{{ placas.items|selectattr('placa_confeccionada')|list|length }}</div>
     </div>
   </div>
 
-  <!-- Tabela de Solicitações -->
-  <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-hidden">
-    <div class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-b border-cyan-500/20 px-6 py-4">
-      <h3 class="text-xl font-semibold text-cyan-100 flex items-center">
-        <i class="fas fa-list-ul mr-3"></i>
-        Histórico de Solicitações
-      </h3>
+  <!-- Stats Cards -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div class="bg-gray-800 border border-gray-700 rounded-lg p-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">Total</p>
+            <p class="text-2xl font-bold text-white">{{ placas.total }}</p>
+          </div>
+          <div class="p-2 bg-blue-500/20 rounded-lg">
+            <i class="fas fa-layer-group text-blue-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gray-800 border border-gray-700 rounded-lg p-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">Recebidas</p>
+            <p class="text-2xl font-bold text-white">{{ placas.items|selectattr('received')|list|length }}</p>
+          </div>
+          <div class="p-2 bg-green-500/20 rounded-lg">
+            <i class="fas fa-check-circle text-green-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gray-800 border border-gray-700 rounded-lg p-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">A Caminho</p>
+            <p class="text-2xl font-bold text-white">{{ placas.items|selectattr('placa_a_caminho')|list|length }}</p>
+          </div>
+          <div class="p-2 bg-yellow-500/20 rounded-lg">
+            <i class="fas fa-shipping-fast text-yellow-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gray-800 border border-gray-700 rounded-lg p-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-gray-400 text-sm mb-1">Confeccionadas</p>
+            <p class="text-2xl font-bold text-white">{{ placas.items|selectattr('placa_confeccionada')|list|length }}</p>
+          </div>
+          <div class="p-2 bg-blue-500/20 rounded-lg">
+            <i class="fas fa-hammer text-blue-400"></i>
+          </div>
+        </div>
+      </div>
     </div>
-    
-    <div class="overflow-x-auto">
-      <table class="w-full">
-        <thead>
-          <tr class="border-b border-cyan-500/20">
-            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Placa</th>
-            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Chassi</th>
-            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Data</th>
-            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Status</th>
-            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Ações</th>
-            <th class="px-6 py-4 text-left text-cyan-300 font-semibold">Documentos</th>
-          </tr>
-        </thead>
-        <tbody>
+
+    <!-- Filter Buttons -->
+    <div class="flex flex-wrap gap-2 mb-6">
+      <button data-filter="all" class="filter-btn active px-4 py-2 bg-blue-600 text-white rounded-lg font-medium text-sm">
+        Todas
+      </button>
+      <button data-filter="received" class="filter-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg font-medium text-sm">
+        Recebidas
+      </button>
+      <button data-filter="a_caminho" class="filter-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg font-medium text-sm">
+        A Caminho
+      </button>
+      <button data-filter="confeccionada" class="filter-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg font-medium text-sm">
+        Confeccionadas
+      </button>
+      <button data-filter="pending" class="filter-btn px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded-lg font-medium text-sm">
+        Pendentes
+      </button>
+    </div>
+
+    <!-- Search Box -->
+    <div class="mb-6">
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <i class="fas fa-search text-gray-500"></i>
+        </div>
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="Buscar por placa ou chassi..." 
+          class="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 text-white rounded-lg focus:outline-none focus:border-blue-500"
+        >
+      </div>
+    </div>
+
+    <!-- Plates List -->
+    <div class="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden">
+      <!-- Desktop Table -->
+      <div class="hidden lg:block">
+        <div class="grid grid-cols-5 gap-4 p-6 border-b border-gray-700 bg-gray-800/50 font-medium text-gray-400">
+          <div>Placa</div>
+          <div>Chassi</div>
+          <div>Data</div>
+          <div>Status</div>
+          <div>Ações</div>
+        </div>
+
+        <div id="placasTableBody">
           {% for placa in placas.items %}
-          <tr class="border-b border-cyan-500/10 hover:bg-cyan-500/5 transition-all duration-200 group">
-            <td class="px-6 py-4">
-              <span class="font-mono text-cyan-100 bg-cyan-500/10 px-3 py-1 rounded-lg text-sm border border-cyan-500/20">
-                {{ placa.placa }}
-              </span>
-            </td>
-            <td class="px-6 py-4">
-              {% if placa.chassi %}
-              <span class="font-mono text-cyan-200 text-sm">{{ placa.chassi.upper() }}</span>
+          <div class="placa-row grid grid-cols-5 gap-4 p-6 border-b border-gray-700 hover:bg-gray-700/50"
+               data-status="{% if placa.received %}received{% elif placa.placa_a_caminho %}a_caminho{% elif placa.placa_confeccionada %}confeccionada{% else %}pending{% endif %}"
+               data-placa="{{ placa.placa|lower }}"
+               data-chassi="{{ placa.chassi|lower if placa.chassi else '' }}">
+            <div class="text-white font-medium">{{ placa.placa }}</div>
+            <div class="text-gray-300">{{ placa.chassi or 'N/A' }}</div>
+            <div class="text-gray-400">
+              {% if placa.date_create %}
+                {{ placa.date_create.strftime('%d/%m/%Y') }}
               {% else %}
-              <span class="text-cyan-400/60 italic text-sm">N/A</span>
+                N/A
               {% endif %}
-            </td>
-            <td class="px-6 py-4">
-              <span class="text-cyan-300 text-sm">{{ placa.date_create.strftime('%d/%m/%Y') }}</span>
-            </td>
-            <td class="px-6 py-4">
+            </div>
+            <div>
               {% if placa.received %}
-              <div class="flex items-center space-x-2 text-green-400">
-                <i class="fas fa-check-circle"></i>
-                <span class="font-medium">Recebida</span>
-              </div>
+              <span class="inline-flex items-center px-3 py-1 bg-green-900/30 text-green-400 rounded text-sm">
+                Recebida
+              </span>
               {% elif placa.placa_a_caminho %}
-              <div class="flex items-center space-x-2 text-yellow-400">
-                <i class="fas fa-shipping-fast"></i>
-                <span class="font-medium">A Caminho</span>
-              </div>
+              <span class="inline-flex items-center px-3 py-1 bg-yellow-900/30 text-yellow-400 rounded text-sm">
+                A Caminho
+              </span>
               {% elif placa.placa_confeccionada %}
-              <div class="flex items-center space-x-2 text-blue-400">
-                <i class="fas fa-hammer"></i>
-                <span class="font-medium">Confeccionada</span>
-              </div>
+              <span class="inline-flex items-center px-3 py-1 bg-blue-900/30 text-blue-400 rounded text-sm">
+                Confeccionada
+              </span>
               {% else %}
-              <div class="flex items-center space-x-2 text-cyan-300">
-                <i class="fas fa-clock"></i>
-                <span>Pendente</span>
-              </div>
+              <span class="inline-flex items-center px-3 py-1 bg-gray-700 text-gray-300 rounded text-sm">
+                Pendente
+              </span>
               {% endif %}
-            </td>
-            <td class="px-6 py-4">
+            </div>
+            <div>
               <div class="flex space-x-2">
-                <a
-                  href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}"
-                  class="inline-flex items-center px-3 py-2 rounded-lg border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/10 hover:border-cyan-400/50 transition-all duration-200 group/btn"
-                  title="Ver detalhes"
-                >
-                  <i class="fas fa-eye {% if placa.received %} text-green-400 {% endif %} group-hover/btn:scale-110 transition-transform duration-200"></i>
+                <a href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}"
+                   class="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded text-sm">
+                  Ver
                 </a>
-                <a
-                  href="{{ url_for('placas.editar_placa', placa_id=placa.id) }}"
-                  class="inline-flex items-center px-3 py-2 rounded-lg border border-blue-500/30 text-blue-300 hover:bg-blue-500/10 hover:border-blue-400/50 transition-all duration-200 group/btn"
-                  title="Editar placa"
-                >
-                  <i class="fas fa-edit group-hover/btn:scale-110 transition-transform duration-200"></i>
-                </a>
-                <a
-                  href="{{ url_for('detalhamento.detalhamento_debito_placa', id_placa=placa.id) }}"
-                  class="inline-flex items-center px-3 py-2 rounded-lg border border-purple-500/30 text-purple-300 hover:bg-purple-500/10 hover:border-purple-400/50 transition-all duration-200 group/btn"
-                  title="Detalhamento de débito"
-                >
-                  <i class="fas fa-file-invoice-dollar group-hover/btn:scale-110 transition-transform duration-200"></i>
+                <a href="{{ url_for('detalhamento.detalhamento_debito_placa', id_placa=placa.id) }}"
+                   class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm">
+                  Débitos
                 </a>
               </div>
-            </td>
-            <td class="px-6 py-4">
-              <a
-                href="{{ url_for('documentos.download_anexos', id_placa=placa.id) }}"
-                class="inline-flex items-center px-3 py-2 rounded-lg border border-purple-500/30 text-purple-300 hover:bg-purple-500/10 hover:border-purple-400/50 transition-all duration-200 group/btn"
-                title="Baixar anexos"
-              >
-                <i class="fa-solid fa-paperclip group-hover/btn:scale-110 transition-transform duration-200"></i>
-              </a>
-            </td>
-          </tr>
+            </div>
+          </div>
           {% endfor %}
-        </tbody>
-      </table>
+        </div>
+      </div>
+
+      <!-- Mobile Cards -->
+      <div class="lg:hidden">
+        <div class="p-4 space-y-4">
+          {% for placa in placas.items %}
+          <div class="placa-row bg-gray-700/30 border border-gray-700 rounded-lg p-5"
+               data-status="{% if placa.received %}received{% elif placa.placa_a_caminho %}a_caminho{% elif placa.placa_confeccionada %}confeccionada{% else %}pending{% endif %}"
+               data-placa="{{ placa.placa|lower }}"
+               data-chassi="{{ placa.chassi|lower if placa.chassi else '' }}">
+            <div class="flex justify-between items-start mb-4">
+              <div>
+                <h3 class="font-bold text-white text-lg">{{ placa.placa }}</h3>
+                <p class="text-gray-400 text-sm mt-1">Chassi: {{ placa.chassi or 'N/A' }}</p>
+              </div>
+              {% if placa.received %}
+              <span class="inline-flex items-center px-2 py-1 bg-green-900/30 text-green-400 rounded text-xs">
+                Recebida
+              </span>
+              {% elif placa.placa_a_caminho %}
+              <span class="inline-flex items-center px-2 py-1 bg-yellow-900/30 text-yellow-400 rounded text-xs">
+                A Caminho
+              </span>
+              {% elif placa.placa_confeccionada %}
+              <span class="inline-flex items-center px-2 py-1 bg-blue-900/30 text-blue-400 rounded text-xs">
+                Confeccionada
+              </span>
+              {% else %}
+              <span class="inline-flex items-center px-2 py-1 bg-gray-700 text-gray-300 rounded text-xs">
+                Pendente
+              </span>
+              {% endif %}
+            </div>
+
+            <div class="mb-4">
+              <p class="text-gray-500 text-sm">
+                <i class="fas fa-calendar mr-2"></i>
+                {% if placa.date_create %}
+                  {{ placa.date_create.strftime('%d/%m/%Y') }}
+                {% else %}
+                  N/A
+                {% endif %}
+              </p>
+            </div>
+
+            <div class="flex space-x-2">
+              <a href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}"
+                 class="flex-1 text-center px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded text-sm">
+                Ver Detalhes
+              </a>
+              <a href="{{ url_for('detalhamento.detalhamento_debito_placa', id_placa=placa.id) }}"
+                 class="flex-1 text-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm">
+                Débitos
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      {% if placas.items|length == 0 %}
+      <div class="p-12 text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-700 mb-4">
+          <i class="fas fa-inbox text-gray-400 text-2xl"></i>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-3">Nenhuma solicitação encontrada</h3>
+        <p class="text-gray-400 mb-6">Você ainda não fez nenhuma solicitação de placa.</p>
+        <a href="{{ url_for('placas.solicitar_placas') }}"
+           class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium">
+          <i class="fas fa-plus mr-2"></i>
+          Criar Primeira Solicitação
+        </a>
+      </div>
+      {% endif %}
     </div>
 
-    <!-- Footer da Tabela -->
-    <div class="border-t border-cyan-500/20 px-6 py-4 bg-cyan-900/10">
-      <div class="flex justify-between items-center text-sm">
-        <span class="text-cyan-300/70">
-          Mostrando {{ placas.items|length }} de {{ placas.total }} solicitações
-        </span>
-        <span class="text-cyan-300/70">
+    <!-- Pagination -->
+    {% if placas.pages > 1 %}
+    <div class="mt-6">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="text-gray-400 text-sm">
           Página {{ placas.page }} de {{ placas.pages }}
-        </span>
+        </div>
+        
+        <div class="flex space-x-2">
+          {% if placas.has_prev %}
+          <a href="{{ url_for('placas.minhas_placas', page=placas.prev_num) }}"
+             class="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg">
+            Anterior
+          </a>
+          {% endif %}
+          
+          {% if placas.has_next %}
+          <a href="{{ url_for('placas.minhas_placas', page=placas.next_num) }}"
+             class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+            Próxima
+          </a>
+          {% endif %}
+        </div>
       </div>
     </div>
-  </div>
-
-  <!-- Paginação -->
-  <div class="flex justify-center mt-8">
-    <nav aria-label="Paginação">
-      <ul class="flex items-center space-x-2">
-        {% for page_num in placas.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=3) %}
-          {% if page_num %}
-            {% if placas.page == page_num %}
-              <!-- Página Ativa -->
-              <li>
-                <a
-                  href="{{ url_for('placas.minhas_placas', page=page_num) }}"
-                  class="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 text-white font-semibold shadow-lg shadow-cyan-500/25 transition-all transform hover:scale-105"
-                >
-                  {{ page_num }}
-                </a>
-              </li>
-            {% else %}
-              <!-- Página Normal -->
-              <li>
-                <a
-                  href="{{ url_for('placas.minhas_placas', page=page_num) }}"
-                  class="flex items-center justify-center w-10 h-10 rounded-full bg-cyan-500/10 text-cyan-300 font-medium hover:bg-cyan-500/20 hover:text-cyan-100 transition-all border border-cyan-500/20 shadow-sm"
-                >
-                  {{ page_num }}
-                </a>
-              </li>
-            {% endif %}
-          {% else %}
-            <!-- Separador -->
-            <li class="px-2 py-1 text-cyan-400/50">
-              <span class="flex items-center justify-center w-6">...</span>
-            </li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    </nav>
+    {% endif %}
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const placaRows = document.querySelectorAll('.placa-row');
+  const searchInput = document.getElementById('searchInput');
+  
+  // Filter functionality
+  filterButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      const filter = this.getAttribute('data-filter');
+      
+      // Update active button
+      filterButtons.forEach(btn => {
+        btn.classList.remove('active', 'bg-blue-600', 'text-white');
+        btn.classList.add('bg-gray-700', 'text-gray-300');
+      });
+      this.classList.add('active', 'bg-blue-600', 'text-white');
+      this.classList.remove('bg-gray-700', 'text-gray-300');
+      
+      // Filter rows
+      placaRows.forEach(row => {
+        if (filter === 'all') {
+          row.style.display = '';
+        } else {
+          const status = row.getAttribute('data-status');
+          row.style.display = status === filter ? '' : 'none';
+        }
+      });
+    });
+  });
+  
+  // Search functionality
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase();
+      
+      placaRows.forEach(row => {
+        const placa = row.getAttribute('data-placa');
+        const chassi = row.getAttribute('data-chassi');
+        
+        if (placa.includes(searchTerm) || chassi.includes(searchTerm)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    });
+  }
+});
+</script>
+
+<style>
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.7);
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.placa-row {
+  animation: fadeIn 0.3s ease-out;
+}
+</style>
 {% endblock %}

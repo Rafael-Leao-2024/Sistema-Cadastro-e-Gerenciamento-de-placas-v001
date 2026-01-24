@@ -1,426 +1,205 @@
 {% extends "layout.html" %}
-{% block title %}Relatório de Pagamento{% endblock %}
-
-{% block head %}
-<style>
-    .form-group {
-        position: relative;
-        margin-bottom: 1.5rem;
-    }
-    
-    .input-label {
-        position: absolute;
-        top: -8px;
-        left: 12px;
-        background: #0f172a;
-        padding: 0 8px;
-        font-size: 0.875rem;
-        color: #22d3ee;
-        z-index: 10;
-        font-weight: 500;
-        letter-spacing: 0.05em;
-    }
-    
-    .select-wrapper {
-        position: relative;
-    }
-    
-    .select-wrapper select {
-        appearance: none;
-        width: 100%;
-        background: rgba(15, 23, 42, 0.7);
-        border: 2px solid rgba(34, 211, 238, 0.2);
-        border-radius: 10px;
-        padding: 14px 16px;
-        color: #e2e8f0;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-    
-    .select-wrapper select:focus {
-        outline: none;
-        border-color: #22d3ee;
-        box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1);
-    }
-    
-    .select-wrapper select:hover {
-        border-color: rgba(34, 211, 238, 0.4);
-    }
-    
-    .select-icon {
-        position: absolute;
-        right: 16px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #22d3ee;
-        pointer-events: none;
-        transition: transform 0.3s ease;
-    }
-    
-    .select-wrapper:hover .select-icon {
-        transform: translateY(-50%) scale(1.1);
-    }
-    
-    .option-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1.5rem;
-    }
-    
-    @media (max-width: 640px) {
-        .option-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-    
-    .period-badge {
-        background: linear-gradient(135deg, #0c4a6e, #155e75);
-        border: 1px solid rgba(34, 211, 238, 0.3);
-        border-radius: 20px;
-        padding: 6px 16px;
-        font-size: 0.9rem;
-        color: #a5f3fc;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .glass-card {
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.8));
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(34, 211, 238, 0.15);
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
-                    0 0 80px rgba(34, 211, 238, 0.05);
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .glass-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(
-            90deg,
-            transparent,
-            rgba(34, 211, 238, 0.1),
-            transparent
-        );
-        transition: 0.5s;
-    }
-    
-    .glass-card:hover::before {
-        left: 100%;
-    }
-    
-    .btn-generate {
-        background: linear-gradient(135deg, #0891b2, #155e75);
-        border: none;
-        border-radius: 12px;
-        color: white;
-        font-weight: 600;
-        font-size: 1rem;
-        padding: 16px 32px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        width: 100%;
-        position: relative;
-        overflow: hidden;
-        letter-spacing: 0.5px;
-    }
-    
-    .btn-generate::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: 0.5s;
-    }
-    
-    .btn-generate:hover::before {
-        left: 100%;
-    }
-    
-    .btn-generate:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px rgba(8, 145, 178, 0.4);
-    }
-    
-    .btn-generate:active {
-        transform: translateY(0);
-    }
-    
-    .header-icon {
-        width: 80px;
-        height: 80px;
-        background: linear-gradient(135deg, #22d3ee, #0ea5e9);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 20px;
-        position: relative;
-        box-shadow: 0 10px 30px rgba(34, 211, 238, 0.3);
-    }
-    
-    .header-icon::after {
-        content: '';
-        position: absolute;
-        inset: -2px;
-        background: linear-gradient(135deg, #22d3ee, #0ea5e9);
-        border-radius: 50%;
-        z-index: -1;
-        filter: blur(10px);
-        opacity: 0.5;
-    }
-    
-    .header-icon i {
-        font-size: 2rem;
-        color: white;
-    }
-    
-    .hint-text {
-        background: rgba(34, 211, 238, 0.1);
-        border: 1px solid rgba(34, 211, 238, 0.2);
-        border-radius: 10px;
-        padding: 12px 16px;
-        margin-top: 24px;
-        position: relative;
-    }
-    
-    .hint-text::before {
-        content: '💡';
-        position: absolute;
-        left: -10px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: #0f172a;
-        padding: 4px;
-        border-radius: 50%;
-        font-size: 0.9rem;
-    }
-    
-    .current-period {
-        background: rgba(34, 211, 238, 0.15);
-        border-radius: 12px;
-        padding: 16px;
-        margin-top: 20px;
-        border: 1px solid rgba(34, 211, 238, 0.25);
-    }
-</style>
-{% endblock %}
+{% block title %}Gerar Relatório{% endblock %}
 
 {% block content %}
-<div class="min-h-[85vh] flex items-center justify-center p-4 md:p-8 animate-fadeIn">
-    <div class="w-full max-w-lg">
-        <!-- Card Principal -->
-        <div class="glass-card p-2">
-            <!-- Header do Card -->
-            <div class="relative overflow-hidden rounded-t-xl">
-                <!-- Gradiente de fundo animado -->
-                <div class="absolute inset-0 bg-gradient-to-r from-cyan-900/20 via-blue-900/10 to-cyan-900/20"></div>
-                
-                <!-- Conteúdo do Header -->
-                <div class="relative z-10 px-6 py-8">
-                    <div class="header-icon">
-                        <i class="fas fa-chart-network"></i>
-                    </div>
-                    
-                    <div class="text-center space-y-3">
-                        <h1 class="text-3xl font-bold bg-gradient-to-r from-cyan-300 to-blue-300 bg-clip-text text-transparent">
-                            Gerar Relatório
-                        </h1>
-                        <p class="text-cyan-200/80 text-sm font-medium">
-                            Análise detalhada de pagamentos por período
-                        </p>
-                        
-                        <!-- Período Atual -->
-                        <div class="current-period">
-                            <div class="flex items-center justify-center gap-2 mb-2">
-                                <i class="fas fa-calendar-check text-cyan-400"></i>
-                                <span class="text-cyan-300 font-medium">Período Atual</span>
-                            </div>
-                            <div class="flex items-center justify-center gap-4">
-                                <div class="period-badge">
-                                    <i class="fas fa-calendar-day"></i>
-                                    <span>{{ current_month }}</span>
+<div class="min-h-[70vh] py-8 px-4">
+    <div class="max-w-md mx-auto">
+        <!-- Cabeçalho -->
+        <div class="mb-8 text-center">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center">
+                <i class="fas fa-chart-bar text-blue-400 text-xl"></i>
+            </div>
+            <h1 class="text-xl font-semibold text-gray-100 mb-2">Gerar Relatório</h1>
+            <p class="text-gray-400 text-sm">Relatório de pagamentos por período</p>
+        </div>
+
+        <!-- Formulário -->
+        <div class="bg-gray-800 rounded-lg border border-gray-700 p-5 mb-6">
+            <form method="POST" action="{{ url_for('pagamentos.relatorio') }}" class="space-y-6">
+                <!-- Período -->
+                <div>
+                    <h3 class="text-sm font-medium text-gray-300 mb-3 flex items-center">
+                        <i class="fas fa-calendar-alt text-blue-400 mr-2"></i>
+                        Período
+                    </h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <!-- Mês -->
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-2">Mês</label>
+                            <div class="relative">
+                                <select name="mes" class="w-full px-3 py-2.5 bg-gray-900 text-gray-100 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 text-sm appearance-none" required>
+                                    {% for i in range(1, 13) %}
+                                        <option value="{{ i }}" {% if i == current_month %}selected{% endif %}>
+                                            {{ "{:02d}".format(i) }} - {{ ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'][i-1] }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="absolute right-3 top-2.5 text-gray-400 pointer-events-none">
+                                    <i class="fas fa-chevron-down text-xs"></i>
                                 </div>
-                                <span class="text-cyan-300">/</span>
-                                <div class="period-badge">
-                                    <i class="fas fa-calendar-star"></i>
-                                    <span>{{ current_year }}</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Ano -->
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-2">Ano</label>
+                            <div class="relative">
+                                <select name="ano" class="w-full px-3 py-2.5 bg-gray-900 text-gray-100 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 text-sm appearance-none" required>
+                                    {% for i in range(current_year, current_year - 3, -1) %}
+                                        <option value="{{ i }}" {% if i == current_year %}selected{% endif %}>
+                                            {{ i }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                <div class="absolute right-3 top-2.5 text-gray-400 pointer-events-none">
+                                    <i class="fas fa-calendar text-xs"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Formulário -->
-            <div class="px-6 pb-8 pt-6">
-                <form method="POST" action="{{ url_for('pagamentos.relatorio') }}">
-                    <div class="space-y-8">
-                        <!-- Seção Período -->
-                        <div class="space-y-4">
-                            <div class="flex items-center gap-2 mb-4">
-                                <div class="w-1 h-6 bg-gradient-to-b from-cyan-500 to-blue-500 rounded-full"></div>
-                                <h3 class="text-lg font-semibold text-cyan-300 flex items-center gap-2">
-                                    <i class="fas fa-clock"></i>
-                                    Selecione o Período
-                                </h3>
-                            </div>
-                            
-                            <div class="option-grid">
-                                <!-- Mês -->
-                                <div class="form-group">
-                                    <span class="input-label">Mês</span>
-                                    <div class="select-wrapper">
-                                        <select name="mes" required>
-                                            {% for i in range(1, 13) %}
-                                                <option value="{{ i }}" {% if i == current_month %}selected{% endif %}>
-                                                    {{ "{:02d}".format(i) }} - {{ ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'][i-1] }}
-                                                </option>
-                                            {% endfor %}
-                                        </select>
-                                        <div class="select-icon">
-                                            <i class="fas fa-chevron-down"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Ano -->
-                                <div class="form-group">
-                                    <span class="input-label">Ano</span>
-                                    <div class="select-wrapper">
-                                        <select name="ano" required>
-                                            {% for i in range(current_year, current_year - 5, -1) %}
-                                                <option value="{{ i }}" {% if i == current_year %}selected{% endif %}>
-                                                    {{ i }}
-                                                </option>
-                                            {% endfor %}
-                                        </select>
-                                        <div class="select-icon">
-                                            <i class="fas fa-calendar-alt"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
+                <!-- Pagador -->
+                <div>
+                    <h3 class="text-sm font-medium text-gray-300 mb-3 flex items-center">
+                        <i class="fas fa-user-tie text-purple-400 mr-2"></i>
+                        Pagador
+                    </h3>
+                    <div class="relative">
+                        <select name="id_usuario_pagador" class="w-full px-3 py-2.5 bg-gray-900 text-gray-100 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 text-sm appearance-none">
+                            <option value="0">Todos os pagadores</option>
+                            {% for pagador in pagadores %}
+                                <option value="{{ pagador.id }}">
+                                    {{ pagador.username }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <div class="absolute right-3 top-2.5 text-gray-400 pointer-events-none">
+                            <i class="fas fa-users text-xs"></i>
                         </div>
-                        
-                        <!-- Seção Pagador -->
-                        <div class="space-y-4">
-                            <div class="flex items-center gap-2 mb-4">
-                                <div class="w-1 h-6 bg-gradient-to-b from-cyan-500 to-blue-500 rounded-full"></div>
-                                <h3 class="text-lg font-semibold text-cyan-300 flex items-center gap-2">
-                                    <i class="fas fa-user-tie"></i>
-                                    Filtro por Pagador
-                                </h3>
-                            </div>
-                            
-                            <div class="form-group">
-                                <span class="input-label">Selecionar Pagador</span>
-                                <div class="select-wrapper">
-                                    <select name="id_usuario_pagador">
-                                        <option value="0" class="text-cyan-300">
-                                            <span class="opacity-60">👥 Todos os Pagadores</span>
-                                        </option>
-                                        {% for pagador in pagadores %}
-                                            <option value="{{ pagador.id }}" class="text-white">
-                                                {{ pagador.username }} 
-                                                <span class="text-cyan-300/70 text-sm">#{{ pagador.id }}</span>
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                    <div class="select-icon">
-                                        <i class="fas fa-users"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Dica Informativa -->
-                        <div class="hint-text">
-                            <p class="text-cyan-300/90 text-sm">
-                                <strong class="text-cyan-200">💡 Dica:</strong> 
-                                Selecione "Todos os Pagadores" para um relatório completo do período escolhido. 
-                                Para análise individual, escolha um pagador específico.
-                            </p>
-                        </div>
-                        
-                        <!-- Botão de Ação -->
-                        <button type="submit" class="btn-generate mt-6">
-                            <i class="fas fa-chart-line animate-pulse"></i>
-                            Gerar Relatório Detalhado
-                            <i class="fas fa-arrow-right transition-transform duration-300 group-hover:translate-x-2"></i>
-                        </button>
                     </div>
-                </form>
-            </div>
+                    <p class="text-gray-500 text-xs mt-2">
+                        Deixe "Todos os pagadores" para relatório completo
+                    </p>
+                </div>
+
+                <!-- Período Atual -->
+                <div class="bg-gray-900/50 rounded-lg border border-gray-700 p-3">
+                    <div class="text-xs text-gray-400 mb-1">Período atual</div>
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-gray-300">
+                            {{ current_month }}/{{ current_year }}
+                        </div>
+                        <div class="text-xs px-2 py-1 bg-gray-700 text-gray-400 rounded">
+                            Atual
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botão -->
+                <button type="submit" 
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2">
+                    <i class="fas fa-chart-line"></i>
+                    Gerar Relatório
+                </button>
+            </form>
         </div>
-        
-        <!-- Rodapé Informativo -->
-        <div class="mt-6 text-center">
-            <p class="text-cyan-400/60 text-sm flex items-center justify-center gap-2">
-                <i class="fas fa-shield-check"></i>
-                Seus dados estão seguros • Relatórios atualizados em tempo real
-            </p>
+
+        <!-- Informações -->
+        <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+            <div class="space-y-3">
+                <div class="flex items-center text-sm text-gray-400">
+                    <i class="fas fa-info-circle text-blue-400 mr-2"></i>
+                    <span>Relatório detalhado de pagamentos</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-400">
+                    <i class="fas fa-shield-alt text-green-400 mr-2"></i>
+                    <span>Dados atualizados em tempo real</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-400">
+                    <i class="fas fa-download text-purple-400 mr-2"></i>
+                    <span>Exportável para análise</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-{% endblock %}
 
-{% block scripts %}
-<script>
-    // Suavizar transição dos selects
-    document.querySelectorAll('select').forEach(select => {
-        select.addEventListener('focus', function() {
-            this.parentElement.style.transform = 'translateY(-2px)';
-        });
-        
-        select.addEventListener('blur', function() {
-            this.parentElement.style.transform = 'translateY(0)';
-        });
-        
-        // Mudar ícone quando dropdown estiver aberto
-        select.addEventListener('mousedown', function() {
-            const icon = this.parentElement.querySelector('.select-icon i');
-            icon.className = 'fas fa-chevron-up';
-        });
-        
-        select.addEventListener('change', function() {
-            const icon = this.parentElement.querySelector('.select-icon i');
-            icon.className = 'fas fa-chevron-down';
-        });
-    });
+<style>
+    select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1em 1em;
+        padding-right: 2.5rem;
+    }
     
-    // Adicionar efeito de digitação no título
+    select:focus {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2360a5fa' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    }
+    
+    /* Animação suave */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .bg-gray-800.rounded-lg {
+        animation: fadeIn 0.3s ease-out;
+    }
+    
+    /* Responsividade extra */
+    @media (max-width: 640px) {
+        .max-w-md {
+            max-width: 100%;
+        }
+    }
+</style>
+
+<script>
     document.addEventListener('DOMContentLoaded', function() {
-        const title = document.querySelector('h1');
-        const text = title.textContent;
-        title.textContent = '';
-        
-        let i = 0;
-        function typeWriter() {
-            if (i < text.length) {
-                title.textContent += text.charAt(i);
-                i++;
-                setTimeout(typeWriter, 50);
-            }
+        // Auto focus no primeiro campo
+        const firstSelect = document.querySelector('select[name="mes"]');
+        if (firstSelect) {
+            firstSelect.focus();
         }
         
-        // Iniciar após pequeno delay
-        setTimeout(typeWriter, 300);
+        // Loading no submit
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function() {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalHTML = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Gerando...';
+            submitBtn.disabled = true;
+            
+            // Reset após 5 segundos (caso erro)
+            setTimeout(() => {
+                submitBtn.innerHTML = originalHTML;
+                submitBtn.disabled = false;
+            }, 5000);
+        });
+        
+        // Estilizar opções do select
+        const styleSelect = function(select) {
+            select.style.color = '#f3f4f6';
+            select.style.backgroundColor = '#111827';
+        };
+        
+        document.querySelectorAll('select').forEach(styleSelect);
+        
+        // Atualizar estilo quando selecionado
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('focus', () => styleSelect(select));
+            select.addEventListener('blur', () => styleSelect(select));
+            select.addEventListener('change', () => styleSelect(select));
+        });
     });
 </script>
 {% endblock %}

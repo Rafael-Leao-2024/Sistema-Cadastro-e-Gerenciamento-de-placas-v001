@@ -1,85 +1,464 @@
-<!-- Navbar com efeito glassmorphism futurista -->
-    <nav class="navbar glass-effect-advanced border-b border-cyan-500/20 shadow-2xl shadow-cyan-500/10 sticky top-0 z-50">
-      <div class="container flex justify-between items-center py-4">
-        <a href="{{ url_for('placas.homepage') }}" class="navbar-brand group">
-          <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25 group-hover:shadow-cyan-500/40 transition-all duration-300">
-              <i class="fas fa-car-alt text-white text-lg"></i>
-            </div>
-            <span class="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-              OfficeSpace
-            </span>
-            {% if current_user.is_admin %}
-            <div class="flex items-center space-x-1">
-              <span class="text-xs bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded-full border border-cyan-500/30">verified</span>
-              <i class="fas fa-check-circle text-cyan-400"></i>
-            </div>
-            {% endif %}
+<!-- Navbar responsiva mantendo backend original -->
+<nav class="navbar glass-effect-advanced border-b border-cyan-500/20 shadow-lg shadow-cyan-500/10 sticky top-0 z-50">
+  <div class="px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center py-3 sm:py-4">
+      <!-- Logo -->
+      <a href="{{ url_for('placas.homepage') }}" class="navbar-brand group flex-shrink-0">
+        <div class="flex items-center space-x-2 sm:space-x-3">
+          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25 group-hover:shadow-cyan-500/40 transition-all duration-300">
+            <i class="fas fa-car-alt text-white text-sm sm:text-base"></i>
           </div>
+          <span class="text-lg sm:text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+            OfficeSpace
+          </span>
+          {% if current_user.is_admin %}
+          <div class="hidden sm:flex items-center space-x-1">
+            <span class="text-xs bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded-full border border-cyan-500/30">verified</span>
+            <i class="fas fa-check-circle text-cyan-400 text-xs"></i>
+          </div>
+          {% endif %}
+        </div>
+      </a>
+      
+      <!-- Desktop Menu -->
+      <div class="hidden md:flex items-center space-x-2 lg:space-x-3">
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('placas.minhas_placas') }}" class="futuristic-nav-btn group px-3 py-2 text-sm lg:text-base">
+          <i class="fas fa-list mr-2 group-hover:scale-110 transition-transform duration-200"></i>
+          <span>Minhas Solicitações</span>
         </a>
         
-        <div class="flex items-center space-x-3">
-          {% if current_user.is_authenticated %}
-          <a href="{{ url_for('placas.minhas_placas') }}" class="futuristic-nav-btn group">
-            <i class="fas fa-list mr-2 group-hover:scale-110 transition-transform duration-200"></i>
-            <span>Minhas Solicitações</span>
-          </a>
-          
-          <a href="{{ url_for('users.account') }}" class="futuristic-nav-btn group">
-            <i class="fas fa-user-circle mr-2 group-hover:scale-110 transition-transform duration-200"></i>
-            <span>Minha Conta</span>
-          </a>
+        <a href="{{ url_for('users.account') }}" class="futuristic-nav-btn group px-3 py-2 text-sm lg:text-base">
+          <i class="fas fa-user-circle mr-2 group-hover:scale-110 transition-transform duration-200"></i>
+          <span>Minha Conta</span>
+        </a>
 
-          <!-- Botão de Notificações Futurista -->
-          <div class="relative">
-            <button id="notificacaoBtn" class="relative p-3 rounded-xl bg-slate-800/50 border border-cyan-500/20 hover:border-cyan-400/40 transition-all duration-300 group">
-              <svg class="w-5 h-5 text-cyan-400 group-hover:text-cyan-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <!-- Botão de Notificações - BACKEND ORIGINAL -->
+        <div class="relative">
+          <button id="notificacaoBtn" class="relative p-2 sm:p-3 rounded-lg sm:rounded-xl bg-slate-800/50 border border-cyan-500/20 hover:border-cyan-400/40 transition-all duration-300 group">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400 group-hover:text-cyan-300 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+            </svg>
+            {% if notificacoes_nao_lidas %}
+              {% if notificacoes_nao_lidas > 0 %}
+              <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center animate-pulse">
+                {{ notificacoes_nao_lidas }}
+              </span>
+              {% endif %}
+            {% endif %}
+          </button>
+          
+          <!-- Dropdown de Notificações - BACKEND ORIGINAL -->
+          <div id="notificacaoDropdown" class="hidden absolute right-0 mt-2 w-72 sm:w-80 glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 z-50 overflow-hidden">
+            <div class="p-4 border-b border-cyan-500/20 bg-gradient-to-r from-cyan-900/30 to-blue-900/30">
+              <h3 class="font-semibold text-cyan-100">Notificações</h3>
+            </div>
+            <div id="notificacoesLista"
+                class="max-h-64 overflow-y-auto bg-slate-900/50"
+                data-url-minhas-placas="{{ url_for('placas.placa_detail', placa_id=0) }}">
+              <!-- Notificações serão carregadas via JavaScript -->
+            </div>
+            <div class="p-3 border-t border-cyan-500/20 bg-slate-900/50">
+              <button id="marcarTodasLidas" class="text-cyan-400 text-sm hover:text-cyan-300 transition-colors duration-200">
+                Marcar todas como lidas
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <a href="{{ url_for('auth.logout') }}" class="futuristic-nav-btn-primary group px-3 py-2 text-sm lg:text-base">
+          <i class="fas fa-sign-out-alt mr-2 group-hover:translate-x-1 transition-transform duration-200"></i>
+          <span>Sair</span>
+        </a>
+        {% else %}
+        <a href="{{ url_for('auth.login') }}" class="futuristic-nav-btn group px-3 py-2 text-sm lg:text-base">
+          <i class="fas fa-sign-in-alt mr-2 group-hover:scale-110 transition-transform duration-200"></i>
+          <span>Entrar</span>
+        </a>
+        <a href="" class="futuristic-nav-btn-primary group px-3 py-2 text-sm lg:text-base">
+          <i class="fas fa-user-plus mr-2 group-hover:scale-110 transition-transform duration-200"></i>
+          <span>Registrar</span>
+        </a>
+        {% endif %}
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobileMenuButton" class="md:hidden p-2 rounded-lg bg-slate-800/50 border border-cyan-500/20 hover:border-cyan-400/40 transition-all duration-200">
+        <i class="fas fa-bars text-cyan-400 text-lg"></i>
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="md:hidden hidden glass-effect-advanced rounded-lg border border-cyan-500/20 mt-2 mb-4 p-4 animate-fadeIn">
+      <div class="space-y-3">
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('placas.minhas_placas') }}" class="futuristic-nav-btn group block p-3 rounded-lg">
+          <i class="fas fa-list mr-3 group-hover:scale-110 transition-transform duration-200"></i>
+          Minhas Solicitações
+        </a>
+        
+        <a href="{{ url_for('users.account') }}" class="futuristic-nav-btn group block p-3 rounded-lg">
+          <i class="fas fa-user-circle mr-3 group-hover:scale-110 transition-transform duration-200"></i>
+          Minha Conta
+        </a>
+
+        <!-- Botão de Notificações Mobile -->
+        <button id="mobileNotificacaoBtn" class="futuristic-nav-btn group w-full text-left p-3 rounded-lg">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-cyan-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                       d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
               </svg>
+              <span>Notificações</span>
               {% if notificacoes_nao_lidas %}
                 {% if notificacoes_nao_lidas > 0 %}
-                <span class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center animate-pulse">
+                <span class="ml-2 bg-red-500 text-white rounded-full text-xs px-2 py-0.5">
                   {{ notificacoes_nao_lidas }}
                 </span>
                 {% endif %}
               {% endif %}
-            </button>
-            
-            <!-- Dropdown de Notificações Futurista -->
-            <div id="notificacaoDropdown" class="hidden absolute right-0 mt-2 w-80 glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 z-50 overflow-hidden">
-              <div class="p-4 border-b border-cyan-500/20 bg-gradient-to-r from-cyan-900/30 to-blue-900/30">
-                <h3 class="font-semibold text-cyan-100">Notificações</h3>
-              </div>
-                <div id="notificacoesLista"
-                class="max-h-64 overflow-y-auto bg-slate-900/50"
-                data-url-minhas-placas="{{ url_for('placas.placa_detail', placa_id=0) }}"
-                >
-                  <!-- Notificações serão carregadas via JavaScript -->
-                </div>
-              
-              <div class="p-3 border-t border-cyan-500/20 bg-slate-900/50">
-                <button id="marcarTodasLidas" class="text-cyan-400 text-sm hover:text-cyan-300 transition-colors duration-200">
-                  Marcar todas como lidas
-                </button>
-              </div>
             </div>
+            <i class="fas fa-chevron-down text-cyan-400 transition-transform duration-200"></i>
           </div>
+        </button>
 
-          <a href="{{ url_for('auth.logout') }}" class="futuristic-nav-btn-primary group">
-            <i class="fas fa-sign-out-alt mr-2 group-hover:translate-x-1 transition-transform duration-200"></i>
-            <span>Sair</span>
-          </a>
-          {% else %}
-          <a href="{{ url_for('auth.login') }}" class="futuristic-nav-btn group">
-            <i class="fas fa-sign-in-alt mr-2 group-hover:scale-110 transition-transform duration-200"></i>
-            <span>Entrar</span>
-          </a>
-          <a href="" class="futuristic-nav-btn-primary group">
-            <i class="fas fa-user-plus mr-2 group-hover:scale-110 transition-transform duration-200"></i>
-            <span>Registrar</span>
-          </a>
-          {% endif %}
+        <!-- Dropdown de Notificações Mobile -->
+        <div id="mobileNotificacoes" class="hidden pl-4 space-y-2 border-l border-cyan-500/20 ml-3">
+          <div class="max-h-48 overflow-y-auto pr-2">
+            <!-- Notificações serão carregadas via JavaScript -->
+          </div>
+          <div class="pt-2 border-t border-cyan-500/20">
+            <button id="marcarTodasLidasMobile" class="text-cyan-400 text-sm hover:text-cyan-300 transition-colors duration-200">
+              Marcar todas como lidas
+            </button>
+          </div>
         </div>
+
+        <a href="{{ url_for('auth.logout') }}" class="futuristic-nav-btn-primary group block p-3 rounded-lg text-center">
+          <i class="fas fa-sign-out-alt mr-3 group-hover:translate-x-1 transition-transform duration-200"></i>
+          Sair do Sistema
+        </a>
+        {% else %}
+        <a href="{{ url_for('auth.login') }}" class="futuristic-nav-btn group block p-3 rounded-lg text-center">
+          <i class="fas fa-sign-in-alt mr-3 group-hover:scale-110 transition-transform duration-200"></i>
+          Entrar no Sistema
+        </a>
+        <a href="" class="futuristic-nav-btn-primary group block p-3 rounded-lg text-center">
+          <i class="fas fa-user-plus mr-3 group-hover:scale-110 transition-transform duration-200"></i>
+          Criar Conta
+        </a>
+        {% endif %}
       </div>
-    </nav>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // Mobile optimization
+  document.addEventListener('DOMContentLoaded', function() {
+    // Touch optimization
+    const notificacaoBtn = document.getElementById('notificacaoBtn');
+    const notificacaoDropdown = document.getElementById('notificacaoDropdown');
+    const notificacoesLista = document.getElementById('notificacoesLista');
+    const marcarTodasLidas = document.getElementById('marcarTodasLidas');
+    const urlMinhasPlacas = document.getElementById('notificacoesLista').dataset.urlMinhasPlacas;
+
+// 
+    // Alternar dropdown
+    notificacaoBtn.addEventListener('click', function() {
+        notificacaoDropdown.classList.toggle('hidden');
+        if (!notificacaoDropdown.classList.contains('hidden')) {
+            carregarNotificacoes();
+        }
+    });
+
+    // Fechar dropdown ao clicar fora
+    document.addEventListener('click', function(event) {
+        if (!notificacaoBtn.contains(event.target) && !notificacaoDropdown.contains(event.target)) {
+            notificacaoDropdown.classList.add('hidden');
+        }
+    });
+
+    // Carregar notificações
+    function carregarNotificacoes() {
+        fetch('/notificacoes')
+            .then(response => response.json())
+            .then(notificacoes => {
+                if (notificacoes.length === 0) {
+                    notificacoesLista.innerHTML = `
+                        <div class="p-4 text-center text-gray-500">
+                            Nenhuma notificação
+                        </div>
+                    `;
+                    return;
+                }
+
+                notificacoesLista.innerHTML = notificacoes.map(notif => `
+                    <div class="p-4 border-b ${notif.lida ? 'bg-gray-50' : 'bg-blue-50'}">
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <p class="text-sm ${notif.lida ? 'text-gray-600' : 'text-gray-800 font-medium'}">
+                                    <a href="${urlMinhasPlacas.replace('0', notif.id_solicitacao)}">${notif.mensagem}</a>
+                                </p>
+                                <p class="text-xs text-gray-500 mt-1">${notif.data_criacao}</p>
+                            </div>
+                            ${!notif.lida ? `
+                            <button onclick="marcarComoLida(${notif.id})" 
+                                    class="ml-2 p-1 text-blue-600 hover:text-blue-800">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                            d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            });
+    }
+
+    // Marcar notificação como lida
+    window.marcarComoLida = function(notificacaoId) {
+        fetch(`/marcar-lida/${notificacaoId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                carregarNotificacoes();
+                // Recarregar a página para atualizar o contador
+                location.reload();
+            }
+        });
+    }
+
+    // Marcar todas como lidas
+    marcarTodasLidas.addEventListener('click', function() {
+        fetch('/marcar-todas-lidas', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                carregarNotificacoes();
+                location.reload();
+            }
+        });
+    });
+
+    document.body.style.touchAction = 'manipulation';
+    
+    // Prevent zoom on double-tap
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function(event) {
+      const now = (new Date()).getTime();
+      if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
+    
+    // Better button feedback on mobile
+    const buttons = document.querySelectorAll('button, a[role="button"]');
+    buttons.forEach(button => {
+      button.addEventListener('touchstart', function() {
+        this.classList.add('active');
+      });
+      
+      button.addEventListener('touchend', function() {
+        this.classList.remove('active');
+      });
+    });
+    
+    // Close dropdowns when tapping outside
+    document.addEventListener('touchstart', function(event) {
+      const dropdowns = document.querySelectorAll('[data-dropdown]');
+      dropdowns.forEach(dropdown => {
+        if (!dropdown.contains(event.target)) {
+          dropdown.classList.remove('open');
+        }
+      });
+    });
+    
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileNotificacaoBtn = document.getElementById('mobileNotificacaoBtn');
+    const mobileNotificacoes = document.getElementById('mobileNotificacoes');
+    
+    if (mobileMenuButton) {
+      mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
+    
+    if (mobileNotificacaoBtn) {
+      mobileNotificacaoBtn.addEventListener('click', () => {
+        mobileNotificacoes.classList.toggle('hidden');
+        // Carrega notificações quando abre no mobile
+        if (!mobileNotificacoes.classList.contains('hidden')) {
+          loadNotifications();
+        }
+      });
+    }
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+        mobileMenu.classList.add('hidden');
+      }
+    });
+    
+    // Optimize scroll for mobile
+    if ('scrollBehavior' in document.documentElement.style) {
+      // Smooth scroll is supported
+    } else {
+      // Polyfill if needed
+    }
+    
+    // Carrega notificações na inicialização
+    loadNotifications();
+  });
+
+  // Notifications system
+  async function loadNotifications() {
+    try {
+      const response = await fetch('/notificacoes');
+      const data = await response.json();
+      
+      // Update desktop notifications
+      const mobileList = document.querySelector('#mobileNotificacoes .max-h-48');
+      const urlmobileList = document.getElementById('notificacoesLista');
+
+      const urlMinhasPlacas = urlmobileList.dataset.urlMinhasPlacas;
+      
+      if (mobileList) {
+        mobileList.innerHTML = data.map(notif => `
+          <div class="p-2 rounded bg-slate-800/30 mb-2 ${!notif.lida ? 'border-l-2 border-cyan-400' : ''}">
+            <p class="text-xs text-cyan-300/70 mt-1">
+              <a href="${urlMinhasPlacas.replace('0', notif.id_solicitacao)}">${notif.mensagem}</a>
+            </p>
+            <span class="text-xs text-cyan-400/60 mt-1 block">${notif.data_criacao}</span>
+            
+              ${!notif.lida ? `
+              <button onclick="marcarComoLida(${notif.id})" 
+                      class="ml-2 p-1 text-white-600 hover:text-blue-800">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M5 13l4 4L19 7"></path>
+                  </svg>
+              </button>
+              ` : ''}
+          </div>
+        `).join('');
+        
+        // Se não houver notificações no mobile
+        if (data.length === 0) {
+          mobileList.innerHTML = `
+            <div class="p-3 text-center">
+              <p class="text-sm text-cyan-300/60">Nenhuma notificação</p>
+            </div>
+          `;
+        }
+      }
+      
+    } catch (error) {
+      console.error('Erro ao carregar notificações:', error);
+      
+      // Mensagem de erro no desktop
+      const desktopList = document.getElementById('notificacoesLista');
+      if (desktopList) {
+        desktopList.innerHTML = `
+          <div class="p-4 text-center">
+            <p class="text-sm text-red-400">Erro ao carregar notificações</p>
+          </div>
+        `;
+      }
+      
+      // Mensagem de erro no mobile
+      const mobileList = document.querySelector('#mobileNotificacoes .max-h-48');
+      if (mobileList) {
+        mobileList.innerHTML = `
+          <div class="p-3 text-center">
+            <p class="text-sm text-red-400">Erro ao carregar notificações</p>
+          </div>
+        `;
+      }
+    }
+  }
+
+  // Mark all as read
+  document.addEventListener('click', function(e) {
+    // Desktop
+    if (e.target.id === 'marcarTodasLidas') {
+      fetch('/notificacoes/marcar-lidas', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(() => {
+        loadNotifications();
+        // Remove o badge de notificações não lidas
+        const badge = document.querySelector('#notificacaoBtn .bg-red-500');
+        if (badge) badge.remove();
+      });
+    }
+    
+    // Mobile
+    if (e.target.id === 'marcarTodasLidasMobile') {
+      fetch('/notificacoes/marcar-lidas', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(() => {
+        loadNotifications();
+        // Remove o badge de notificações não lidas no mobile
+        const mobileBadge = document.querySelector('#mobileNotificacaoBtn .bg-red-500');
+        if (mobileBadge) mobileBadge.remove();
+      });
+    }
+  });
+
+  // Notification dropdown toggle (desktop)
+  const notificacaoBtn = document.getElementById('notificacaoBtn');
+  const notificacaoDropdown = document.getElementById('notificacaoDropdown');
+
+  if (notificacaoBtn && notificacaoDropdown) {
+    notificacaoBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      notificacaoDropdown.classList.toggle('hidden');
+      // Carrega notificações quando abre o dropdown
+      if (!notificacaoDropdown.classList.contains('hidden')) {
+        loadNotifications();
+      }
+    });
+    
+    // Close when clicking outside
+    document.addEventListener('click', () => {
+      notificacaoDropdown.classList.add('hidden');
+    });
+    
+    notificacaoDropdown.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+  }
+
+  // Viewport height fix for mobile browsers
+  function setVH() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
+
+  setVH();
+  window.addEventListener('resize', setVH);
+  window.addEventListener('orientationchange', setVH);
+</script>

@@ -1,39 +1,38 @@
 {% extends "layout.html" %}
-
 {% block title %}Homepage{% endblock %}
 
 {% block content %}
-<div class="animate-fadeIn">
+<div class="min-h-screen bg-gray-900 p-4">
   <!-- Hero Section -->
-  <section class="flex flex-col items-center justify-center text-center py-16 mb-12">
-    <div class="glass-effect-advanced rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 p-12 max-w-4xl mx-auto">
-      <h1 class="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+  <section class="flex flex-col items-center justify-center text-center py-8 mb-8">
+    <div class="bg-gray-800 rounded-lg border border-gray-700 p-6 w-full max-w-4xl mx-auto">
+      <h1 class="text-2xl sm:text-3xl font-bold mb-4 text-white">
         Sistema de Emplacamento Veicular
       </h1>
-      <p class="text-xl text-cyan-300/80 max-w-3xl mx-auto mb-10">
+      <p class="text-gray-400 max-w-3xl mx-auto mb-6">
         Soluções completas para emplacamento de veículos com agilidade e segurança
       </p>
 
       {% if not current_user.is_authenticated %}
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="" class="futuristic-btn px-10 py-4 text-lg group">
-          <i class="fas fa-user-plus mr-3 group-hover:scale-110 transition-transform duration-200"></i>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="" class="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors w-full sm:w-auto text-center">
+          <i class="fas fa-user-plus mr-2"></i>
           Criar Conta
         </a>
-        <a href="{{ url_for('auth.login') }}" class="futuristic-nav-btn px-10 py-4 text-lg group">
-          <i class="fas fa-sign-in-alt mr-3 group-hover:scale-110 transition-transform duration-200"></i>
+        <a href="{{ url_for('auth.login') }}" class="px-6 py-3 bg-gray-700 text-gray-300 rounded-lg font-medium hover:bg-gray-600 transition-colors w-full sm:w-auto text-center mt-2 sm:mt-0">
+          <i class="fas fa-sign-in-alt mr-2"></i>
           Acessar Sistema
         </a>
       </div>
       {% else %}
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="{{ url_for('placas.solicitar_placas') }}" class="futuristic-btn px-10 py-4 text-lg group">
-          <i class="fas fa-plus-circle mr-3 group-hover:scale-110 transition-transform duration-200"></i>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="{{ url_for('placas.solicitar_placas') }}" class="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors w-full sm:w-auto text-center">
+          <i class="fas fa-plus-circle mr-2"></i>
           Nova Solicitação
         </a>
-        <a href="{{ url_for('placas.minhas_placas') }}" class="futuristic-nav-btn px-10 py-4 text-lg group">
-          <i class="fas fa-list-ol mr-3 group-hover:scale-110 transition-transform duration-200"></i>
-          Ver Minhas Solicitações
+        <a href="{{ url_for('placas.minhas_placas') }}" class="px-6 py-3 bg-gray-700 text-gray-300 rounded-lg font-medium hover:bg-gray-600 transition-colors w-full sm:w-auto text-center mt-2 sm:mt-0">
+          <i class="fas fa-list-ol mr-2"></i>
+          Minhas Solicitações
         </a>
       </div>
       {% endif %}
@@ -41,133 +40,81 @@
   </section>
 
   <!-- Features Grid -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-    <!-- Comunidade -->
-    <a href="{{ url_for('users.listar_usuarios') }}">
-      <div class="futuristic-card group">
-        <div class="text-center p-8">
-          <div class="futuristic-icon mb-6">
-            <i class="fas fa-users text-white text-2xl"></i>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+    {% set features = [
+      ('users.listar_usuarios', 'users', 'Colaboradores', '✨ Junte-se à Nossa Comunidade Aqui, você faz parte de algo maior! Nossa comunidade é um espaço onde pessoas como você se conectam, para participar e crescerem juntas.'),
+      ('procuracao.selecionar_modelo', 'robot', 'Procurações Automatizadas com IA', 'Processos ágeis e eficientes para você não perder tempo com digitações repetidas'),
+      ('despachante.selecionar_despachante', 'user-tie', 'Despachante', 'Escolha seu despachante de confiança para facilitar todo o processo de emplacamento do seu veículo.'),
+      ('pagamentos.financas_geral', 'chart-line', 'Relatório e Finanças', '⚡ Relatório Rápido e Seguro! com FastPay – a solução prática para suas Solicitações. Sem complicação, só velocidade e segurança!'),
+      ('support.chat', 'comments', 'Suporte com IA', '🛠️ Suporte Rápido e Eficiente! Precisa de ajuda? Nosso suporte especializado está aqui para resolver suas dúvidas e problemas.'),
+      ('placas.gerenciamento_pedidos', 'tasks', 'Gerenciamento', '🔧 Admin de Placas Controle total das suas Solicitações! Gerenciamento simples, rápido e eficiente para andamento dos processos.'),
+      ('detalhamento.detalhamento_debito', 'file-invoice-dollar', 'Detalhamento Débitos', '📊 Detalhamento de Débitos! Controle de taxas, boletos para melhor transparência aos usuários.'),
+      ('atividade.todas_atividades', 'history', 'Atividades', '📝 Histórico de atividades que registra e organiza todas as ações realizadas na plataforma, como logins e atualizações de dados.')
+    ] %}
+    
+    {% for route, icon, title, description in features %}
+    <a href="{{ url_for(route) }}" class="block">
+      <div class="bg-gray-800 rounded-lg border border-gray-700 p-6 h-full hover:bg-gray-700/50 transition-colors hover:border-gray-600">
+        <div class="text-center">
+          <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-blue-500/20 flex items-center justify-center">
+            <i class="fas fa-{{ icon }} text-blue-400"></i>
           </div>
-          <h3 class="text-xl font-semibold mb-4 text-cyan-100 group-hover:text-white transition-colors duration-300">Colaboradores</h3>
-          <p class="text-cyan-300/80 group-hover:text-cyan-200 transition-colors duration-300">
-            ✨ Junte-se à Nossa Comunidade Aqui, você faz parte de algo maior!
-            Nossa comunidade é um espaço onde pessoas como você se conectam,
-            para participar e crescerem juntas.
+          <h3 class="text-lg font-semibold mb-3 text-white">
+            {{ title }}
+          </h3>
+          <p class="text-gray-400 text-sm leading-relaxed">
+            {{ description }}
           </p>
         </div>
       </div>
     </a>
-
-    <!-- Solicitação Rápida -->
-    <a href="{{ url_for('procuracao.selecionar_modelo') }}">
-      <div class="futuristic-card group">
-        <div class="text-center p-8">
-          <div class="futuristic-icon mb-6">
-            <i class="fas fa-robot text-white text-2xl"></i>
-          </div>
-          <h3 class="text-xl font-semibold mb-4 text-cyan-100 group-hover:text-white transition-colors duration-300">Procuraçoes Automatizadas com IA</h3>
-          <p class="text-cyan-300/80 group-hover:text-cyan-200 transition-colors duration-300">
-            Processos ágeis e eficientes para você não perder tempo com digitaçoes repetidas
-          </p>
-        </div>
-      </div>
-    </a>
-
-    <!-- Despachante -->
-    <a href="{{ url_for('despachante.selecionar_despachante') }}">
-      <div class="futuristic-card group">
-        <div class="text-center p-8">
-          <div class="futuristic-icon mb-6">
-            <i class="fas fa-user-tie text-white text-2xl"></i>
-          </div>
-          <h3 class="text-xl font-semibold mb-4 text-cyan-100 group-hover:text-white transition-colors duration-300">Despachante</h3>
-          <p class="text-cyan-300/80 group-hover:text-cyan-200 transition-colors duration-300">
-            Escolha seu despachante de confiança para facilitar todo o processo
-            de emplacamento do seu veículo.
-          </p>
-        </div>
-      </div>
-    </a>
-
-    <!-- FastPay -->
-    <a href="{{ url_for('pagamentos.financas_geral') }}">
-      <div class="futuristic-card group">
-        <div class="text-center p-8">
-          <div class="futuristic-icon mb-6">
-            <i class="fas fa-chart-line text-white text-2xl"></i>
-          </div>
-          <h3 class="text-xl font-semibold mb-4 text-cyan-100 group-hover:text-white transition-colors duration-300">Relatório e Finanças</h3>
-          <p class="text-cyan-300/80 group-hover:text-cyan-200 transition-colors duration-300">
-            ⚡ Relatório Rápido e Seguro! com FastPay – a solução prática para
-            suas Solicitações. Sem complicação, só velocidade e segurança!
-          </p>
-        </div>
-      </div>
-    </a>
-
-    <!-- AI Suporte -->
-    <a href="{{ url_for('support.chat') }}">
-      <div class="futuristic-card group">
-        <div class="text-center p-8">
-          <div class="futuristic-icon mb-6">
-            <i class="fas fa-comments text-white text-2xl"></i>
-          </div>
-          <h3 class="text-xl font-semibold mb-4 text-cyan-100 group-hover:text-white transition-colors duration-300">Suporte com IA</h3>
-          <p class="text-cyan-300/80 group-hover:text-cyan-200 transition-colors duration-300">
-            🛠️ Suporte Rápido e Eficiente! Precisa de ajuda? Nosso suporte
-            especializado está aqui para resolver suas dúvidas e problemas.
-          </p>
-        </div>
-      </div>
-    </a>
-
-    <!-- Management -->
-    <a href="{{ url_for('placas.gerenciamento_pedidos') }}">
-      <div class="futuristic-card group">
-        <div class="text-center p-8">
-          <div class="futuristic-icon mb-6">
-            <i class="fas fa-tasks text-white text-2xl"></i>
-          </div>
-          <h3 class="text-xl font-semibold mb-4 text-cyan-100 group-hover:text-white transition-colors duration-300">Gerenciamento</h3>
-          <p class="text-cyan-300/80 group-hover:text-cyan-200 transition-colors duration-300">
-            🔧 Admin de Placas Controle total das suas Solicitações! Gerenciamento
-            simples, rápido e eficiente para andamento dos processoa.
-          </p>
-        </div>
-      </div>
-    </a>
-
-    <!-- detalhamento -->
-    <a href="{{ url_for('detalhamento.detalhamento_debito') }}">
-      <div class="futuristic-card group">
-        <div class="text-center p-8">
-          <div class="futuristic-icon mb-6">
-            <i class="fas fa-file-invoice-dollar text-white text-2xl"></i>
-          </div>
-          <h3 class="text-xl font-semibold mb-4 text-cyan-100 group-hover:text-white transition-colors duration-300">Detalhamento Débitos</h3>
-          <p class="text-cyan-300/80 group-hover:text-cyan-200 transition-colors duration-300">
-            📊 Detalhamento de Débitos! Controle de taxas, boletos para melhor transparência aos usuários.
-          </p>
-        </div>
-      </div>
-    </a>
-
-    <!-- Atividades  -->
-    <a href="{{ url_for('atividade.todas_atividades') }}">
-      <div class="futuristic-card group">
-        <div class="text-center p-8">
-          <div class="futuristic-icon mb-6">
-            <i class="fas fa-history text-white text-2xl"></i>
-          </div>
-          <h3 class="text-xl font-semibold mb-4 text-cyan-100 group-hover:text-white transition-colors duration-300">Atividades</h3>
-          <p class="text-cyan-300/80 group-hover:text-cyan-200 transition-colors duration-300">
-            📝 Histórico de atividades que registra e organiza todas as ações realizadas na plataforma, como logins e atualizações de dados.
-          </p>
-        </div>
-      </div>
-    </a>
-
+    {% endfor %}
   </div>
 </div>
+
+<style>
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .p-6 {
+    padding: 1rem;
+  }
+  
+  .py-8 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  
+  .mb-8 {
+    margin-bottom: 2rem;
+  }
+}
+
+/* Improve touch targets */
+a {
+  touch-action: manipulation;
+}
+
+/* Smooth transitions */
+.transition-colors {
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.7);
+}
+</style>
 {% endblock %}

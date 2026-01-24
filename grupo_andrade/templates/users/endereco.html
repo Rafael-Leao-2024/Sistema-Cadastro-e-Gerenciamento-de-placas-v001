@@ -3,164 +3,232 @@
 {% block title %}Meu Endereço{% endblock %}
 
 {% block content %}
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6 animate-fadeIn">
-  <!-- Sidebar -->
-  <div class="md:col-span-1">
-    <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-6">
-      <div class="text-center">
-        <img
-          src="{{ current_user.image_file }}"
-          class="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-cyan-500/50 shadow-lg shadow-cyan-500/20"
-        />
-        <h3 class="text-lg font-semibold text-cyan-100">{{ current_user.username }}</h3>
-        <p class="text-cyan-300/70 text-sm">{{ current_user.email }}</p>
-      </div>
-      <div class="space-y-2 mt-6 pt-6 border-t border-cyan-500/20">
-        <a
-          href="{{ url_for('users.account') }}"
-          class="flex items-center px-4 py-3 rounded-lg text-cyan-300 hover:bg-cyan-500/10 hover:text-cyan-100 transition-all duration-200"
-        >
-          <i class="fas fa-user-circle mr-3"></i> Perfil
-        </a>
-        <a
-          href="{{ url_for('users.endereco') }}"
-          class="flex items-center px-4 py-3 rounded-lg bg-cyan-500/20 text-cyan-100 border border-cyan-500/30"
-        >
-          <i class="fas fa-map-marker-alt mr-3"></i> Endereço
-        </a>
-        <a
-          href="{{ url_for('placas.minhas_placas') }}"
-          class="flex items-center px-4 py-3 rounded-lg text-cyan-300 hover:bg-cyan-500/10 hover:text-cyan-100 transition-all duration-200"
-        >
-          <i class="fas fa-car mr-3"></i> Minhas Placas
-        </a>
+<div class="min-h-screen bg-gray-900">
+  <!-- Header -->
+  <div class="bg-gray-800 border-b border-gray-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="py-4">
+        <h1 class="text-2xl font-bold text-white flex items-center">
+          <i class="fas fa-map-marker-alt text-blue-400 mr-3"></i>
+          Meu Endereço
+        </h1>
       </div>
     </div>
   </div>
 
   <!-- Main Content -->
-  <div class="md:col-span-3">
-    <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 overflow-hidden">
-      <div class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-b border-cyan-500/20 px-6 py-4">
-        <h3 class="text-xl font-semibold text-cyan-100 flex items-center">
-          <i class="fas fa-map-marker-alt mr-3"></i> Meu Endereço
-        </h3>
-      </div>
-      <div class="p-6">
-        <form method="POST">
-          {{ form.hidden_tag() }}
-
-          <div class="form-group mb-8">
-            <label class="block text-cyan-300 font-medium mb-3">
-              {{ form.cidade.label }}
-            </label>
-            <div class="relative">
-              <div class="absolute top-3 left-3 flex items-start pointer-events-none">
-                <i class="fas fa-home text-cyan-400/80 mt-1"></i>
-              </div>
-              {{ form.cidade(class="futuristic-input pl-12", rows="4", placeholder="Digite seu endereço completo...") }}
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="flex flex-col lg:flex-row gap-6">
+      <!-- Sidebar -->
+      <div class="lg:w-1/4">
+        <div class="bg-gray-800 rounded-lg border border-gray-700 p-6">
+          <div class="text-center mb-6">
+            <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center text-white text-2xl">
+              {{ current_user.username[0]|upper }}
             </div>
-            {% if form.cidade.errors %}
-              {% for error in form.cidade.errors %}
-              <p class="text-red-400 text-sm mt-2 flex items-center">
-                <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
-              </p>
-              {% endfor %}
-            {% endif %}
+            <h3 class="font-bold text-white">{{ current_user.username }}</h3>
+            <p class="text-gray-400 text-sm">{{ current_user.email }}</p>
           </div>
 
-        <!-- input rua -->
+          <div class="space-y-2">
+            <a href="{{ url_for('users.account') }}"
+               class="flex items-center px-4 py-3 text-gray-400 hover:bg-gray-700 hover:text-white rounded-lg transition-colors">
+              <i class="fas fa-user-circle mr-3"></i>
+              Perfil
+            </a>
+            <a href="{{ url_for('users.endereco') }}"
+               class="flex items-center px-4 py-3 bg-blue-900/50 text-blue-400 rounded-lg font-medium">
+              <i class="fas fa-map-marker-alt mr-3"></i>
+              Endereço
+            </a>
+            <a href="{{ url_for('placas.minhas_placas') }}"
+               class="flex items-center px-4 py-3 text-gray-400 hover:bg-gray-700 hover:text-white rounded-lg transition-colors">
+              <i class="fas fa-car mr-3"></i>
+              Minhas Placas
+            </a>
+          </div>
+        </div>
+      </div>
 
-            <div class="form-group">
-              <label class="block text-cyan-300 font-medium mb-2">
-                {{ form.rua.label }}
-              </label>
-              <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <i class="fas fa-envelope text-cyan-400/80"></i>
+      <!-- Form Content -->
+      <div class="lg:w-3/4">
+        <div class="bg-gray-800 rounded-lg border border-gray-700">
+          <div class="border-b border-gray-700 p-6">
+            <h2 class="text-xl font-bold text-white flex items-center">
+              <i class="fas fa-home text-blue-400 mr-3"></i>
+              Endereço de Entrega
+            </h2>
+            <p class="text-gray-400 text-sm mt-1">Preencha seus dados de endereço para entregas</p>
+          </div>
+
+          <div class="p-6">
+            <form method="POST">
+              {{ form.hidden_tag() }}
+
+              <!-- Address Fields -->
+              <div class="space-y-6">
+                <!-- Rua -->
+                <div>
+                  <label class="block text-gray-300 font-medium mb-2">
+                    <i class="fas fa-road mr-2 text-blue-400"></i>
+                    {{ form.rua.label }}
+                  </label>
+                  {{ form.rua(class="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-blue-500", placeholder="Ex: Rua das Flores") }}
+                  {% if form.rua.errors %}
+                    {% for error in form.rua.errors %}
+                    <p class="text-red-400 text-sm mt-2">
+                      <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
+                    </p>
+                    {% endfor %}
+                  {% endif %}
                 </div>
-                {{ form.rua(class="futuristic-input pl-12") }}
-              </div>
-              {% if form.rua.errors %}
-                {% for error in form.rua.errors %}
-                <p class="text-red-400 text-sm mt-2 flex items-center">
-                  <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
-                </p>
-                {% endfor %}
-              {% endif %}
-            </div>
 
-            <!-- input de bairro -->
-
-            <div class="form-group">
-              <label class="block text-cyan-300 font-medium mb-2">
-                {{ form.bairro.label }}
-              </label>
-              <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <i class="fas fa-envelope text-cyan-400/80"></i>
+                <!-- Bairro -->
+                <div>
+                  <label class="block text-gray-300 font-medium mb-2">
+                    <i class="fas fa-map-signs mr-2 text-blue-400"></i>
+                    {{ form.bairro.label }}
+                  </label>
+                  {{ form.bairro(class="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-blue-500", placeholder="Ex: Centro") }}
+                  {% if form.bairro.errors %}
+                    {% for error in form.bairro.errors %}
+                    <p class="text-red-400 text-sm mt-2">
+                      <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
+                    </p>
+                    {% endfor %}
+                  {% endif %}
                 </div>
-                {{ form.bairro(class="futuristic-input pl-12") }}
-              </div>
-              {% if form.bairro.errors %}
-                {% for error in form.bairro.errors %}
-                <p class="text-red-400 text-sm mt-2 flex items-center">
-                  <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
-                </p>
-                {% endfor %}
-              {% endif %}
-            </div>
 
-
-            <!-- input de cep -->
-
-            <div class="form-group">
-              <label class="block text-cyan-300 font-medium mb-2">
-                {{ form.cep.label }}
-              </label>
-              <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <i class="fas fa-envelope text-cyan-400/80"></i>
+                <!-- Cidade -->
+                <div>
+                  <label class="block text-gray-300 font-medium mb-2">
+                    <i class="fas fa-city mr-2 text-blue-400"></i>
+                    {{ form.cidade.label }}
+                  </label>
+                  {{ form.cidade(class="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-blue-500", placeholder="Ex: São Paulo") }}
+                  {% if form.cidade.errors %}
+                    {% for error in form.cidade.errors %}
+                    <p class="text-red-400 text-sm mt-2">
+                      <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
+                    </p>
+                    {% endfor %}
+                  {% endif %}
                 </div>
-                {{ form.cep(class="futuristic-input pl-12") }}
-              </div>
-              {% if form.cep.errors %}
-                {% for error in form.cep.errors %}
-                <p class="text-red-400 text-sm mt-2 flex items-center">
-                  <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
-                </p>
-                {% endfor %}
-              {% endif %}
-            </div>
 
-            <!-- input de uf -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <!-- UF -->
+                  <div>
+                    <label class="block text-gray-300 font-medium mb-2">
+                      <i class="fas fa-flag mr-2 text-blue-400"></i>
+                      {{ form.uf.label }}
+                    </label>
+                    {{ form.uf(class="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-blue-500", placeholder="Ex: SP") }}
+                    {% if form.uf.errors %}
+                      {% for error in form.uf.errors %}
+                      <p class="text-red-400 text-sm mt-2">
+                        <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
+                      </p>
+                      {% endfor %}
+                    {% endif %}
+                  </div>
 
-            <div class="form-group">
-              <label class="block text-cyan-300 font-medium mb-2">
-                {{ form.uf.label }}
-              </label>
-              <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <i class="fas fa-envelope text-cyan-400/80"></i>
+                  <!-- CEP -->
+                  <div>
+                    <label class="block text-gray-300 font-medium mb-2">
+                      <i class="fas fa-mail-bulk mr-2 text-blue-400"></i>
+                      {{ form.cep.label }}
+                    </label>
+                    {{ form.cep(class="w-full px-4 py-3 bg-gray-700 border border-gray-600 text-white rounded-lg focus:outline-none focus:border-blue-500", placeholder="Ex: 00000-000") }}
+                    {% if form.cep.errors %}
+                      {% for error in form.cep.errors %}
+                      <p class="text-red-400 text-sm mt-2">
+                        <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
+                      </p>
+                      {% endfor %}
+                    {% endif %}
+                  </div>
                 </div>
-                {{ form.uf(class="futuristic-input pl-12") }}
               </div>
-              {% if form.uf.errors %}
-                {% for error in form.uf.errors %}
-                <p class="text-red-400 text-sm mt-2 flex items-center">
-                  <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
-                </p>
-                {% endfor %}
-              {% endif %}
+
+              <!-- Submit Button -->
+              <div class="mt-8 pt-6 border-t border-gray-700">
+                <button type="submit"
+                        class="w-full md:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center">
+                  <i class="fas fa-save mr-2"></i>
+                  Salvar Endereço
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Address Info -->
+        <div class="mt-6 bg-gray-800/50 rounded-lg border border-gray-700 p-5">
+          <div class="flex items-start space-x-3">
+            <div class="p-2 bg-blue-900/20 rounded-lg">
+              <i class="fas fa-info-circle text-blue-400"></i>
             </div>
-            
-          <button type="submit" class="futuristic-btn px-8 py-3 group">
-            <i class="fas fa-save mr-3 group-hover:scale-110 transition-transform duration-200"></i>
-            Salvar Endereço
-          </button>
-        </form>
+            <div>
+              <h4 class="font-medium text-white mb-2">Importante</h4>
+              <p class="text-gray-300 text-sm">
+                Certifique-se de que seu endereço está correto, pois será utilizado para entregas de placas
+                e comunicação oficial. Mantenha sempre atualizado.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<style>
+/* Form input focus effect */
+input:focus, select:focus, textarea:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.7);
+}
+</style>
+
+<script>
+// Simple CEP mask
+document.addEventListener('DOMContentLoaded', function() {
+  const cepInput = document.getElementById('cep');
+  
+  if (cepInput) {
+    cepInput.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      
+      if (value.length > 5) {
+        value = value.substring(0, 5) + '-' + value.substring(5, 8);
+      }
+      
+      e.target.value = value;
+    });
+  }
+  
+  // Auto-focus first input
+  const firstInput = document.querySelector('input[type="text"]');
+  if (firstInput) {
+    firstInput.focus();
+  }
+});
+</script>
 {% endblock %}

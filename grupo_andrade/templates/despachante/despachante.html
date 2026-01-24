@@ -1,101 +1,196 @@
 {% extends "layout.html" %}
-{% block title %}Despachante - Grupo Andrade{% endblock %}
+{% block title %}Selecionar Despachante{% endblock %}
 
 {% block content %}
-<div class="min-h-[70vh] flex items-center justify-center px-4 animate-fadeIn">
-    <div class="w-full max-w-2xl">
-        <!-- Card Principal -->
-        <div class="glass-effect-advanced rounded-2xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-hidden">
-            <!-- Header com Gradiente -->
-            <div class="bg-gradient-to-r from-cyan-900/40 to-blue-900/40 border-b border-cyan-500/20 py-8 px-8">
-                <div class="text-center">
-                    <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
-                        <i class="fas fa-user-tie text-white text-2xl"></i>
-                    </div>
-                    <h2 class="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-                        Escolha seu Despachante
-                    </h2>
-                    <p class="text-cyan-300/80 mt-3">Selecione um profissional de confiança para cuidar do seu emplacamento</p>
-                </div>
-            </div>
-
-            <!-- Formulário -->
-            <div class="p-8">
-                <form method="POST">
-                    <div class="mb-8">
-                        <label class="block text-cyan-300 font-semibold text-lg mb-4 flex items-center">
-                            <i class="fas fa-list-ul mr-3"></i>
-                            Selecione o despachante:
-                        </label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i class="fas fa-chevron-down text-cyan-400/80"></i>
-                            </div>
-                            <select 
-                                name="despachante_id" 
-                                id="despachante_id"
-                                class="futuristic-select pl-12 appearance-none cursor-pointer"
-                                required
-                            >
-                                <option value="" disabled selected class="text-cyan-300/50">-- Selecione um despachante --</option>
-                                {% for despachante in despachantes %}
-                                <option id="{{ despachante.id }}" value="{{ despachante.id }}" class="text-cyan-900">
-                                    ID - {{ despachante.id }} ...{{ despachante.username.title() }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                                <i class="fas fa-user-tie text-cyan-400/60"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Botão de Escolher -->
-                    <div class="text-center">
-                        <button 
-                            type="submit" 
-                            class="futuristic-btn-lg group relative overflow-hidden"
-                        >
-                            <span class="relative z-10 flex items-center justify-center">
-                                <i class="fas fa-check-circle mr-3 group-hover:scale-110 transition-transform duration-200"></i>
-                                Confirmar Escolha
-                            </span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Footer Informativo -->
-            <div class="border-t border-cyan-500/20 px-8 py-6 bg-cyan-900/10">
-                <div class="flex items-center justify-center text-center text-cyan-300/70">
-                    <i class="fas fa-shield-alt mr-2 text-cyan-400"></i>
-                    <span class="text-sm">Profissionais verificados e qualificados</span>
-                </div>
-            </div>
+<div class="min-h-[70vh] py-8 px-4">
+    <div class="max-w-2xl mx-auto">
+        <!-- Cabeçalho Minimalista -->
+        <div class="mb-6">
+            <h1 class="text-xl font-semibold text-gray-100 mb-2 flex items-center">
+                <i class="fas fa-user-tie text-blue-400 mr-3"></i>
+                Selecionar Despachante
+            </h1>
+            <p class="text-gray-400 text-sm">Escolha o profissional para seu processo</p>
         </div>
 
-        <!-- Cards dos Despachantes (Opcional - Visual Extra) -->
-        {% if despachantes %}
-        <div class="mt-8">
-            <h3 class="text-xl font-semibold text-cyan-100 mb-6 text-center flex items-center justify-center">
-                <i class="fas fa-star mr-3 text-yellow-400"></i>
-                Nossa Equipe de Despachantes
-            </h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {% for despachante in despachantes %}
-                <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-4 text-center hover:border-cyan-400/40 transition-all duration-300 group">
-                    <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg group-hover:shadow-cyan-500/25 transition-shadow duration-300">
-                        <i class="fas fa-user-tie text-white text-lg"></i>
+        <!-- Formulário Compacto -->
+        <div class="bg-gray-800 rounded-lg border border-gray-700 p-5 mb-6">
+            <form method="POST">
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        Despachante Responsável
+                    </label>
+                    <div class="relative">
+                        <select 
+                            name="despachante_id" 
+                            id="despachante_id"
+                            class="w-full px-4 py-2.5 pl-10 pr-10 bg-gray-900 text-gray-100 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 appearance-none"
+                            required
+                            autofocus
+                        >
+                            <option value="" disabled selected class="text-gray-500">Selecione...</option>
+                            {% for despachante in despachantes %}
+                            <option value="{{ despachante.id }}" class="bg-gray-800 text-gray-100">
+                                {{ despachante.username.title() }} (ID: {{ despachante.id }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <div class="absolute left-3 top-2.5 text-gray-400">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="absolute right-3 top-2.5 text-gray-400">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
                     </div>
-                    <h4 class="text-cyan-100 font-semibold group-hover:text-white transition-colors duration-300">
-                        {{ despachante.username }}
-                    </h4>
-                    <p class="text-cyan-400 text-sm mt-1">Despachante Profissional</p>
+                </div>
+
+                <div class="flex gap-3 pt-3 border-t border-gray-700">
+                    <a href="{{ url_for('placas.homepage') }}" 
+                       class="px-4 py-2.5 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700 text-center text-sm transition-colors flex-1">
+                        Cancelar
+                    </a>
+                    <button 
+                        type="submit" 
+                        class="px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium transition-colors flex-1">
+                        Confirmar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Lista de Despachantes -->
+        <div class="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+            <div class="px-5 py-3 border-b border-gray-700">
+                <h2 class="text-sm font-medium text-gray-300">Equipe Disponível</h2>
+            </div>
+            
+            <div class="divide-y divide-gray-700">
+                {% for despachante in despachantes %}
+                <div class="p-4 hover:bg-gray-750 transition-colors cursor-pointer group"
+                     onclick="selectDespachante('{{ despachante.id }}')">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-3 group-hover:bg-gray-600 transition-colors">
+                            <span class="text-blue-300 font-medium text-sm">{{ despachante.username.title()|first }}</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-sm font-medium text-gray-100 truncate">{{ despachante.username.title() }}</h3>
+                            <div class="flex items-center text-gray-400 text-xs mt-0.5">
+                                <i class="fas fa-hashtag mr-1.5"></i>
+                                <span>ID {{ despachante.id }}</span>
+                            </div>
+                        </div>
+                        <div class="hidden group-hover:block">
+                            <i class="fas fa-check text-blue-400 text-sm"></i>
+                        </div>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
         </div>
-        {% endif %}
+
+        <!-- Informações Rápidas -->
+        <div class="mt-6 grid grid-cols-2 gap-3">
+            <div class="bg-gray-800 rounded-lg p-3 border border-gray-700">
+                <div class="flex items-center mb-2">
+                    <div class="w-6 h-6 rounded-full bg-blue-900/30 flex items-center justify-center mr-2">
+                        <i class="fas fa-shield-alt text-blue-400 text-xs"></i>
+                    </div>
+                    <h4 class="text-xs font-medium text-gray-300">Verificado</h4>
+                </div>
+                <p class="text-gray-500 text-xs">Profissionais certificados</p>
+            </div>
+            
+            <div class="bg-gray-800 rounded-lg p-3 border border-gray-700">
+                <div class="flex items-center mb-2">
+                    <div class="w-6 h-6 rounded-full bg-green-900/30 flex items-center justify-center mr-2">
+                        <i class="fas fa-clock text-green-400 text-xs"></i>
+                    </div>
+                    <h4 class="text-xs font-medium text-gray-300">Disponível</h4>
+                </div>
+                <p class="text-gray-500 text-xs">Horário comercial</p>
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectElement = document.getElementById('despachante_id');
+        
+        // Selecionar por clique na lista
+        window.selectDespachante = function(id) {
+            selectElement.value = id;
+            
+            // Remover destaque anterior
+            document.querySelectorAll('.p-4').forEach(item => {
+                item.classList.remove('bg-gray-750', 'border-blue-500/30');
+            });
+            
+            // Destacar item selecionado
+            const clickedItem = Array.from(document.querySelectorAll('.p-4')).find(item => 
+                item.getAttribute('onclick').includes(id)
+            );
+            
+            if (clickedItem) {
+                clickedItem.classList.add('bg-gray-750', 'border-blue-500/30');
+                clickedItem.style.borderLeft = '3px solid #3b82f6';
+            }
+            
+            // Focar no select
+            selectElement.focus();
+        };
+        
+        // Atualizar seleção visual
+        selectElement.addEventListener('change', function() {
+            window.selectDespachante(this.value);
+        });
+        
+        // Tecla Enter para enviar
+        selectElement.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.closest('form').querySelector('button[type="submit"]').click();
+            }
+        });
+        
+        // Estilo do select customizado
+        const styleSelect = () => {
+            selectElement.style.color = '#f3f4f6';
+            selectElement.style.backgroundColor = '#111827';
+        };
+        
+        styleSelect();
+        selectElement.addEventListener('change', styleSelect);
+        selectElement.addEventListener('focus', styleSelect);
+        selectElement.addEventListener('blur', styleSelect);
+    });
+</script>
+
+<style>
+    select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.25em 1.25em;
+        padding-right: 2.5rem;
+    }
+    
+    select:focus {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2360a5fa' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    }
+    
+    option {
+        background-color: #1f2937;
+        color: #f3f4f6;
+    }
+    
+    option:checked {
+        background-color: #3b82f6;
+        color: white;
+    }
+    
+    .bg-gray-750 {
+        background-color: #2d3748;
+    }
+</style>
 {% endblock %}

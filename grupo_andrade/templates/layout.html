@@ -2,7 +2,7 @@
 <html lang="pt-br" class="bg-slate-900">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <title>Office Space {% block title %}{% endblock %}</title>
 
     <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='img/apple-touch-icon.png') }}">
@@ -11,7 +11,6 @@
     <link rel="manifest" href="{{ url_for('static', filename='img/site.webmanifest') }}">
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
     <script src="https://cdn.tailwindcss.com"></script>
     
     <link
@@ -27,29 +26,39 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
     />
     {% block head %}{% endblock %}
+    
+    <style>
+      @media (max-width: 640px) {
+        .container {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+      }
+    </style>
   </head>
-  <body class="bg-slate-900">
+  <body class="bg-slate-900 min-h-screen flex flex-col">
 
     {% if not hide_navbar %}
         {% include "navegador.html" %}
     {% endif %}
 
-
-    <main class="container py-8">
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          {% for category, message in messages %}
-          <div class="alert-{{ category }} mb-6 animate-fadeIn">
-            <div class="flex items-center space-x-3">
-              <i class="fas fa-info-circle text-cyan-400"></i>
-              <span>{{ message }}</span>
+    <main class="flex-grow px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <div class="max-w-7xl mx-auto">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert-{{ category }} mb-4 sm:mb-6 animate-fadeIn rounded-lg p-4">
+              <div class="flex items-start sm:items-center space-x-3">
+                <i class="fas fa-info-circle text-cyan-400 mt-0.5 sm:mt-0"></i>
+                <span class="text-sm sm:text-base">{{ message }}</span>
+              </div>
             </div>
-          </div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
-      
-      {% block content %}{% endblock content %}
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock content %}
+      </div>
     </main>
 
     {% if not hide_footer %}

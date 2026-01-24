@@ -1,139 +1,117 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<div class="min-h-screen py-8 animate-fadeIn">
-  <div class="max-w-2xl mx-auto">
-    <!-- Header Principal -->
-    <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 p-8 mb-8">
+<div class="min-h-screen bg-gray-100 p-4">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
       <div class="text-center">
-        <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
-          <i class="fas fa-file-upload text-white text-2xl"></i>
+        <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-100 flex items-center justify-center">
+          <i class="fas fa-file-upload text-blue-600 text-xl"></i>
         </div>
-        <h2 class="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-          Upload de Documentos
-        </h2>
-        <a href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}">
-          <p class="text-cyan-300/80 text-lg mt-2 font-mono bg-cyan-500/10 px-4 py-2 rounded-lg border border-cyan-500/20 inline-block">
+        <h1 class="text-2xl font-bold text-gray-800 mb-2">Adicionar Documentos</h1>
+        <div class="flex items-center justify-center gap-2 mb-3">
+          <span class="text-gray-600">Placa:</span>
+          <a href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}" 
+             class="font-mono text-blue-600 font-medium bg-blue-50 px-3 py-1 rounded">
             {{ placa.placa }}
-          </p>
-        </a>
-        <p class="text-cyan-300/70 text-sm mt-3">Adicione múltiplos arquivos PDF para esta placa</p>
+          </a>
+        </div>
+        <p class="text-gray-500 text-sm">Adicione documentos em PDF para esta placa</p>
       </div>
     </div>
 
-    <!-- Card do Formulário -->
-    <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-hidden">
-      <div class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-b border-cyan-500/20 px-6 py-4">
-        <h3 class="text-xl font-semibold text-cyan-100 flex items-center">
-          <i class="fas fa-cloud-upload-alt mr-3"></i>
+    <!-- Upload Form -->
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
+      <div class="bg-gray-50 px-6 py-4 border-b">
+        <h2 class="text-lg font-semibold text-gray-800">
+          <i class="fas fa-upload mr-2 text-blue-600"></i>
           Selecione os Arquivos
-        </h3>
+        </h2>
       </div>
 
-      <form
-        id="upload-container"
-        method="POST"
-        enctype="multipart/form-data"
-        class="p-6 space-y-6"
-      >
-        <!-- Área de Upload -->
-        <div class="text-center">
-          <label class="block text-cyan-300 font-medium mb-4 text-lg">
-            <i class="fas fa-file-pdf mr-2 text-red-400"></i>
-            Selecione múltiplos arquivos PDF
+      <form method="POST" enctype="multipart/form-data" class="p-6" id="uploadForm">
+        <!-- File Upload Area -->
+        <div class="mb-6">
+          <label class="block text-gray-700 font-medium mb-3">
+            <i class="fas fa-file-pdf mr-2 text-red-500"></i>
+            Selecione arquivos PDF
           </label>
           
-          <div class="relative border-2 border-dashed border-cyan-500/30 rounded-xl p-8 hover:border-cyan-400/50 transition-all duration-300 bg-cyan-500/5 hover:bg-cyan-500/10 group cursor-pointer">
+          <div class="relative border-2 border-dashed border-gray-300 rounded-lg p-8 hover:border-blue-400 transition-colors">
             <input
-              id="file-input"
               type="file"
               name="file"
               accept=".pdf"
               class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               multiple
+              required
+              id="fileInput"
             />
-            <div class="space-y-3">
-              <div class="w-16 h-16 mx-auto rounded-full bg-cyan-500/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <i class="fas fa-file-pdf text-cyan-400 text-2xl"></i>
+            <div class="text-center space-y-3">
+              <div class="w-12 h-12 mx-auto rounded-full bg-blue-100 flex items-center justify-center">
+                <i class="fas fa-file-pdf text-blue-500 text-xl"></i>
               </div>
               <div>
-                <p class="text-cyan-100 font-medium">Clique para selecionar arquivos</p>
-                <p class="text-cyan-400/70 text-sm mt-1">ou arraste e solte os PDFs aqui</p>
+                <p class="text-gray-800 font-medium" id="uploadText">Clique para selecionar arquivos</p>
+                <p class="text-gray-500 text-sm mt-1">ou arraste e solte aqui</p>
               </div>
-              <p class="text-cyan-400/60 text-xs">
-                Formatos aceitos: .pdf • Máx: 10 arquivos
+              <p class="text-gray-400 text-xs">
+                Apenas arquivos .pdf • Máximo 10 arquivos
               </p>
             </div>
           </div>
           
-          <!-- Contador de Arquivos -->
-          <div id="file-counter" class="mt-4 hidden">
-            <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm font-medium border border-cyan-500/30">
-              <i class="fas fa-file mr-1"></i>
-              <span id="file-count">0</span> arquivo(s) selecionado(s)
-            </span>
+          <!-- Progress Container (hidden by default) -->
+          <div id="progressContainer" class="mt-4 hidden">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-sm text-gray-600">Enviando arquivos...</span>
+              <span id="progressPercent" class="text-sm font-medium text-blue-600">0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+              <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
           </div>
+          
+          <!-- Selected Files List -->
+          <div id="selectedFiles" class="mt-4 space-y-2 hidden"></div>
         </div>
 
-        <!-- Lista de Arquivos Selecionados -->
-        <div id="file-list" class="space-y-2 max-h-40 overflow-y-auto hidden">
-          <div class="text-cyan-300 text-sm font-medium mb-2 flex items-center">
-            <i class="fas fa-list mr-2"></i>
-            Arquivos selecionados:
+        <!-- Submit Button -->
+        <button type="submit"
+                class="w-full px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center"
+                id="submitBtn">
+          <i class="fas fa-cloud-upload-alt mr-2"></i>
+          <span id="btnText">Enviar Documentos</span>
+          <div id="loadingSpinner" class="hidden ml-2">
+            <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
           </div>
-          <div id="file-items" class="space-y-1"></div>
-        </div>
-
-        <!-- Botão de Upload -->
-        <button
-  type="submit"
-          class="futuristic-btn w-full group relative overflow-hidden px-4 py-2 flex items-center justify-center gap-2 rounded-md"
-          id="upload-button"
-          disabled
-        >
-          <span class="relative z-10 flex items-center gap-2">
-            <i class="fas fa-cloud-upload-alt transition-transform duration-200 group-hover:scale-110"></i>
-            <span>Iniciar Upload</span>
-          </span>
         </button>
-
-        <!-- Barra de Progresso -->
-        <div id="progress-container" class="hidden">
-          <div class="flex justify-between text-cyan-300 text-sm mb-2">
-            <span>Progresso do upload:</span>
-            <span id="progress-text">0%</span>
-          </div>
-          <div class="w-full bg-cyan-500/20 rounded-full h-2">
-            <div id="progress-bar" class="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
-          </div>
-        </div>
       </form>
     </div>
 
-    <!-- Link para Download -->
-    <div class="text-center mt-6">
-      <a
-        href="{{ url_for('documentos.download_anexos', id_placa=placa.id) }}"
-        class="futuristic-nav-btn group inline-flex items-center"
-      >
-        <i class="fas fa-download mr-2 group-hover:scale-110 transition-transform duration-200"></i>
-        Ver Documentos Anexados
+    <!-- View Documents Button -->
+    <div class="text-center mb-6">
+      <a href="{{ url_for('documentos.download_anexos', id_placa=placa.id) }}"
+         class="inline-flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors">
+        <i class="fas fa-download mr-2"></i>
+        Ver Documentos Existentes
       </a>
     </div>
 
-    <!-- Mensagens Flash -->
+    <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-      <div class="mt-6 space-y-3">
+      <div class="space-y-3 mb-6">
         {% for category, message in messages %}
-        <div class="{% if category == 'success' %}bg-green-500/20 border-green-500/30 text-green-400{% else %}bg-red-500/20 border-red-500/30 text-red-400{% endif %} border rounded-xl p-4 text-center transition-all duration-300">
-          <div class="flex items-center justify-center space-x-2">
+        <div class="{% if category == 'success' %}bg-green-50 border-green-200 text-green-700{% else %}bg-red-50 border-red-200 text-red-700{% endif %} border rounded-lg p-4">
+          <div class="flex items-center justify-center">
             {% if category == 'success' %}
-            <i class="fas fa-check-circle text-green-400"></i>
+            <i class="fas fa-check-circle mr-2"></i>
             {% else %}
-            <i class="fas fa-exclamation-circle text-red-400"></i>
+            <i class="fas fa-exclamation-circle mr-2"></i>
             {% endif %}
-            <span class="font-medium">{{ message }}</span>
+            <span>{{ message }}</span>
           </div>
         </div>
         {% endfor %}
@@ -141,220 +119,215 @@
       {% endif %}
     {% endwith %}
 
-    <!-- Informações de Ajuda -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
-      <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-4 text-center">
-        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-green-500/20 flex items-center justify-center">
-          <i class="fas fa-file-pdf text-green-400 text-sm"></i>
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div class="bg-white rounded-lg shadow-sm p-4 text-center border">
+        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-green-100 flex items-center justify-center">
+          <i class="fas fa-file-pdf text-green-600"></i>
         </div>
-        <p class="text-cyan-100 text-sm font-medium">Somente PDF</p>
-        <p class="text-cyan-400/60 text-xs">Apenas arquivos .pdf são aceitos</p>
+        <p class="text-gray-800 font-medium text-sm">Somente PDF</p>
+        <p class="text-gray-500 text-xs">Apenas arquivos .pdf</p>
       </div>
       
-      <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-4 text-center">
-        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-blue-500/20 flex items-center justify-center">
-          <i class="fas fa-layer-group text-blue-400 text-sm"></i>
+      <div class="bg-white rounded-lg shadow-sm p-4 text-center border">
+        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-blue-100 flex items-center justify-center">
+          <i class="fas fa-copy text-blue-600"></i>
         </div>
-        <p class="text-cyan-100 text-sm font-medium">Múltiplos Arquivos</p>
-        <p class="text-cyan-400/60 text-xs">Selecione vários de uma vez</p>
+        <p class="text-gray-800 font-medium text-sm">Múltiplos</p>
+        <p class="text-gray-500 text-xs">Vários de uma vez</p>
       </div>
       
-      <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-4 text-center">
-        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-purple-500/20 flex items-center justify-center">
-          <i class="fas fa-sync text-purple-400 text-sm"></i>
+      <div class="bg-white rounded-lg shadow-sm p-4 text-center border">
+        <div class="w-10 h-10 mx-auto mb-2 rounded-full bg-purple-100 flex items-center justify-center">
+          <i class="fas fa-sync text-purple-600"></i>
         </div>
-        <p class="text-cyan-100 text-sm font-medium">Upload em Lote</p>
-        <p class="text-cyan-400/60 text-xs">Todos os arquivos juntos</p>
+        <p class="text-gray-800 font-medium text-sm">Upload em Lote</p>
+        <p class="text-gray-500 text-xs">Todos juntos</p>
       </div>
     </div>
   </div>
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const fileInput = document.getElementById('file-input');
-    const fileCounter = document.getElementById('file-counter');
-    const fileCount = document.getElementById('file-count');
-    const fileList = document.getElementById('file-list');
-    const fileItems = document.getElementById('file-items');
-    const uploadButton = document.getElementById('upload-button');
-    const progressContainer = document.getElementById('progress-container');
-    const progressBar = document.getElementById('progress-bar');
-    const progressText = document.getElementById('progress-text');
-    const uploadContainer = document.getElementById('upload-container');
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('uploadForm');
+  const fileInput = document.getElementById('fileInput');
+  const uploadText = document.getElementById('uploadText');
+  const submitBtn = document.getElementById('submitBtn');
+  const btnText = document.getElementById('btnText');
+  const loadingSpinner = document.getElementById('loadingSpinner');
+  const progressContainer = document.getElementById('progressContainer');
+  const progressBar = document.getElementById('progressBar');
+  const progressPercent = document.getElementById('progressPercent');
+  const selectedFiles = document.getElementById('selectedFiles');
 
-    // Drag and drop functionality
-    const dropArea = fileInput.parentElement;
-
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-      dropArea.addEventListener(eventName, preventDefaults, false);
-    });
-
-    function preventDefaults(e) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-
-    ['dragenter', 'dragover'].forEach(eventName => {
-      dropArea.addEventListener(eventName, highlight, false);
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-      dropArea.addEventListener(eventName, unhighlight, false);
-    });
-
-    function highlight() {
-      dropArea.classList.add('border-cyan-400', 'bg-cyan-500/20');
-    }
-
-    function unhighlight() {
-      dropArea.classList.remove('border-cyan-400', 'bg-cyan-500/20');
-    }
-
-    dropArea.addEventListener('drop', handleDrop, false);
-
-    function handleDrop(e) {
-      const dt = e.dataTransfer;
-      const files = dt.files;
-      fileInput.files = files;
-      handleFiles(files);
-    }
-
-    fileInput.addEventListener('change', function() {
-      handleFiles(this.files);
-    });
-
-
-    const form = document.querySelector('form');
-    const submitBtn = document.querySelector('button[type="submit"]');
-    
-    form.addEventListener('submit', function() {
-        // Desabilitar botão e mostrar loading
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processando...';
-        submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
-        
-        // Adicionar overlay de loading
-        const overlay = document.createElement('div');
-        overlay.id = 'loadingOverlay';
-        overlay.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50';
-        overlay.innerHTML = `
-            <div class="glass-effect-advanced rounded-2xl p-8 text-center">
-                <div class="w-16 h-16 mx-auto mb-4">
-                    <div class="relative w-full h-full">
-                        <div class="absolute inset-0 rounded-full border-4 border-cyan-500/30"></div>
-                        <div class="absolute inset-0 rounded-full border-4 border-transparent border-t-cyan-400 animate-spin"></div>
-                    </div>
-                </div>
-                <h3 class="text-lg font-semibold text-cyan-100 mb-2">Upload de Arquivos</h3>
-                <p class="text-cyan-200/70 text-sm">Por favor, aguarde...</p>
+  // Show selected files
+  fileInput.addEventListener('change', function() {
+    if (this.files.length > 0) {
+      uploadText.textContent = `${this.files.length} arquivo(s) selecionado(s)`;
+      selectedFiles.innerHTML = '';
+      selectedFiles.classList.remove('hidden');
+      
+      for (let i = 0; i < this.files.length; i++) {
+        const file = this.files[i];
+        const fileSize = (file.size / 1024 / 1024).toFixed(2); // MB
+        const fileItem = document.createElement('div');
+        fileItem.className = 'flex items-center justify-between bg-gray-50 p-3 rounded';
+        fileItem.innerHTML = `
+          <div class="flex items-center">
+            <i class="fas fa-file-pdf text-red-500 mr-3"></i>
+            <div>
+              <p class="text-sm text-gray-800 truncate max-w-[200px]">${file.name}</p>
+              <p class="text-xs text-gray-500">${fileSize} MB</p>
             </div>
+          </div>
         `;
-        document.body.appendChild(overlay);
-    });
-
-    function handleFiles(files) {
-      if (files.length > 0) {
-        fileCounter.classList.remove('hidden');
-        fileList.classList.remove('hidden');
-        fileCount.textContent = files.length;
-        uploadButton.disabled = false;
-        
-        // Limpar lista anterior
-        fileItems.innerHTML = '';
-        
-        // Adicionar novos arquivos à lista
-        Array.from(files).forEach((file, index) => {
-          const fileItem = document.createElement('div');
-          fileItem.className = 'flex items-center justify-between p-2 bg-cyan-500/5 rounded-lg border border-cyan-500/10';
-          fileItem.innerHTML = `
-            <div class="flex items-center space-x-3 min-w-0 flex-1">
-              <div class="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center flex-shrink-0">
-                <i class="fas fa-file-pdf text-red-400 text-xs"></i>
-              </div>
-              <div class="min-w-0 flex-1">
-                <p class="text-cyan-100 text-sm truncate" title="${file.name}">${file.name}</p>
-                <p class="text-cyan-400/60 text-xs">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
-              </div>
-            </div>
-            <div class="flex-shrink-0">
-              <span class="px-2 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-xs font-medium">
-                ${index + 1}
-              </span>
-            </div>
-          `;
-          fileItems.appendChild(fileItem);
-        });
-      } else {
-        fileCounter.classList.add('hidden');
-        fileList.classList.add('hidden');
-        uploadButton.disabled = true;
+        selectedFiles.appendChild(fileItem);
       }
+    } else {
+      uploadText.textContent = 'Clique para selecionar arquivos';
+      selectedFiles.classList.add('hidden');
+    }
+  });
+
+  // Form submission with progress simulation
+  form.addEventListener('submit', function(e) {
+    if (fileInput.files.length === 0) {
+      e.preventDefault();
+      return;
     }
 
-    // Simular progresso de upload (substituir por lógica real)
-    uploadContainer.addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      if (fileInput.files.length === 0) {
-        return;
-      }
+    // Show loading state
+    submitBtn.disabled = true;
+    btnText.textContent = 'Enviando...';
+    loadingSpinner.classList.remove('hidden');
+    progressContainer.classList.remove('hidden');
 
-      // Mostrar barra de progresso
-      progressContainer.classList.remove('hidden');
-      uploadButton.disabled = true;
-      
-      // Simular upload
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += Math.random() * 10;
-        if (progress >= 100) {
-          progress = 100;
-          clearInterval(interval);
-          
-          // Enviar formulário após conclusão
-          setTimeout(() => {
-            uploadContainer.submit();
-          }, 500);
-        }
+    // Simulate progress (in real app this would come from actual upload progress)
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 10;
+      if (progress <= 100) {
+        progressBar.style.width = `${progress}%`;
+        progressPercent.textContent = `${progress}%`;
         
-        progressBar.style.width = progress + '%';
-        progressText.textContent = Math.round(progress) + '%';
-      }, 200);
-    });
+        // Slow down as we approach 90%
+        if (progress >= 90) {
+          clearInterval(interval);
+          // At 90%, wait for actual upload to complete
+          setTimeout(() => {
+            progressBar.style.width = '100%';
+            progressPercent.textContent = '100%';
+            btnText.textContent = 'Processando...';
+          }, 1000);
+        }
+      } else {
+        clearInterval(interval);
+      }
+    }, 200);
+
+    // The form will continue with actual submission
+    // This is just for visual feedback
   });
+
+  // Drag and drop functionality
+  const dropArea = fileInput.parentElement;
+  
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropArea.addEventListener(eventName, preventDefaults, false);
+  });
+
+  function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  ['dragenter', 'dragover'].forEach(eventName => {
+    dropArea.addEventListener(eventName, highlight, false);
+  });
+
+  ['dragleave', 'drop'].forEach(eventName => {
+    dropArea.addEventListener(eventName, unhighlight, false);
+  });
+
+  function highlight() {
+    dropArea.classList.add('border-blue-500', 'bg-blue-50');
+  }
+
+  function unhighlight() {
+    dropArea.classList.remove('border-blue-500', 'bg-blue-50');
+  }
+
+  dropArea.addEventListener('drop', handleDrop, false);
+
+  function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    
+    fileInput.files = files;
+    
+    // Trigger change event
+    const event = new Event('change', { bubbles: true });
+    fileInput.dispatchEvent(event);
+  }
+});
 </script>
-
+<!-- 
 <style>
-  /* Estilos para a área de drag and drop */
-  .drop-zone-active {
-    border-color: rgb(6, 182, 212);
-    background-color: rgba(6, 182, 212, 0.1);
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .p-6 {
+    padding: 1rem;
   }
+  
+  .p-8 {
+    padding: 1.5rem;
+  }
+  
+  .grid-cols-1 {
+    grid-template-columns: 1fr;
+  }
+  
+  .max-w-\[200px\] {
+    max-width: 150px;
+  }
+}
 
-  /* Scrollbar personalizada */
-  #file-list::-webkit-scrollbar {
-    width: 6px;
-  }
+/* Improve touch targets for mobile */
+button, a {
+  touch-action: manipulation;
+}
 
-  #file-list::-webkit-scrollbar-track {
-    background: rgba(15, 23, 42, 0.3);
-    border-radius: 3px;
-  }
+/* Ensure form elements are easy to tap on mobile */
+input[type="file"] {
+  min-height: 44px;
+}
 
-  #file-list::-webkit-scrollbar-thumb {
-    background-color: rgba(6, 182, 212, 0.5);
-    border-radius: 3px;
-  }
+/* Better visual feedback */
+.border-dashed:hover {
+  border-color: #3b82f6;
+  background-color: #f8fafc;
+}
 
-  /* Animações */
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-  }
+/* Loading spinner animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 
-  .uploading {
-    animation: pulse 1.5s ease-in-out infinite;
-  }
-</style>
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Progress bar transition */
+#progressBar {
+  transition: width 0.3s ease;
+}
+
+/* Disabled button styling */
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+</style> -->
 {% endblock %}

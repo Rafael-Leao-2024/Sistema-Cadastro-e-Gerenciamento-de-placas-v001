@@ -2,35 +2,40 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<div class="min-h-screen py-8 animate-fadeIn">
-  <div class="max-w-4xl mx-auto">
-    <!-- Header -->
-    <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 p-8 mb-8">
-      <div class="text-center">
-        <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
-          <i class="fas fa-file-download text-white text-2xl"></i>
+<div class="min-h-screen bg-gray-900">
+  <!-- Header -->
+  <div class="bg-gray-800 border-b border-gray-700">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="py-4">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-center space-x-3">
+            <div class="p-2 bg-blue-600 rounded-lg">
+              <i class="fas fa-file-download text-white"></i>
+            </div>
+            <div>
+              <h1 class="text-xl sm:text-2xl font-bold text-white">Documentos da Placa</h1>
+              <div class="flex items-center space-x-2 mt-1">
+                <p class="text-gray-400 text-sm">Placa:</p>
+                <a href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}" 
+                   class="font-mono text-white bg-gray-700 px-2 py-1 rounded text-sm">
+                  {{ placa.placa }}
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
-        <h2 class="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-          Documentos da Placa
-        </h2>
-        <a href="{{ url_for('placas.placa_detail', placa_id=placa.id) }}">
-          <p class="text-cyan-300/80 text-lg mt-2 font-mono bg-cyan-500/10 px-4 py-2 rounded-lg border border-cyan-500/20 inline-block">
-            {{ placa.placa }}
-          </p>
-        </a>
-        <p class="text-cyan-300/70 text-sm mt-3">Gerencie os documentos anexos desta solicitação</p>
       </div>
     </div>
+  </div>
 
-    <!-- Lista de Documentos -->
-    <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 shadow-2xl shadow-cyan-500/10 overflow-hidden">
-      <div class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-b border-cyan-500/20 px-6 py-4">
-        <div class="flex justify-between items-center">
-          <h3 class="text-xl font-semibold text-cyan-100 flex items-center">
-            <i class="fas fa-folder-open mr-3"></i>
-            Documentos Anexados
-          </h3>
-          <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm font-medium border border-cyan-500/30">
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Documents List -->
+    <div class="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden mb-6">
+      <div class="border-b border-gray-700 p-6">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <h2 class="text-lg font-bold text-white">Documentos Anexados</h2>
+          <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded text-sm">
             {{ files|length }} arquivo(s)
           </span>
         </div>
@@ -38,62 +43,43 @@
 
       {% if files %}
       <div class="p-6">
-        <div class="grid gap-4">
+        <div class="space-y-4">
           {% for file in files %}
-          <div class="group relative bg-cyan-500/5 border border-cyan-500/20 rounded-xl p-4 hover:border-cyan-400/40 transition-all duration-300 hover:bg-cyan-500/10">
-            <div class="flex items-center justify-between">
-              <!-- Informações do Arquivo -->
-              <div class="flex items-center space-x-4 flex-1 min-w-0">
-                <div class="w-12 h-12 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25 flex-shrink-0">
-                  <i class="fas fa-file text-white text-lg"></i>
+          <div class="bg-gray-700/30 border border-gray-700 rounded-lg p-4 hover:bg-gray-700/50">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <!-- File Info -->
+              <div class="flex items-start space-x-3 flex-1">
+                <div class="p-2 bg-blue-600/20 rounded-lg">
+                  <i class="fas fa-file text-blue-400"></i>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <div class="flex items-center space-x-3 mb-1">
-                    <!-- Nome do arquivo com truncagem -->
-                    <div class="filename-container min-w-0 flex-1">
-                      <div class="filename-text">
-                        <span class="text-cyan-100 font-semibold text-lg truncate block" title="{{ file.filename }}">{{ file.filename }}</span>
-                      </div>
-                    </div>
-                    <span class="px-2 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-xs font-medium flex-shrink-0">
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
+                    <span class="font-medium text-white truncate" title="{{ file.filename }}">
+                      {{ file.filename }}
+                    </span>
+                    <span class="px-2 py-1 bg-gray-700 text-gray-300 rounded text-xs">
                       ID: {{ file.id }}
                     </span>
                   </div>
-                  <div class="flex items-center space-x-4 text-cyan-400/70 text-sm">
-                    <span class="flex items-center">
-                      <i class="fas fa-calendar mr-1"></i>
-                      por {{ file.author.username|title }}
-                      {{ file.date_create.strftime('%d/%m/%Y') }}
-                    </span>
-                    <span class="flex items-center">
-                      <i class="fas fa-clock mr-1"></i>
-                      {{ file.date_create.strftime('%H:%M') }}
-                    </span>
+                  <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-gray-500 text-xs">
+                    <span>Por: {{ file.author.username|title }}</span>
+                    <span>{{ file.date_create.strftime('%d/%m/%Y %H:%M') }}</span>
                   </div>
                 </div>
               </div>
 
-              <!-- Ações -->
-              <div class="flex items-center space-x-3 flex-shrink-0 ml-4">
-                <!-- Download -->
-                <a
-                  href="{{ url_for('documentos.download_file', name=file.filename) }}"
-                  target="_blank"
-                  class="futuristic-btn-sm group/btn"
-                  title="Baixar documento"
-                >
-                  <i class="fas fa-download mr-2 group-hover/btn:scale-110 transition-transform duration-200"></i>
+              <!-- Actions -->
+              <div class="flex space-x-2">
+                <a href="{{ url_for('documentos.download_file', name=file.filename) }}"
+                   target="_blank"
+                   class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm">
+                  <i class="fas fa-download mr-1"></i>
                   Baixar
                 </a>
-
-                <!-- Deletar -->
-                <a 
-                  href="{{ url_for('documentos.delete_file', id_file=file.id) }}"
-                  class="futuristic-btn-danger-sm group/btn"
-                  title="Excluir documento"
-                  onclick="return confirm('Tem certeza que deseja excluir este documento? Esta ação não pode ser desfeita.')"
-                >
-                  <i class="fas fa-trash mr-2 group-hover/btn:scale-110 transition-transform duration-200"></i>
+                <a href="{{ url_for('documentos.delete_file', id_file=file.id) }}"
+                   class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm"
+                   onclick="return confirm('Tem certeza que deseja excluir este documento?')">
+                  <i class="fas fa-trash mr-1"></i>
                   Excluir
                 </a>
               </div>
@@ -103,83 +89,79 @@
         </div>
       </div>
       {% else %}
-      <!-- Estado Vazio -->
+      <!-- Empty State -->
       <div class="p-12 text-center">
-        <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-cyan-500/10 flex items-center justify-center">
-          <i class="fas fa-file-alt text-cyan-400 text-3xl"></i>
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-700 mb-4">
+          <i class="fas fa-file-alt text-gray-400 text-2xl"></i>
         </div>
-        <h3 class="text-xl font-semibold text-cyan-100 mb-3">Nenhum documento encontrado</h3>
-        <p class="text-cyan-300/70 max-w-md mx-auto mb-6">
-          Não há documentos anexados a esta placa no momento.
-          Clique no botão abaixo para adicionar o primeiro documento.
-        </p>
+        <h3 class="text-lg font-bold text-white mb-3">Nenhum documento encontrado</h3>
+        <p class="text-gray-400 mb-6">Não há documentos anexados a esta placa.</p>
       </div>
       {% endif %}
 
       <!-- Footer -->
-      <div class="border-t border-cyan-500/20 px-6 py-4 bg-cyan-900/10">
-        <div class="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
-          <div class="text-cyan-300/70 text-sm flex items-center">
-            <i class="fas fa-info-circle mr-2"></i>
-            Formatos suportados: PDF, JPG, PNG, DOC
+      <div class="border-t border-gray-700 p-6">
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div class="text-gray-500 text-sm">
+            Formatos: PDF, JPG, PNG, DOC
           </div>
-          <a
-            href="{{ url_for('documentos.upload_file_anexo', id_placa=placa.id) }}"
-            class="flex items-center gap-2 px-4 py-2 rounded-md bg-blue-500 hover:bg-blue-600 text-white font-medium transition-all duration-200"
-          >
-            <i class="fas fa-plus"></i>
-            <span>Adicionar Novo Documento</span>
+          <a href="{{ url_for('documentos.upload_file_anexo', id_placa=placa.id) }}"
+             class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium">
+            <i class="fas fa-plus mr-2"></i>
+            Adicionar Documento
           </a>
         </div>
       </div>
     </div>
 
-    <!-- Informações Adicionais -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-      <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-6">
-        <h4 class="text-lg font-semibold text-cyan-100 mb-4 flex items-center">
-          <i class="fas fa-car mr-3"></i>
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Placa Info -->
+      <div class="bg-gray-800 border border-gray-700 rounded-lg p-6">
+        <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+          <i class="fas fa-car text-blue-400 mr-3"></i>
           Informações da Placa
-        </h4>
-        <div class="space-y-3 text-sm">
-          <div class="flex justify-between text-cyan-300">
-            <span>Placa:</span>
-            <span class="text-cyan-100 font-mono">{{ placa.placa }}</span>
+        </h3>
+        <div class="space-y-3">
+          <div class="flex justify-between">
+            <span class="text-gray-400">Placa:</span>
+            <span class="text-white font-mono">{{ placa.placa }}</span>
           </div>
           {% if placa.chassi %}
-          <div class="flex justify-between text-cyan-300">
-            <span>Chassi:</span>
-            <span class="text-cyan-100 font-mono">{{ placa.chassi.upper() }}</span>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Chassi:</span>
+            <span class="text-white font-mono">{{ placa.chassi.upper() }}</span>
           </div>
           {% endif %}
-          <div class="flex justify-between text-cyan-300">
-            <span>Solicitante:</span>
-            <span class="text-cyan-100">{{ placa.author.username }}</span>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Solicitante:</span>
+            <span class="text-white">{{ placa.author.username }}</span>
           </div>
-          <div class="flex justify-between text-cyan-300">
-            <span>Data de Criação:</span>
-            <span class="text-cyan-100">{{ placa.date_create.strftime('%d/%m/%Y') }}</span>
+          <div class="flex justify-between">
+            <span class="text-gray-400">Criação:</span>
+            <span class="text-white">{{ placa.date_create.strftime('%d/%m/%Y') }}</span>
           </div>
         </div>
       </div>
 
-      <div class="glass-effect-advanced rounded-xl border border-cyan-500/20 p-6">
-        <h4 class="text-lg font-semibold text-cyan-100 mb-4 flex items-center">
-          <i class="fas fa-question-circle mr-3"></i>
-          Ajuda Rápida
-        </h4>
-        <div class="space-y-3 text-sm text-cyan-300/80">
+      <!-- Help Info -->
+      <div class="bg-gray-800 border border-gray-700 rounded-lg p-6">
+        <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+          <i class="fas fa-info-circle text-blue-400 mr-3"></i>
+          Informações
+        </h3>
+        <div class="space-y-3 text-gray-300 text-sm">
           <div class="flex items-start space-x-2">
             <i class="fas fa-check text-green-400 mt-1"></i>
             <span>Adicione documentos relacionados à placa</span>
           </div>
           <div class="flex items-start space-x-2">
             <i class="fas fa-check text-green-400 mt-1"></i>
-            <span>Formatos suportados: PDF, imagens, documentos</span>
+            <span>Formatos: PDF, imagens, documentos</span>
           </div>
           <div class="flex items-start space-x-2">
             <i class="fas fa-check text-green-400 mt-1"></i>
-            <span>Mantenha os documentos organizados por placa</span>
+            <span>Mantenha os documentos organizados</span>
           </div>
         </div>
       </div>
@@ -188,86 +170,39 @@
 </div>
 
 <style>
-  /* Estilos para truncagem de texto */
-  .filename-container {
-    display: flex;
-    flex-direction: row;
-    overflow: hidden;
-  }
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
 
-  .filename-text {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-width: 0;
-  }
+::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 4px;
+}
 
-  /* Estilos para os botões */
-  .futuristic-btn-sm {
-    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.7);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .p-6 {
+    padding: 1rem;
+  }
+  
+  .text-sm {
     font-size: 0.875rem;
   }
-
-  .futuristic-btn-sm:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 1rem rgba(6, 182, 212, 0.3);
+  
+  .space-y-4 > * + * {
+    margin-top: 1rem;
   }
-
-  .futuristic-btn-danger-sm {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    font-weight: 600;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    font-size: 0.875rem;
-  }
-
-  .futuristic-btn-danger-sm:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 1rem rgba(239, 68, 68, 0.3);
-  }
-
-  /* Garantir que os botões sejam sempre visíveis */
-  .flex-shrink-0 {
-    flex-shrink: 0;
-  }
-
-  .min-w-0 {
-    min-width: 0;
-  }
-
-
-    /* GARANTIR TRUNCAGEM DOS NOMES LONGOS */
-  .truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 300px; /* Ajuste conforme necessário */
-  }
-
-  /* GARANTIR QUE OS BOTÕES NÃO QUEBREM LINHA */
-  .flex-shrink-0 {
-    flex-shrink: 0;
-  }
-
-  .min-w-0 {
-    min-width: 0;
-  }
+}
 </style>
 {% endblock %}

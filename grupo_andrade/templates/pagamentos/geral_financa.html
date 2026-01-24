@@ -1,245 +1,350 @@
 {% extends "layout.html" %}
-
-{% block title %}Finanças Gerais{% endblock %}
+{% block title %}Finanças{% endblock %}
 
 {% block content %}
-<div class="space-y-8">
-    <!-- Cabeçalho -->
-    <div class="futuristic-card">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+<div class="min-h-[70vh] py-8 px-4">
+    <div class="max-w-6xl mx-auto">
+        <!-- Cabeçalho com botão -->
+        <div class="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-cyan-400 mb-2">Finanças Gerais</h1>
-                <p class="text-slate-300">Resumo financeiro de todos os usuários</p>
+                <h1 class="text-2xl font-semibold text-gray-100 mb-2 flex items-center">
+                    <i class="fas fa-chart-pie text-blue-400 mr-3"></i>
+                    Finanças Gerais
+                </h1>
+                <p class="text-gray-400">Resumo financeiro de todos os usuários</p>
             </div>
-            <div class="mt-4 md:mt-0">
-                <div class="text-right">
-                    <p class="text-slate-300">Data: {{ now.strftime('%d/%m/%Y') }}</p>
-                    <p class="text-slate-300">Hora: {{ now.strftime('%H:%M') }}</p>
-                </div>
-            </div>
+            <a href="{{ url_for('pagamentos.relatorio') }}"
+               class="px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors text-sm text-center inline-block">
+                <i class="fas fa-file-invoice-dollar mr-2"></i>
+                Ver Relatórios
+            </a>
         </div>
-    </div>
 
-    <!-- Resumo Total -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <a href="{{ url_for('users.listar_usuarios') }}">
-            <div class="futuristic-card">
-                <div class="text-center p-6">
-                    <i class="fas fa-users text-cyan-400 text-4xl mb-4"></i>
-                    <h3 class="text-xl font-semibold text-slate-300 mb-2">Total de Usuários</h3>
-                    <p class="text-3xl font-bold text-cyan-400">{{ usuarios|length }}</p>
-                </div>
-            </div>
-        </a>
-        
-        <a href="{{ url_for('placas.todas') }}">
-            <div class="futuristic-card">
-                <div class="text-center p-6">
-                    <i class="fas fa-car text-cyan-400 text-4xl mb-4"></i>
-                    <h3 class="text-xl font-semibold text-slate-300 mb-2">Total de Placas</h3>
-                    <p class="text-3xl font-bold text-cyan-400">
-                        {{ usuarios|sum(attribute='total_placas') }}
-                    </p>
-                </div>
-            </div>
-        </a>
-
-        <div class="futuristic-card">
-            <div class="text-center p-6">
-                <i class="fas fa-money-bill-wave text-cyan-400 text-4xl mb-4"></i>
-                <h3 class="text-xl font-semibold text-slate-300 mb-2">Total de Honorários</h3>
-                <p class="text-3xl font-bold text-cyan-400">
-                    R$ {{ "%.2f"|format(usuarios|sum(attribute='total_honorario')) }}
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Lista de Usuários -->
-    {% for usuario_data in usuarios %}
-    
-    <div class="futuristic-card">
-    <a href="{{ url_for('pagamentos.relatorio') }}">
-            <!-- Cabeçalho do Usuário -->
-        <div class="border-b border-slate-700 pb-4 mb-6">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                <div class="flex items-center space-x-4 mb-4 md:mb-0">
-                    <div class="w-12 h-12 bg-cyan-900 rounded-full flex items-center justify-center">
-                        <i class="fas fa-user text-cyan-400 text-xl"></i>
+        <!-- Métricas Principais -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-3">
+                        <i class="fas fa-users text-blue-400"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold text-cyan-400">{{ usuario_data.usuario.username }}</h2>
-                        <p class="text-slate-400">{{ usuario_data.usuario.email }}</p>
+                        <p class="text-gray-400 text-sm">Total Usuários</p>
+                        <p class="text-xl font-semibold text-gray-100">{{ usuarios|length }}</p>
                     </div>
                 </div>
-                
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="text-center">
-                        <p class="text-sm text-slate-400">Posição</p>
-                        <p class="text-lg font-bold text-cyan-400">#{{ loop.index }}</p>
+            </div>
+
+            <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-3">
+                        <i class="fas fa-car text-green-400"></i>
                     </div>
-                    <div class="text-center">
-                        <p class="text-sm text-slate-400">Total Placas</p>
-                        <p class="text-lg font-bold text-cyan-400">{{ usuario_data.total_placas }}</p>
-                    </div>
-                    <div class="text-center">
-                        <p class="text-sm text-slate-400">Média/Placa</p>
-                        <p class="text-lg font-bold text-cyan-400">
-                            {% if usuario_data.total_placas > 0 %}
-                            R$ {{ "%.2f"|format(usuario_data.total_honorario / usuario_data.total_placas) }}
-                            {% else %}
-                            R$ 0.00
-                            {% endif %}
+                    <div>
+                        <p class="text-gray-400 text-sm">Total Placas</p>
+                        <p class="text-xl font-semibold text-gray-100">
+                            {{ usuarios|sum(attribute='total_placas') }}
                         </p>
                     </div>
-                    <div class="text-center">
-                        <p class="text-sm text-slate-400">Total Honorários</p>
-                        <p class="text-lg font-bold text-cyan-400">R$ {{ "%.2f"|format(usuario_data.total_honorario) }}</p>
+                </div>
+            </div>
+
+            <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-3">
+                        <i class="fas fa-dollar-sign text-yellow-400"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-400 text-sm">Total Honorários</p>
+                        <p class="text-xl font-semibold text-gray-100">
+                            R$ {{ "%.2f"|format(usuarios|sum(attribute='total_honorario')) }}
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Detalhes Mensais -->
-        {% if usuario_data.placas_agrupadas %}
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-slate-700">
-                <thead>
-                    <tr class="bg-slate-800">
-                        <th class="px-6 py-3 text-left text-xs font-medium text-cyan-400 uppercase tracking-wider">
-                            Ano/Mês
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-cyan-400 uppercase tracking-wider">
-                            Quantidade de Placas
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-cyan-400 uppercase tracking-wider">
-                            Total de Honorários
-                        </th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-cyan-400 uppercase tracking-wider">
-                            Média por Placa
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-700">
-                    {% for placa in usuario_data.placas_agrupadas %}
-                    <tr class="hover:bg-slate-800 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-slate-300 font-medium">
-                                {{ "%02d"|format(placa.mes|int) }}/{{ placa.ano|int }}
+
+        <!-- Lista de Usuários -->
+        <div class="space-y-4">
+            {% for usuario_data in usuarios %}
+            <div class="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+                <!-- Cabeçalho do Usuário -->
+                <div class="p-4 border-b border-gray-700 cursor-pointer user-header">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-3">
+                                <span class="text-gray-300 font-medium">
+                                    {{ usuario_data.usuario.username|first|upper }}
+                                </span>
                             </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-slate-300">
-                                {{ placa.total_placas }}
+                            <div>
+                                <h3 class="font-medium text-gray-100">{{ usuario_data.usuario.username }}</h3>
+                                <p class="text-gray-500 text-sm truncate">{{ usuario_data.usuario.email }}</p>
                             </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-slate-300">
-                                R$ {{ "%.2f"|format(placa.total_honorario or 0) }}
+                        </div>
+                        <div class="text-right">
+                            <div class="px-2 py-1 bg-gray-700 text-gray-300 rounded text-xs">
+                                #{{ loop.index }}
                             </div>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-slate-300">
-                                {% if placa.total_placas > 0 %}
-                                    R$ {{ "%.2f"|format((placa.total_honorario or 0) / placa.total_placas) }}
+                        </div>
+                    </div>
+
+                    <!-- Métricas do Usuário -->
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="text-center">
+                            <div class="text-gray-400 text-xs mb-1">Placas</div>
+                            <div class="text-gray-100 font-medium">{{ usuario_data.total_placas }}</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-gray-400 text-xs mb-1">Total</div>
+                            <div class="text-gray-100 font-medium">R$ {{ "%.2f"|format(usuario_data.total_honorario) }}</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-gray-400 text-xs mb-1">Média</div>
+                            <div class="text-gray-100 font-medium">
+                                {% if usuario_data.total_placas > 0 %}
+                                R$ {{ "%.2f"|format(usuario_data.total_honorario / usuario_data.total_placas) }}
                                 {% else %}
-                                    R$ 0.00
+                                R$ 0.00
                                 {% endif %}
                             </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% else %}
-        <div class="text-center py-8">
-            <i class="fas fa-chart-line text-slate-600 text-4xl mb-4"></i>
-            <p class="text-slate-400">Nenhum dado financeiro disponível para este usuário</p>
-        </div>
-        {% endif %}
-    </a>
-    </div>
-    {% endfor %}
-    
-    <!-- Estatísticas Gerais -->
-    <div class="futuristic-card">
-        <h3 class="text-xl font-bold text-cyan-400 mb-6">Estatísticas Gerais</h3>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-                <h4 class="text-lg font-semibold text-slate-300 mb-4">Top 5 Usuários por Honorários</h4>
-                <div class="space-y-3">
-                    {% for usuario_data in usuarios[:5] %}
-                    <div class="flex items-center justify-between p-3 bg-slate-800 rounded-lg">
-                        <div class="flex items-center space-x-3">
-                            <span class="text-cyan-400 font-bold">#{{ loop.index }}</span>
-                            <span class="text-slate-300">{{ usuario_data.usuario.username }}</span>
                         </div>
-                        <span class="text-cyan-400 font-bold">
+                    </div>
+                </div>
+
+                <!-- Detalhes Mensais (Expandível) -->
+                {% if usuario_data.placas_agrupadas %}
+                <div class="user-details border-t border-gray-700">
+                    <div class="p-4">
+                        <div class="flex justify-between items-center mb-3">
+                            <div class="text-gray-400 text-sm">Detalhes Mensais</div>
+                            <div class="text-gray-500 text-xs">{{ usuario_data.placas_agrupadas|length }} meses</div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            {% for placa in usuario_data.placas_agrupadas %}
+                            <div class="flex justify-between items-center p-2 bg-gray-900/50 rounded border border-gray-700">
+                                <div class="text-gray-300 text-sm">
+                                    {{ "%02d"|format(placa.mes|int) }}/{{ placa.ano|int }}
+                                </div>
+                                <div class="flex gap-4">
+                                    <div class="text-right">
+                                        <div class="text-gray-400 text-xs">Placas</div>
+                                        <div class="text-gray-100 text-sm">{{ placa.total_placas }}</div>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-gray-400 text-xs">Total</div>
+                                        <div class="text-gray-100 text-sm">R$ {{ "%.2f"|format(placa.total_honorario or 0) }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="mt-8">
+            <div class="bg-gray-800 rounded-lg border border-gray-700 p-5">
+                <h3 class="font-medium text-gray-300 mb-4">Top Usuários</h3>
+                
+                <div class="space-y-3">
+                    {% set usuarios_ordenados = usuarios|sort(attribute='total_honorario', reverse=true) %}
+                    {% for usuario_data in usuarios_ordenados[:5] %}
+                    <div class="flex items-center justify-between p-3 bg-gray-900/50 rounded border border-gray-700">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center mr-3">
+                                <span class="text-gray-300 text-sm font-medium">{{ loop.index }}</span>
+                            </div>
+                            <div class="text-gray-300 text-sm truncate max-w-[140px]">
+                                {{ usuario_data.usuario.username }}
+                            </div>
+                        </div>
+                        <div class="text-green-400 font-medium">
                             R$ {{ "%.2f"|format(usuario_data.total_honorario) }}
-                        </span>
+                        </div>
                     </div>
                     {% endfor %}
                 </div>
-            </div>
-            
-            <div>
-                <h4 class="text-lg font-semibold text-slate-300 mb-4">Distribuição por Usuário</h4>
-                <div class="space-y-4">
-                    {% set total_geral = usuarios|sum(attribute='total_honorario') %}
-                    {% for usuario_data in usuarios %}
-                    {% if total_geral > 0 %}
-                    {% set percentual = (usuario_data.total_honorario / total_geral * 100) %}
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <span class="text-sm text-slate-300">{{ usuario_data.usuario.username }}</span>
-                            <span class="text-sm text-cyan-400">{{ "%.1f"|format(percentual) }}%</span>
-                        </div>
-                        <div class="w-full bg-slate-700 rounded-full h-2">
-                            <div 
-                                class="bg-cyan-500 h-2 rounded-full" 
-                                style="width: '{{ percentual }}'"
-                            ></div>
-                        </div>
+
+                <!-- Distribuição -->
+                <div class="mt-6 pt-6 border-t border-gray-700">
+                    <h3 class="font-medium text-gray-300 mb-4">Distribuição</h3>
+                    <div class="space-y-2">
+                        {% set total_geral = usuarios|sum(attribute='total_honorario') %}
+                        {% set usuarios_limitados = usuarios_ordenados[:5] %}
+                        
+                        {% for usuario_data in usuarios_limitados %}
+                            {% if total_geral > 0 %}
+                                {% set percentual = (usuario_data.total_honorario / total_geral * 100) %}
+                                <div class="flex items-center">
+                                    <div class="text-gray-400 text-sm w-32 truncate">
+                                        {{ usuario_data.usuario.username }}
+                                    </div>
+                                    <div class="flex-1 mx-3">
+                                        <div class="w-full bg-gray-700 rounded-full h-2">
+                                            <div class="bg-blue-500 h-2 rounded-full" 
+                                                 style="width: {{ percentual|round(1) }}%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="text-gray-400 text-sm w-16 text-right">
+                                        {{ "%.1f"|format(percentual) }}%
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
-                    {% endif %}
-                    {% endfor %}
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
 
-{% block head %}
 <style>
-    .futuristic-card {
-        background: rgba(30, 41, 59, 0.7);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(34, 211, 238, 0.2);
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        transition: all 0.3s ease;
+    /* Animações sutis */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
     
-    .futuristic-card:hover {
-        border-color: rgba(34, 211, 238, 0.4);
-        box-shadow: 0 8px 30px rgba(34, 211, 238, 0.1);
+    .bg-gray-800.rounded-lg {
+        animation: fadeIn 0.3s ease-out;
+        animation-fill-mode: both;
     }
     
-    table {
-        border-collapse: separate;
-        border-spacing: 0;
+    /* Delay para os cards */
+    .space-y-4 > div:nth-child(1) { animation-delay: 0.1s; }
+    .space-y-4 > div:nth-child(2) { animation-delay: 0.2s; }
+    .space-y-4 > div:nth-child(3) { animation-delay: 0.3s; }
+    .space-y-4 > div:nth-child(4) { animation-delay: 0.4s; }
+    .space-y-4 > div:nth-child(5) { animation-delay: 0.5s; }
+    
+    /* Estilo para cabeçalho clicável */
+    .user-header:hover {
+        background-color: rgba(55, 65, 81, 0.3);
     }
     
-    th {
-        background: rgba(15, 23, 42, 0.8);
+    /* Estilo para detalhes expandíveis */
+    .user-details {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: all 0.3s ease-out;
     }
     
-    tr:last-child td {
-        border-bottom: none;
+    .user-details.expanded {
+        max-height: 500px;
+        opacity: 1;
+    }
+    
+    /* Scrollbar customizada */
+    @media (min-width: 768px) {
+        .space-y-2 {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .space-y-2::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .space-y-2::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        
+        .space-y-2::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 2px;
+        }
+    }
+    
+    /* Responsividade extra */
+    @media (max-width: 640px) {
+        .sm\:grid-cols-3 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .grid-cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .sm\:grid-cols-3 {
+            grid-template-columns: 1fr;
+        }
+        
+        .grid-cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
     }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle para detalhes mensais
+        const userHeaders = document.querySelectorAll('.user-header');
+        userHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                const detailsSection = this.closest('.bg-gray-800').querySelector('.user-details');
+                if (detailsSection) {
+                    detailsSection.classList.toggle('expanded');
+                    
+                    // Rotacionar ícone de seta (se houver)
+                    const arrowIcon = this.querySelector('.fa-chevron-down, .fa-chevron-right');
+                    if (arrowIcon) {
+                        arrowIcon.classList.toggle('fa-chevron-down');
+                        arrowIcon.classList.toggle('fa-chevron-right');
+                    }
+                }
+            });
+        });
+        
+        // Tooltip para emails longos
+        const emails = document.querySelectorAll('.truncate');
+        emails.forEach(email => {
+            email.addEventListener('mouseenter', function(e) {
+                if (this.scrollWidth > this.clientWidth) {
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'fixed z-50 px-2 py-1 text-xs bg-gray-900 text-gray-100 rounded shadow-lg';
+                    tooltip.textContent = this.textContent;
+                    document.body.appendChild(tooltip);
+                    
+                    const rect = this.getBoundingClientRect();
+                    tooltip.style.top = (rect.top - 25) + 'px';
+                    tooltip.style.left = (rect.left + rect.width/2 - tooltip.offsetWidth/2) + 'px';
+                    
+                    this._tooltip = tooltip;
+                }
+            });
+            
+            email.addEventListener('mouseleave', function() {
+                if (this._tooltip) {
+                    this._tooltip.remove();
+                    delete this._tooltip;
+                }
+            });
+        });
+        
+        // Adicionar ícones de seta aos cabeçalhos
+        userHeaders.forEach(header => {
+            const detailsSection = header.closest('.bg-gray-800').querySelector('.user-details');
+            if (detailsSection) {
+                // Adicionar ícone de seta
+                const icon = document.createElement('i');
+                icon.className = 'fas fa-chevron-right text-gray-400 text-xs ml-2';
+                header.querySelector('.text-right').appendChild(icon);
+            }
+        });
+    });
+</script>
 {% endblock %}
