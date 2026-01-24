@@ -399,7 +399,7 @@
   document.addEventListener('click', function(e) {
     // Desktop
     if (e.target.id === 'marcarTodasLidas') {
-      fetch('/notificacoes/marcar-lidas', {
+      fetch('/notificacoes/marcar-todas-lidas', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -414,7 +414,7 @@
     
     // Mobile
     if (e.target.id === 'marcarTodasLidasMobile') {
-      fetch('/notificacoes/marcar-lidas', {
+      fetch('/marcar-todas-lidas', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

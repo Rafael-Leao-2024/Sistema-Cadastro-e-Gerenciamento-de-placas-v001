@@ -29,7 +29,7 @@ def inject_notificacoes_placas():
 
 
 
-@placas.route("/")
+@placas.route("/homepage")
 def homepage():
     flash(message="Pagina Principal", category="success")
     return render_template('homepage.html', titulo='homepage')
@@ -256,7 +256,9 @@ def solicitar_placas():
         if len(lista_placas) == 1:
             flash('Solicitaçao enviada com sucesso!', 'success')
             return redirect(url_for('documentos.upload_file_anexo', id_placa=lista_placas[0].id))
-        
+        if len(lista_placas) > 1:
+            flash('Placas Solicitadas com sucesso', 'success')
+            return redirect(url_for('placas.minhas_placas'))
         else:
             flash('Voce nao preencheu os campos com os dados!', 'info')
             return redirect(url_for('placas.solicitar_placas'))     
@@ -322,6 +324,7 @@ def gerenciamento_pedidos():
                 .order_by(desc(Placa.date_create))\
                 .paginate(page=page, per_page=per_page, error_out=False)
     form = PlacaStatusForm()
+    print(placas)
     return render_template('placas/status_manager_placas.html', placas=placas, titulo='gerenciamento', tamanho=placas.total, form=form, page=page)
 
 

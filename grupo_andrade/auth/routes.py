@@ -47,7 +47,7 @@ def login_callback():
         login_user(user)
         
         flash('Login realizado com sucesso!', 'success')
-        return redirect(url_for('placas.solicitar_placas'))
+        return redirect(url_for('placas.homepage'))
         
     except Exception as e:
         print(f"Erro na autenticação: {e}")

@@ -120,6 +120,14 @@ def upload_file_anexo(id_placa):
                 # armazenamento AWS
                 try:
                     enviar_arquivo_s3(file=file, filename=filename)
+
+                    if "comprovante" in filename.lower():
+                        registrar_atividade(
+                            usuario_id=current_user.id,
+                            acao='PAGAMENTO',
+                            descricao=f"Processo de Pagamento em andamento ...{placa.chassi[-4:]}"
+                        )
+
                     flash(f'Arquivo {filename} enviado com sucesso ', category="success")
                 except NoCredentialsError:
                     flash('Credenciais invalidas', 'info')

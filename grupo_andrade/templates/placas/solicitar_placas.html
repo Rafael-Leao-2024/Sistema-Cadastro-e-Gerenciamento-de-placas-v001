@@ -1,688 +1,451 @@
 {% extends "layout.html" %}
-
-{% block title %}Solicitar Placas{% endblock %}
+{% block title %}Nova Solicitação{% endblock %}
 
 {% block content %}
-<div class="animate-fadeIn">
-  <!-- Header Estilizado -->
-  <div class="relative mb-8 sm:mb-12">
-    <div class="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 rounded-2xl blur-xl"></div>
-    <div class="relative glass-effect-advanced rounded-2xl border border-cyan-500/20 p-6 sm:p-8">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div class="flex items-center space-x-4">
-          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/25">
-            <i class="fas fa-plus-circle text-white text-lg sm:text-xl"></i>
-          </div>
-          <div>
-            <h2 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-              Nova Solicitação
-            </h2>
-            <p class="text-cyan-300/70 text-sm sm:text-base mt-1">Preencha os dados da sua placa</p>
-          </div>
-        </div>
-        <a href="{{ url_for('placas.minhas_placas') }}" class="futuristic-nav-btn px-4 sm:px-6 py-2.5 sm:py-3 group w-full sm:w-auto text-center">
-          <i class="fas fa-arrow-left mr-2 group-hover:-translate-x-1 transition-transform duration-200"></i>
-          Voltar
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Grid Principal -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
-    <!-- Coluna Esquerda - Informações do Usuário -->
-    <div class="lg:col-span-1">
-      <div class="glass-effect-advanced rounded-2xl border border-cyan-500/20 overflow-hidden h-full">
-        <div class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-b border-cyan-500/20 px-6 py-4">
-          <h3 class="text-lg font-semibold text-cyan-100 flex items-center">
-            <i class="fas fa-user-circle mr-3 text-cyan-400"></i>
-            Seus Dados
-          </h3>
-        </div>
-        <div class="p-6">
-          <div class="space-y-6">
-            <!-- Avatar e Nome -->
-            <div class="flex items-center space-x-4">
-              <div class="w-12 h-12 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center">
-                <i class="fas fa-user text-white"></i>
-              </div>
-              <div>
-                <h4 class="font-bold text-cyan-100">{{ current_user.username }}</h4>
-                <p class="text-sm text-cyan-300/70">{{ current_user.email }}</p>
-              </div>
-            </div>
-
-            <!-- Informações Detalhadas -->
-            <div class="space-y-4">
-              <div class="p-4 rounded-xl bg-slate-800/30 border border-cyan-500/10">
-                <div class="flex items-center text-cyan-300 mb-2">
-                  <i class="fas fa-map-marker-alt mr-2 text-cyan-400"></i>
-                  <span class="text-sm font-medium">Endereço para Entrega</span>
-                </div>
-                <p class="text-cyan-100 text-sm">{{ endereco }}</p>
-              </div>
-
-              <div class="p-4 rounded-xl bg-slate-800/30 border border-cyan-500/10">
-                <div class="flex items-center text-cyan-300 mb-2">
-                  <i class="fas fa-user-tie mr-2 text-cyan-400"></i>
-                  <span class="text-sm font-medium">Despachante</span>
-                </div>
-                <p class="text-cyan-100 text-sm">{{ despachante }}</p>
-              </div>
-            </div>
-
-            <!-- Status Info -->
-            <div class="p-4 rounded-xl bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/20">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-sm text-cyan-300">Status da Conta</span>
-                <span class="px-2 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
-                  Ativa
-                </span>
-              </div>
-              <p class="text-xs text-cyan-300/70">Todos os dados estão prontos para envio.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Coluna Direita - Formulário -->
-    <div class="lg:col-span-2">
-      <form method="POST" id="solicitarForm" class="space-y-6 sm:space-y-8">
-        <!-- Card do Formulário -->
-        <div class="glass-effect-advanced rounded-2xl border border-cyan-500/20 overflow-hidden">
-          <div class="bg-gradient-to-r from-cyan-900/30 to-blue-900/30 border-b border-cyan-500/20 px-6 py-4">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div class="flex items-center">
-                <div class="w-10 h-10 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center mr-3">
-                  <i class="fas fa-car text-white"></i>
-                </div>
+<div class="min-h-[70vh] py-8 px-4">
+    <div class="max-w-6xl mx-auto">
+        <!-- Cabeçalho -->
+        <div class="mb-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                 <div>
-                  <h3 class="text-lg font-semibold text-cyan-100">Dados da Placa</h3>
-                  <p class="text-sm text-cyan-300/70">Preencha as informações do veículo</p>
+                    <h1 class="text-xl font-semibold text-gray-100 mb-1">Nova Solicitação</h1>
+                    <p class="text-gray-400 text-sm">Adicionar nova placa</p>
                 </div>
-              </div>
-              <button type="button" id="add-placa" class="futuristic-btn-sm group px-4 py-2.5">
-                <i class="fas fa-plus mr-2 group-hover:scale-110 transition-transform duration-200"></i>
-                Adicionar Placa
-              </button>
+                <div class="flex gap-2">
+                    <a href="{{ url_for('placas.minhas_placas') }}" 
+                       class="px-3 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors text-sm">
+                        Voltar
+                    </a>
+                </div>
             </div>
-          </div>
-
-          <!-- Container das Placas -->
-          <div class="p-6" id="placas-container">
-            <!-- Primeira Placa -->
-            <div class="placa-item group relative p-6 rounded-xl bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-cyan-500/20 hover:border-cyan-400/30 transition-all duration-300">
-              <!-- Header da Placa -->
-              <div class="flex items-center justify-between mb-6">
-                <div class="flex items-center">
-                  <div class="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mr-3">
-                    <i class="fas fa-car text-cyan-400 text-sm"></i>
-                  </div>
-                  <span class="text-sm font-semibold text-cyan-300">Placa #<span class="placa-counter text-cyan-100">1</span></span>
-                </div>
-                <button type="button" class="remove-placa-btn opacity-0 group-hover:opacity-100 transition-all duration-200 text-red-400 hover:text-red-300">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-              </div>
-
-              <!-- Grid de Campos -->
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <!-- Chassi -->
-                <div class="form-group">
-                  <label class="block text-sm font-medium text-cyan-300 mb-2 flex items-center">
-                    <i class="fas fa-barcode mr-2 text-cyan-400"></i>
-                    Chassi
-                  </label>
-                  <input
-                    type="text"
-                    name="chassi"
-                    class="futuristic-input"
-                    value="{{ chassi }}"
-                    placeholder="Digite o número do chassi"
-                    required
-                  />
-                </div>
-
-                <!-- Placa -->
-                <div class="form-group">
-                  <label class="block text-sm font-medium text-cyan-300 mb-2 flex items-center">
-                    <i class="fas fa-car-alt mr-2 text-cyan-400"></i>
-                    Placa
-                  </label>
-                  <input
-                    type="text"
-                    name="placa"
-                    class="futuristic-input uppercase"
-                    value="{{ placa }}"
-                    placeholder="Ex: ABC1B34"
-                    required
-                  />
-                </div>
-
-                <!-- Renavam -->
-                <div class="form-group">
-                  <label class="block text-sm font-medium text-cyan-300 mb-2 flex items-center">
-                    <i class="fas fa-hashtag mr-2 text-cyan-400"></i>
-                    Renavam
-                  </label>
-                  <input 
-                    type="text" 
-                    name="renavam" 
-                    class="futuristic-input"
-                    value="00000000000"
-                    placeholder="11 dígitos"
-                  />
-                </div>
-
-                <!-- CRLV -->
-                <div class="form-group">
-                  <label class="block text-sm font-medium text-cyan-300 mb-2 flex items-center">
-                    <i class="fas fa-file-alt mr-2 text-cyan-400"></i>
-                    CRLV
-                  </label>
-                  <input 
-                    type="text" 
-                    name="crlv" 
-                    class="futuristic-input" 
-                    value="000000000" 
-                    placeholder="9 dígitos"
-                  />
-                </div>
-
-                <!-- Endereço -->
-                <div class="form-group md:col-span-2">
-                  <label class="block text-sm font-medium text-cyan-300 mb-2 flex items-center">
-                    <i class="fas fa-map-marker-alt mr-2 text-cyan-400"></i>
-                    Endereço de Entrega (opcional)
-                  </label>
-                  <input
-                    type="text"
-                    name="endereco_placa"
-                    class="futuristic-input"
-                    {% if current_user.enderecos and current_user.enderecos|length > 0 %}
-                    value="{{ current_user.enderecos[-1].rua }}"
-                    {% else %}
-                    value=""
-                    {% endif %}
-                    placeholder="Digite o endereço para entrega"
-                  />
-                </div>
-
-                <!-- Honorário -->
-                <div class="form-group">
-                  <label class="block text-sm font-medium text-cyan-300 mb-2 flex items-center">
-                    <i class="fas fa-dollar-sign mr-2 text-cyan-400"></i>
-                    Valor do Honorário R$
-                  </label>
-                  <div class="relative">
-                    <span class="absolute left-4 top-1/2 transform -translate-y-1/2 text-cyan-400"></span>
-                    <input
-                      type="number"
-                      name="honorario"
-                      value="{{ placa.honorario if placa.honorario else '' }}"
-                      class="futuristic-input pl-12"
-                      placeholder="1,99"
-                      step="0.01"
-                      min="0"
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <!-- Resumo e Envio -->
-        <div class="glass-effect-advanced rounded-2xl border border-cyan-500/20 p-6">
-          <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-            <!-- Resumo -->
-            <div class="flex-1">
-              <h4 class="text-lg font-semibold text-cyan-100 mb-4">Resumo da Solicitação</h4>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="p-4 rounded-xl bg-slate-800/30 border border-cyan-500/10">
-                  <div class="flex items-center mb-2">
-                    <div class="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center mr-3">
-                      <i class="fas fa-car text-cyan-400"></i>
+        <!-- Layout principal -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Informações do usuário -->
+            <div class="lg:col-span-1">
+                <div class="bg-gray-800 rounded-lg border border-gray-700 p-4 mb-4 lg:mb-0">
+                    <h3 class="text-sm font-medium text-gray-300 mb-4">Seus dados</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-3">
+                                <span class="text-gray-300">{{ current_user.username|first|upper }}</span>
+                            </div>
+                            <div>
+                                <div class="text-gray-100 text-sm">{{ current_user.username }}</div>
+                                <div class="text-gray-500 text-xs">{{ current_user.email }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="text-gray-500 text-xs">Endereço</div>
+                            <div class="text-gray-300 text-sm">{{ endereco }}</div>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="text-gray-500 text-xs">Despachante</div>
+                            <div class="text-gray-300 text-sm">{{ despachante }}</div>
+                        </div>
                     </div>
-                    <div>
-                      <p class="text-sm text-cyan-300">Total de Placas</p>
-                      <p class="text-2xl font-bold text-cyan-100" id="total-placas">1</p>
-                    </div>
-                  </div>
                 </div>
-
-                <div class="p-4 rounded-xl bg-slate-800/30 border border-cyan-500/10">
-                  <div class="flex items-center mb-2">
-                    <div class="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center mr-3">
-                      <i class="fas fa-dollar-sign text-green-400"></i>
-                    </div>
-                    <div>
-                      <p class="text-sm text-cyan-300">Valor Total</p>
-                      <p class="text-2xl font-bold text-green-100">R$ <span id="total-honorarios">{{ current_user.calcular_honorarios() }}</span></p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
 
-            <!-- Botão Enviar -->
-            <div class="lg:text-right">
-              <button type="submit" class="futuristic-btn px-8 py-4 group relative overflow-hidden">
-                <div class="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div class="relative flex items-center justify-center">
-                  <i class="fas fa-paper-plane mr-3 group-hover:translate-x-1 transition-transform duration-200"></i>
-                  <span class="font-semibold">Enviar Solicitação</span>
-                </div>
-              </button>
-              <p class="text-xs text-cyan-300/70 mt-3 max-w-xs">
-                <i class="fas fa-info-circle mr-1"></i>
-                Sua solicitação será processada em até 24h
-              </p>
+            <!-- Formulário -->
+            <div class="lg:col-span-2">
+                <form method="POST" class="space-y-6">
+                    <!-- Card do formulário -->
+                    <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-sm font-medium text-gray-300">Dados da placa</h3>
+                            <button type="button" 
+                                    id="add-placa"
+                                    class="px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-xs">
+                                + Adicionar outra
+                            </button>
+                        </div>
+                        
+                        <!-- Container das placas -->
+                        <div id="placas-container" class="space-y-4">
+                            <!-- Primeira placa -->
+                            <div class="placa-item bg-gray-900/50 rounded border border-gray-700 p-4">
+                                <div class="flex justify-between items-center mb-4">
+                                    <div class="text-gray-400 text-sm">Placa #<span class="placa-counter text-gray-300">1</span></div>
+                                    <!-- Botão de remover escondido para a primeira placa -->
+                                    <button type="button" 
+                                            class="remove-placa-btn text-gray-500 hover:text-red-400 transition-colors text-sm hidden">
+                                        × Remover
+                                    </button>
+                                </div>
+                                
+                                <div class="space-y-4">
+                                    <!-- Chassi -->
+                                    <div>
+                                        <label class="block text-gray-400 text-xs mb-2">Chassi</label>
+                                        <input type="text" 
+                                               name="chassi" 
+                                               class="w-full px-3 py-2 bg-gray-800 text-gray-100 border border-gray-600 rounded focus:outline-none focus:border-blue-500 text-sm"
+                                               value="{{ chassi }}"
+                                               placeholder="Número do chassi"
+                                               required>
+                                    </div>
+                                    
+                                    <!-- Placa -->
+                                    <div>
+                                        <label class="block text-gray-400 text-xs mb-2">Placa</label>
+                                        <input type="text" 
+                                               name="placa" 
+                                               class="w-full px-3 py-2 bg-gray-800 text-gray-100 border border-gray-600 rounded focus:outline-none focus:border-blue-500 text-sm uppercase"
+                                               value="{{ placa }}"
+                                               placeholder="Ex: ABC1B34"
+                                               required>
+                                    </div>
+                                    
+                                    <!-- Renavam e CRLV -->
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-gray-400 text-xs mb-2">Renavam</label>
+                                            <input type="text" 
+                                                   name="renavam" 
+                                                   class="w-full px-3 py-2 bg-gray-800 text-gray-100 border border-gray-600 rounded focus:outline-none focus:border-blue-500 text-sm"
+                                                   value="00000000000"
+                                                   placeholder="11 dígitos">
+                                        </div>
+                                        <div>
+                                            <label class="block text-gray-400 text-xs mb-2">CRLV</label>
+                                            <input type="text" 
+                                                   name="crlv" 
+                                                   class="w-full px-3 py-2 bg-gray-800 text-gray-100 border border-gray-600 rounded focus:outline-none focus:border-blue-500 text-sm"
+                                                   value="000000000"
+                                                   placeholder="9 dígitos">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Endereço -->
+                                    <div>
+                                        <label class="block text-gray-400 text-xs mb-2">Endereço de entrega (opcional)</label>
+                                        <input type="text" 
+                                               name="endereco_placa" 
+                                               class="w-full px-3 py-2 bg-gray-800 text-gray-100 border border-gray-600 rounded focus:outline-none focus:border-blue-500 text-sm"
+                                               {% if current_user.enderecos and current_user.enderecos|length > 0 %}
+                                               value="{{ current_user.enderecos[-1].rua }}"
+                                               {% endif %}
+                                               placeholder="Endereço para entrega">
+                                    </div>
+                                    
+                                    <!-- Honorário -->
+                                    <div>
+                                        <label class="block text-gray-400 text-xs mb-2">Valor do honorário (R$)</label>
+                                        <input type="number" 
+                                               name="honorario" 
+                                               class="w-full px-3 py-2 bg-gray-800 text-gray-100 border border-gray-600 rounded focus:outline-none focus:border-blue-500 text-sm"
+                                               value="{{ placa.honorario if placa.honorario else '0.00' }}"
+                                               placeholder="0.00"
+                                               step="0.01"
+                                               min="0"
+                                               required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Resumo e envio -->
+                    <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+                        <div class="space-y-4">
+                            <h3 class="text-sm font-medium text-gray-300">Resumo</h3>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-gray-900/50 rounded p-3">
+                                    <div class="text-gray-400 text-xs mb-1">Total de placas</div>
+                                    <div class="text-gray-100 text-lg" id="total-placas">1</div>
+                                </div>
+                                
+                                <div class="bg-gray-900/50 rounded p-3">
+                                    <div class="text-gray-400 text-xs mb-1">Valor total</div>
+                                    <div class="text-green-400 text-lg" id="total-honorarios">
+                                        R$ {{ "%.2f"|format(current_user.calcular_honorarios()) }}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="pt-4 border-t border-gray-700">
+                                <button type="submit" 
+                                        class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm">
+                                    Enviar solicitação
+                                </button>
+                                <p class="text-gray-500 text-xs text-center mt-2">
+                                    Processamento em até 24h
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-          </div>
         </div>
-      </form>
     </div>
-  </div>
 </div>
-
-<!-- Modal de Confirmação -->
-<div id="confirmModal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 hidden">
-  <div class="glass-effect-advanced rounded-2xl border border-cyan-500/20 max-w-md w-full animate-fadeIn transform transition-all duration-300">
-    <div class="p-6">
-      <div class="w-16 h-16 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center mx-auto mb-4">
-        <i class="fas fa-paper-plane text-white text-xl"></i>
-      </div>
-      <h3 class="text-xl font-bold text-cyan-100 text-center mb-2">Confirmar Envio</h3>
-      <p class="text-cyan-300 text-center mb-6">
-        Deseja enviar <span class="font-semibold text-cyan-100" id="modal-placas-count">1</span> 
-        solicitação(ões) no valor total de 
-        <span class="font-semibold text-green-400">R$ <span id="modal-total-value">0.00</span></span>?
-      </p>
-      <div class="flex gap-3">
-        <button type="button" id="confirmCancel" class="futuristic-nav-btn flex-1 py-3">
-          Cancelar
-        </button>
-        <button type="button" id="confirmSubmit" class="futuristic-btn flex-1 py-3">
-          Confirmar
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Variáveis
-    let placaCount = 1;
-    const totalPlacasElement = document.getElementById('total-placas');
-    const totalHonorariosElement = document.getElementById('total-honorarios');
-    const container = document.getElementById('placas-container');
-    const addButton = document.getElementById('add-placa');
-    const form = document.getElementById('solicitarForm');
-
-    // Atualizar totais
-    function updateTotals() {
-      const placas = document.querySelectorAll('.placa-item');
-      totalPlacasElement.textContent = placas.length;
-      
-      let total = 0;
-      placas.forEach(placa => {
-        const honorarioInput = placa.querySelector('input[name="honorario"]');
-        total += parseFloat(honarioInput.value || 0);
-      });
-      
-      totalHonorariosElement.textContent = total.toFixed(2).replace('.', ',');
-    }
-
-    // Formatar entrada para maiúsculas
-    document.querySelectorAll('.uppercase').forEach(input => {
-      input.addEventListener('input', function() {
-        this.value = this.value.toUpperCase();
-      });
-    });
-
-    // Adicionar nova placa
-    if (addButton && container) {
-      addButton.addEventListener('click', function() {
-        const placaItems = document.querySelectorAll('.placa-item');
-        if (placaItems.length >= 5) {
-          showToast('Máximo de 5 solicitações por vez', 'warning');
-          return;
-        }
-        
-        const template = placaItems[0].cloneNode(true);
-        placaCount++;
-        
-        // Atualizar contador
-        const counter = template.querySelector('.placa-counter');
-        if (counter) counter.textContent = placaCount;
-        
-        // Limpar valores
-        template.querySelectorAll('input').forEach(input => {
-          input.value = '';
-          if (input.name === 'honorario') input.value = '0';
-          if (input.name === 'renavam') input.value = '00000000000';
-          if (input.name === 'crlv') input.value = '000000000';
-        });
-        
-        // Mostrar botão de remover
-        const removeBtn = template.querySelector('.remove-placa-btn');
-        removeBtn.classList.remove('opacity-0');
-        
-        // Adicionar à lista
-        container.appendChild(template);
-        
-        // Adicionar evento de remoção
-        addRemoveEvent(template);
-        
-        // Atualizar totais
-        updateTotals();
-        
-        // Animar entrada
-        template.style.opacity = '0';
-        template.style.transform = 'translateY(20px)';
-        setTimeout(() => {
-          template.style.opacity = '1';
-          template.style.transform = 'translateY(0)';
-          template.style.transition = 'all 0.3s ease';
-        }, 10);
-        
-        showToast('Nova placa adicionada', 'success');
-      });
-    }
-
-    // Função para remover placa
-    function addRemoveEvent(element) {
-      const removeBtn = element.querySelector('.remove-placa-btn');
-      if (removeBtn) {
-        removeBtn.addEventListener('click', function() {
-          const allPlacas = document.querySelectorAll('.placa-item');
-          if (allPlacas.length > 1) {
-            // Animar saída
-            element.style.opacity = '0';
-            element.style.transform = 'translateX(20px)';
-            
-            setTimeout(() => {
-              element.remove();
-              updateTotals();
-              updateCounters();
-              showToast('Placa removida', 'info');
-            }, 300);
-          } else {
-            showToast('Você precisa ter pelo menos uma placa', 'warning');
-          }
-        });
-      }
-      
-      // Atualizar totais quando honorário muda
-      const honorarioInput = element.querySelector('input[name="honorario"]');
-      if (honorarioInput) {
-        honorarioInput.addEventListener('input', updateTotals);
-      }
-    }
-
-    // Atualizar contadores
-    function updateCounters() {
-      const placas = document.querySelectorAll('.placa-item');
-      placas.forEach((placa, index) => {
-        const counter = placa.querySelector('.placa-counter');
-        if (counter) counter.textContent = index + 1;
-      });
-      placaCount = placas.length;
-    }
-
-    // Setup inicial
-    document.querySelectorAll('.placa-item').forEach((item, index) => {
-      if (index > 0) {
-        const removeBtn = item.querySelector('.remove-placa-btn');
-        if (removeBtn) removeBtn.classList.remove('opacity-0');
-        addRemoveEvent(item);
-      }
-      
-      const honorarioInput = item.querySelector('input[name="honorario"]');
-      if (honorarioInput) {
-        honorarioInput.addEventListener('input', updateTotals);
-      }
-    });
-    
-    updateTotals();
-    
-    // Validação do formulário
-    if (form) {
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Validar campos obrigatórios
-        let isValid = true;
-        const placas = document.querySelectorAll('.placa-item');
-        
-        placas.forEach(placa => {
-          const chassi = placa.querySelector('input[name="chassi"]');
-          const placaNum = placa.querySelector('input[name="placa"]');
-          const honorario = placa.querySelector('input[name="honorario"]');
-          
-          if (!chassi.value.trim() || !placaNum.value.trim() || !honorario.value.trim()) {
-            isValid = false;
-            [chassi, placaNum, honorario].forEach(input => {
-              if (!input.value.trim()) {
-                input.classList.add('error');
-              }
-            });
-          }
-        });
-        
-        if (!isValid) {
-          showToast('Preencha todos os campos obrigatórios', 'error');
-          return;
-        }
-        
-        // Mostrar modal de confirmação em mobile
-        if (window.innerWidth < 768) {
-          showConfirmationModal();
-        } else {
-          // Enviar diretamente em desktop
-          this.submit();
-        }
-      });
-    }
-    
-    // Remover erro ao digitar
-    document.querySelectorAll('input').forEach(input => {
-      input.addEventListener('input', function() {
-        this.classList.remove('error');
-      });
-    });
-    
-    // Modal de confirmação
-    const confirmModal = document.getElementById('confirmModal');
-    const confirmCancel = document.getElementById('confirmCancel');
-    const confirmSubmit = document.getElementById('confirmSubmit');
-    
-    function showConfirmationModal() {
-      document.getElementById('modal-placas-count').textContent = totalPlacasElement.textContent;
-      document.getElementById('modal-total-value').textContent = totalHonorariosElement.textContent;
-      confirmModal.classList.remove('hidden');
-    }
-    
-    if (confirmCancel) {
-      confirmCancel.addEventListener('click', function() {
-        confirmModal.classList.add('hidden');
-      });
-    }
-    
-    if (confirmSubmit) {
-      confirmSubmit.addEventListener('click', function() {
-        confirmModal.classList.add('hidden');
-        form.submit();
-      });
-    }
-    
-    // Fechar modal ao clicar fora
-    confirmModal.addEventListener('click', function(e) {
-      if (e.target === confirmModal) {
-        confirmModal.classList.add('hidden');
-      }
-    });
-    
-    // Toast notifications
-    function showToast(message, type = 'info') {
-      const toast = document.createElement('div');
-      toast.className = `fixed top-4 right-4 z-50 px-4 py-3 rounded-xl glass-effect-advanced border ${
-        type === 'success' ? 'border-green-500/20 text-green-300' :
-        type === 'warning' ? 'border-yellow-500/20 text-yellow-300' :
-        type === 'error' ? 'border-red-500/20 text-red-300' :
-        'border-cyan-500/20 text-cyan-300'
-      } transform translate-x-full transition-transform duration-300`;
-      toast.innerHTML = `
-        <div class="flex items-center">
-          <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : type === 'error' ? 'times-circle' : 'info-circle'} mr-3"></i>
-          <span>${message}</span>
-        </div>
-      `;
-      document.body.appendChild(toast);
-      
-      setTimeout(() => toast.classList.remove('translate-x-full'), 100);
-      setTimeout(() => {
-        toast.classList.add('translate-x-full');
-        setTimeout(() => toast.remove(), 300);
-      }, 3000);
-    }
-  });
-</script>
 
 <style>
-  .futuristic-input {
-    width: 100%;
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid rgba(6, 182, 212, 0.2);
-    border-radius: 0.75rem;
-    padding: 0.875rem 1rem;
-    color: #f1f5f9;
-    font-size: 0.9375rem;
-    transition: all 0.2s ease;
-  }
-  
-  .futuristic-input:focus {
-    outline: none;
-    border-color: rgba(6, 182, 212, 0.5);
-    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
-  }
-  
-  .futuristic-input::placeholder {
-    color: rgba(148, 163, 184, 0.5);
-  }
-  
-  .futuristic-input.error {
-    border-color: rgba(239, 68, 68, 0.5);
-    animation: shake 0.3s ease-in-out;
-  }
-  
-  .futuristic-btn {
-    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
-    color: white;
-    padding: 0.875rem 2rem;
-    border-radius: 0.75rem;
-    font-weight: 500;
-    border: none;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .futuristic-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.4);
-  }
-  
-  .futuristic-btn-sm {
-    background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
-    color: white;
-    padding: 0.625rem 1.25rem;
-    border-radius: 0.625rem;
-    font-weight: 500;
-    border: none;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .futuristic-btn-sm:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
-  }
-  
-  .futuristic-nav-btn {
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid rgba(6, 182, 212, 0.2);
-    color: #cbd5e1;
-    border-radius: 0.625rem;
-    padding: 0.625rem 1.25rem;
-    transition: all 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .futuristic-nav-btn:hover {
-    border-color: rgba(6, 182, 212, 0.4);
-    color: white;
-    transform: translateY(-1px);
-  }
-  
-  .glass-effect-advanced {
-    background: rgba(15, 23, 42, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-  
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-5px); }
-    40%, 80% { transform: translateX(5px); }
-  }
-  
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-20px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-  }
-  
-  .animate-fadeIn {
-    animation: fadeIn 0.3s ease-out;
-  }
-  
-  /* Responsividade */
-  @media (max-width: 640px) {
-    .futuristic-input {
-      padding: 0.75rem;
-      font-size: 0.875rem;
+    /* Animações */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
     
-    .futuristic-btn {
-      padding: 0.75rem 1.5rem;
-      font-size: 0.875rem;
+    .placa-item {
+        animation: fadeIn 0.3s ease-out;
     }
     
-    .glass-effect-advanced {
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+    /* Responsividade */
+    @media (max-width: 1024px) {
+        .lg\:grid-cols-3 {
+            grid-template-columns: 1fr;
+        }
     }
-  }
-  
-  /* Efeitos de hover nas placas */
-  .placa-item:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.1);
-  }
-  
-  .placa-item {
-    transition: all 0.3s ease;
-  }
+    
+    /* Auto uppercase */
+    .uppercase {
+        text-transform: uppercase;
+    }
+    
+    /* Botão de remover */
+    .remove-placa-btn {
+        cursor: pointer;
+        background: none;
+        border: none;
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+    
+    .remove-placa-btn:hover {
+        background-color: rgba(239, 68, 68, 0.1);
+        border-radius: 4px;
+    }
+    
+    .hidden {
+        display: none;
+    }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let placaCount = 1;
+        const container = document.getElementById('placas-container');
+        const addButton = document.getElementById('add-placa');
+        const totalPlacasElement = document.getElementById('total-placas');
+        
+        // Auto uppercase para campo placa
+        document.querySelectorAll('.uppercase').forEach(input => {
+            input.addEventListener('input', function() {
+                this.value = this.value.toUpperCase();
+            });
+        });
+        
+        // Formatar valor monetário
+        document.querySelectorAll('input[name="honorario"]').forEach(input => {
+            input.addEventListener('blur', function() {
+                let value = this.value.replace(',', '.');
+                if (value && !isNaN(value)) {
+                    const num = parseFloat(value);
+                    this.value = num.toFixed(2);
+                    updateTotalHonorarios();
+                }
+            });
+        });
+        
+        // Adicionar nova placa
+        if (addButton && container) {
+            addButton.addEventListener('click', function() {
+                const placas = document.querySelectorAll('.placa-item');
+                if (placas.length >= 5) {
+                    alert('Máximo de 5 solicitações por vez');
+                    return;
+                }
+                
+                // Clonar primeira placa
+                const template = placas[0].cloneNode(true);
+                placaCount++;
+                
+                // Atualizar contador
+                const counter = template.querySelector('.placa-counter');
+                if (counter) counter.textContent = placaCount;
+                
+                // Limpar valores
+                template.querySelectorAll('input').forEach(input => {
+                    input.value = '';
+                    if (input.name === 'honorario') input.value = '0.00';
+                    if (input.name === 'renavam') input.value = '00000000000';
+                    if (input.name === 'crlv') input.value = '000000000';
+                });
+                
+                // Mostrar botão de remover
+                const removeBtn = template.querySelector('.remove-placa-btn');
+                if (removeBtn) {
+                    removeBtn.classList.remove('hidden');
+                }
+                
+                // Adicionar à lista
+                container.appendChild(template);
+                
+                // Adicionar eventos
+                addPlacaEvents(template);
+                
+                // Atualizar contador
+                updateTotalPlacas();
+                
+                // Scroll para nova placa
+                template.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+        }
+        
+        // Adicionar eventos a uma placa
+        function addPlacaEvents(placaItem) {
+            // Botão remover
+            const removeBtn = placaItem.querySelector('.remove-placa-btn');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', function() {
+                    const allPlacas = document.querySelectorAll('.placa-item');
+                    if (allPlacas.length > 1) {
+                        placaItem.remove();
+                        updateTotalPlacas();
+                        updateCounters();
+                        updateTotalHonorarios();
+                    }
+                });
+            }
+            
+            // Formatar honorário
+            const honorarioInput = placaItem.querySelector('input[name="honorario"]');
+            if (honorarioInput) {
+                honorarioInput.addEventListener('blur', updateTotalHonorarios);
+            }
+            
+            // Auto uppercase para placa
+            const placaInput = placaItem.querySelector('.uppercase');
+            if (placaInput) {
+                placaInput.addEventListener('input', function() {
+                    this.value = this.value.toUpperCase();
+                });
+            }
+        }
+        
+        // Atualizar contador de placas
+        function updateTotalPlacas() {
+            const placas = document.querySelectorAll('.placa-item');
+            totalPlacasElement.textContent = placas.length;
+            
+            // Atualizar texto do botão adicionar
+            const addBtn = document.getElementById('add-placa');
+            if (addBtn) {
+                if (placas.length >= 5) {
+                    addBtn.textContent = 'Máximo alcançado';
+                    addBtn.disabled = true;
+                    addBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                    addBtn.classList.add('bg-gray-600', 'cursor-not-allowed');
+                } else {
+                    addBtn.textContent = '+ Adicionar outra';
+                    addBtn.disabled = false;
+                    addBtn.classList.remove('bg-gray-600', 'cursor-not-allowed');
+                    addBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                }
+            }
+        }
+        
+        // Atualizar total de honorários
+        function updateTotalHonorarios() {
+            let total = 0;
+            document.querySelectorAll('input[name="honorario"]').forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                total += value;
+            });
+            
+            const totalElement = document.getElementById('total-honorarios');
+            if (totalElement) {
+                totalElement.textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+            }
+        }
+        
+        // Atualizar números das placas
+        function updateCounters() {
+            const placas = document.querySelectorAll('.placa-item');
+            placas.forEach((placa, index) => {
+                const counter = placa.querySelector('.placa-counter');
+                if (counter) counter.textContent = index + 1;
+                
+                // Mostrar/ocultar botão de remover
+                const removeBtn = placa.querySelector('.remove-placa-btn');
+                if (removeBtn) {
+                    if (index === 0) {
+                        removeBtn.classList.add('hidden');
+                    } else {
+                        removeBtn.classList.remove('hidden');
+                    }
+                }
+            });
+        }
+        
+        // Adicionar eventos à primeira placa
+        const primeiraPlaca = document.querySelector('.placa-item');
+        if (primeiraPlaca) {
+            addPlacaEvents(primeiraPlaca);
+        }
+        
+        // Validar formulário
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                let isValid = true;
+                const errors = [];
+                
+                document.querySelectorAll('.placa-item').forEach((placa, index) => {
+                    const chassi = placa.querySelector('input[name="chassi"]');
+                    const placaNum = placa.querySelector('input[name="placa"]');
+                    const honorario = placa.querySelector('input[name="honorario"]');
+                    
+                    if (!chassi.value.trim()) {
+                        errors.push(`Placa ${index + 1}: Chassi é obrigatório`);
+                        chassi.classList.add('border-red-500');
+                        isValid = false;
+                    }
+                    
+                    if (!placaNum.value.trim()) {
+                        errors.push(`Placa ${index + 1}: Número da placa é obrigatório`);
+                        placaNum.classList.add('border-red-500');
+                        isValid = false;
+                    }
+                    
+                    const honorarioVal = parseFloat(honorario.value);
+                    if (!honorarioVal || honorarioVal <= 0) {
+                        errors.push(`Placa ${index + 1}: Valor do honorário deve ser maior que zero`);
+                        honorario.classList.add('border-red-500');
+                        isValid = false;
+                    }
+                });
+                
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Corrija os seguintes erros:\n\n' + errors.join('\n'));
+                }
+            });
+        }
+        
+        // Remover borda vermelha ao digitar
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('border-red-500');
+            });
+        });
+        
+        // Inicializar
+        updateTotalHonorarios();
+    });
+</script>
+
 {% endblock %}
