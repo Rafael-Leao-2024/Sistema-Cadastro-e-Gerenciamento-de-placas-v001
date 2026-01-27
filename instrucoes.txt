@@ -1,0 +1,54 @@
+Projeto no GitHub
+git clone https://github.com/Rafael-Leao-2024/Sistema-Cadastro-e-Gerenciamento-de-placas-v001.git
+
+Banco de Dados em desenvolvimento
+
+variavel de ambiente do .env 
+DATABASE_URL=sqlite:///banco_desenvolvedor.db
+
+$ flask db init
+$ flask db migrate -m "mensagem da migraçao"
+$ flask db upgrade
+
+
+Banco de Dados em producao 
+
+variavel de ambiente no RAILWAY
+DATABASE_URL="caminho privado"
+
+$ flask db init
+$ flask db migrate -m "mensagem da migraçao"
+$ git add .
+$ git commit -m "mensagem do commit"
+$ git push
+$ flask db upgrade
+
+Para Executar a app rode
+
+Entre na pasta
+$ cd sistema-cadastro-e-gerenciamento-de-placas-v001
+
+crie um ambiente virtual
+$ python -m venv .venv
+
+Ative o ambiente virtual
+$ .venv/scripts/activate
+
+Todas as dependencias com um unico comando
+$ pip install -r requirements.txt
+
+
+Executar a aplicaçao
+$ python app.py
+ou assim 
+$ flask --app grupo_andrade.main run
+
+
+caminho da aplicacao 
+
+http://127.0.0.1:5000/homepage
+
+para finalizar a aplcaçao digite 
+control + c no terminal
+
+apos finalizar boa pratica é desativar o ambiente virtual

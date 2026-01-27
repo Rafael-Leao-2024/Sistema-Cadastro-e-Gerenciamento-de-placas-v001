@@ -8,7 +8,7 @@ from .schema import DadosCompleto
 
 
 def ler_pdf(file):
-    reader = PdfReader(file)    
+    reader = PdfReader(file)
     texto = reader.pages[0].extract_text()
     return texto
 

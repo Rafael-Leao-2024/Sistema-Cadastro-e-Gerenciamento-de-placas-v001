@@ -1,78 +1,74 @@
 {% extends "layout.html" %}
-
-{% block title %}procuracao{% endblock %}
-
+{% block title %}Procuracao - {{ titulo }} {% endblock %}
 
 {% block content %}
-<div class="min-h-screen py-8">
-    <div class="max-w-4xl mx-auto px-4">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <div class="flex justify-center space-x-4 mb-6">
-                <a href="{{ url_for('procuracao.selecionar_modelo') }}" class="futuristic-nav-btn inline-flex items-center space-x-2">
-                    <i class="fas fa-arrow-left"></i>
-                    <span>Voltar</span>
+<div class="min-h-screen py-4 px-4 print:py-2">
+    <div class="max-w-4xl mx-auto">
+        <!-- Cabeçalho (visível apenas na tela) -->
+        <div class="mb-6 print:hidden">
+            <div class="flex justify-between items-center mb-4">
+                <a href="{{ url_for('procuracao.selecionar_modelo') }}"
+                   class="px-3 py-2 border border-gray-600 text-gray-300 rounded hover:bg-gray-700 transition-colors text-sm">
+                    <i class="fas fa-arrow-left mr-2"></i>Voltar
                 </a>
-                <button onclick="window.print()" class="futuristic-nav-btn-primary inline-flex items-center space-x-2">
-                    <i class="fas fa-print mr-2"></i>
-                    <span>Imprimir</span>
+                <button onclick="window.print()" 
+                        class="px-3 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm">
+                    <i class="fas fa-print mr-2"></i>Imprimir
                 </button>
             </div>
         </div>
 
         <!-- Documento da Procuração -->
-        <div class="glass-effect-advanced rounded-2xl p-8 border border-cyan-500/20 print:bg-white print:border-gray-300">
+        <div class="bg-white border border-gray-300 rounded-lg p-6 print:p-0 print:border-0 print:shadow-none">
             <!-- Cabeçalho do Documento -->
-            <div class="text-center mb-8 border-b border-cyan-500/20 pb-6 print:border-gray-300">
-                <h2 class="text-2xl font-bold text-gray-300 print:text-black mb-2">PROCURAÇÃO PARTICULAR</h2>
-                <p class="text-gray-300 print:text-gray-300 text-sm">
-                    (Específica para serviços de Veículos - DETRAN-PE)
-                </p>
+            <div class="text-center mb-8 border-b border-gray-400 pb-4">
+                <h1 class="text-2xl font-bold text-gray-900 mb-2 print:text-3xl">PROCURAÇÃO PARTICULAR</h1>
+                <p class="text-gray-700 text-base">(Específica para serviços de Veículos - DETRAN-PE)</p>
             </div>
 
             <!-- Seção Outorgante -->
             <div class="mb-8">
-                <h3 class="text-lg font-semibold text-cyan-400 mb-4 print:text-gray-300 border-b border-cyan-500/20 pb-2 print:border-gray-300">
-                    OUTORGANTE (Dados do Proprietário) — <span class="text-red-500 text-sm">*Campos obrigatórios*</span>
-                </h3>
-                <div class="grid md:grid-cols-2 gap-4 text-gray-300 print:text-black">
-                    <div><strong>Nome completo:</strong> {{ dados.destinatario.nome_destinatario }}</div>
-                    <div><strong>CPF / CNPJ</strong> {{ dados.destinatario.cnpj_destinatario }}</div>
-                    <div><strong>Endereço:</strong> {{ dados.destinatario.endereco_destinatario }}</div>
-                    <div><strong>Bairro:</strong> {{ dados.destinatario.bairro_destinatario }}</div>
-                    <div><strong>CEP:</strong> {{ dados.destinatario.cep_destinatario }}</div>
-                    <div><strong>Cidade:</strong> {{ dados.destinatario.cidade_destinatario }}</div>
-                    <div><strong>UF:</strong> {{ dados.destinatario.uf_destinatario }}</div>
+                <h2 class="text-lg font-semibold text-gray-900 mb-4 border-b border-gray-300 pb-2 print:font-bold">
+                    OUTORGANTE (Dados do Proprietário)
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-base text-gray-800">
+                    <div><strong class="text-gray-900">Nome completo:</strong> {{ dados.destinatario.nome_destinatario }}</div>
+                    <div><strong class="text-gray-900">CPF / CNPJ:</strong> {{ dados.destinatario.cnpj_destinatario }}</div>
+                    <div><strong class="text-gray-900">Endereço:</strong> {{ dados.destinatario.endereco_destinatario }}</div>
+                    <div><strong class="text-gray-900">Bairro:</strong> {{ dados.destinatario.bairro_destinatario }}</div>
+                    <div><strong class="text-gray-900">CEP:</strong> {{ dados.destinatario.cep_destinatario }}</div>
+                    <div><strong class="text-gray-900">Cidade:</strong> {{ dados.destinatario.cidade_destinatario }}</div>
+                    <div><strong class="text-gray-900">UF:</strong> {{ dados.destinatario.uf_destinatario }}</div>
                 </div>
             </div>
 
             <!-- Seção Outorgado -->
             <div class="mb-8">
-                <h3 class="text-lg font-semibold text-cyan-400 mb-4 print:text-gray-300 border-b border-cyan-500/20 pb-2 print:border-gray-300">
-                    OUTORGADO (Procurador Legal) — <span class="text-red-500 text-sm">*Campos obrigatórios*</span>
-                </h3>
+                <h2 class="text-lg font-semibold text-gray-900 mb-4 border-b border-gray-300 pb-2 print:font-bold">
+                    OUTORGADO (Procurador Legal)
+                </h2>
                 {% if despachante %}
-                    {% if despachante.enderecos | length  > 0 %}
-                    <div class="grid md:grid-cols-2 gap-4 text-gray-300 print:text-black">
-                        <div><strong>Nome completo:</strong> {{ despachante.username | upper }}</div>
-                        <div><strong>CPF / CNPJ:</strong> {{ despachante.cpf_cnpj }}</div>
-                        <div><strong>RG:</strong> {{ despachante.rg }}</div>
-                        <div><strong>Cep:</strong> {{ despachante.enderecos[-1].cep }}</div>
-                        <div><strong>Rua:</strong> {{ despachante.enderecos[-1].rua | upper }}</div>
-                        <div><strong>Bairro:</strong> {{ despachante.enderecos[-1].bairro | title }}</div>
-                        <div><strong>Cidade:</strong> {{ despachante.enderecos[-1].cidade | title }}</div>
-                        <div><strong>UF:</strong> {{ despachante.enderecos[-1].uf | upper }}</div>
+                    {% if despachante.enderecos | length > 0 %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-base text-gray-800">
+                        <div><strong class="text-gray-900">Nome completo:</strong> {{ despachante.username | upper }}</div>
+                        <div><strong class="text-gray-900">CPF / CNPJ:</strong> {{ despachante.cpf_cnpj }}</div>
+                        <div><strong class="text-gray-900">RG:</strong> {{ despachante.rg }}</div>
+                        <div><strong class="text-gray-900">CEP:</strong> {{ despachante.enderecos[-1].cep }}</div>
+                        <div><strong class="text-gray-900">Rua:</strong> {{ despachante.enderecos[-1].rua | upper }}</div>
+                        <div><strong class="text-gray-900">Bairro:</strong> {{ despachante.enderecos[-1].bairro | title }}</div>
+                        <div><strong class="text-gray-900">Cidade:</strong> {{ despachante.enderecos[-1].cidade | title }}</div>
+                        <div><strong class="text-gray-900">UF:</strong> {{ despachante.enderecos[-1].uf | upper }}</div>
                     </div>
                     {% else %}
-                    <div class="grid md:grid-cols-2 gap-4 text-gray-300 print:text-black">
-                        <div><strong>Nome completo:</strong></div>
-                        <div><strong>CPF / CNPJ:</strong></div>
-                        <div><strong>RG:</strong></div>
-                        <div><strong>Cep:</strong></div>
-                        <div><strong>Rua:</strong></div>
-                        <div><strong>Bairro:</strong></div>
-                        <div><strong>Cidade:</strong></div>
-                        <div><strong>UF:</strong></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-base text-gray-800">
+                        <div><strong class="text-gray-900">Nome completo:</strong></div>
+                        <div><strong class="text-gray-900">CPF / CNPJ:</strong></div>
+                        <div><strong class="text-gray-900">RG:</strong></div>
+                        <div><strong class="text-gray-900">CEP:</strong></div>
+                        <div><strong class="text-gray-900">Rua:</strong></div>
+                        <div><strong class="text-gray-900">Bairro:</strong></div>
+                        <div><strong class="text-gray-900">Cidade:</strong></div>
+                        <div><strong class="text-gray-900">UF:</strong></div>
                     </div>
                     {% endif %}
                 {% endif %}
@@ -80,86 +76,232 @@
 
             <!-- Dados do Veículo -->
             <div class="mb-8">
-                <h3 class="text-lg font-semibold text-cyan-400 mb-4 print:text-gray-300 border-b border-cyan-500/20 pb-2 print:border-gray-300">
-                    DADOS DO VEÍCULO — <span class="text-red-500 text-sm">*Campos obrigatórios*</span>
-                </h3>
-                <div class="grid md:grid-cols-2 gap-4 text-gray-300 print:text-black">
-                    <div><strong>Placa:</strong>Novo</div>
-                    <div><strong>Renavan:</strong>Novo</div>
-                    <div><strong>Marca / Modelo:</strong> {{ dados.produto.nome_produto }}</div>
-                    <div><strong>Chassi:</strong> {{ dados.produto.chassi }}</div>
-                    <div><strong>Valor NF:</strong> {{ dados.produto.valor_total_nota }}</div>
-                    <div><strong>Cor Predominante:</strong> {{ dados.produto.cor_produto }}</div>
-                    <div><strong>Num Motor:</strong> {{ dados.produto.numero_motor }}</div>
-                    <div><strong>ano modelo:</strong> {{ dados.produto.ano_modelo }}</div>
-                    <div><strong>ano fabricacao:</strong> {{ dados.produto.ano_fabricacao }}</div>
+                <h2 class="text-lg font-semibold text-gray-900 mb-4 border-b border-gray-300 pb-2 print:font-bold">
+                    DADOS DO VEÍCULO
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-base text-gray-800">
+                    <div><strong class="text-gray-900">Placa:</strong> Novo</div>
+                    <div><strong class="text-gray-900">Renavan:</strong> Novo</div>
+                    <div><strong class="text-gray-900">Marca / Modelo:</strong> {{ dados.produto.nome_produto }}</div>
+                    <div><strong class="text-gray-900">Chassi:</strong> {{ dados.produto.chassi }}</div>
+                    <div><strong class="text-gray-900">Valor NF:</strong> {{ dados.produto.valor_total_nota }}</div>
+                    <div><strong class="text-gray-900">Cor Predominante:</strong> {{ dados.produto.cor_produto }}</div>
+                    <div><strong class="text-gray-900">Nº Motor:</strong> {{ dados.produto.numero_motor }}</div>
+                    <div><strong class="text-gray-900">Ano Modelo:</strong> {{ dados.produto.ano_modelo }}</div>
+                    <div><strong class="text-gray-900">Ano Fabricação:</strong> {{ dados.produto.ano_fabricacao }}</div>
                 </div>
             </div>
 
             <!-- Serviços Autorizados -->
             <div class="mb-8">
-                <h3 class="text-lg font-semibold text-cyan-400 mb-4 print:text-gray-300 border-b border-cyan-500/20 pb-2 print:border-gray-300">
-                    SERVIÇOS AUTORIZADOS (Obrigatório especificar)
-                </h3>
-                <div class="text-gray-300 print:text-black">
-                    <strong>Serviços autorizados:</strong>
-                </div>
+                <h2 class="text-lg font-semibold text-gray-900 mb-4 border-b border-gray-300 pb-2 print:font-bold">
+                    SERVIÇOS AUTORIZADOS:
+                </h2>
             </div>
 
             <!-- Texto da Procuração -->
-            <div class="mb-8 text-gray-300 print:text-black leading-relaxed">
+            <div class="mb-8 text-base text-gray-800 leading-relaxed">
                 <p class="mb-4">
-                    O(a) OUTORGANTE acima identificado(a) concede plenos poderes ao OUTORGADO indicado, para representá-lo(a) perante o DETRAN-PE e/ou CIRETRANs, podendo assinar, requerer, desistir, receber documentos e praticar todos os atos necessários ao cumprimento deste mandato.
+                    O(a) OUTORGANTE acima identificado(a) concede plenos poderes ao OUTORGADO indicado, para 
+                    representá-lo(a) perante o DETRAN-PE e/ou CIRETRANs, podendo assinar, requerer, desistir,
+                    receber documentos e praticar todos os atos necessários ao cumprimento deste mandato.
                 </p>
             </div>
 
             <!-- Assinaturas -->
-            <div class="grid md:grid-cols-2 gap-8 mt-12">
-                <div class="text-center">
-                    <p class="text-gray-600 print:text-gray-300 mb-4">Local e data: ___________________________________________</p>
-                    <p class="text-gray-300 print:text-black font-semibold mb-2">Assinatura do Outorgante:</p>
-                    <div class="border-t border-gray-400 pt-8 mt-4">_______________________________________________________________</div>
+            <div class="mt-12 pt-8 border-t border-gray-400">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="text-center">
+                        <p class="text-base text-gray-700 mb-6">Local e data: ___________________________________________</p>
+                        <p class="font-semibold text-gray-900 mb-2">Assinatura do Outorgante:</p>
+                        <div class="border-t border-gray-500 pt-8 mt-4 text-gray-900">_______________________________________________________________</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Rodapé do DETRAN -->
-            <div class="mt-12 pt-6 border-t border-gray-300 text-center text-gray-600 print:text-gray-300 text-sm">
-                <p><strong>DETRAN-PE / Departamento Estadual de Trânsito de Pernambuco</strong></p>
+            <!-- Rodapé do DETRAN 
+            <div class="mt-16 pt-6 border-t border-gray-400 text-center text-sm text-gray-700">
+                <p class="font-semibold text-gray-900">DETRAN-PE / Departamento Estadual de Trânsito de Pernambuco</p>
                 <p>Estrada do Barbalho, 889 - Iputinga - Recife/PE - CEP: 50.690-900</p>
                 <p>CNPJ: 09.753.781/0001-60 | Teleatendimento: +55 81 3184.8109 / 3184.8129</p>
-            </div>
+            </div> -->
         </div>
 
-        <!-- Ações -->
-        <div class="flex justify-center space-x-4 mt-8 print:hidden">
-            <button onclick="window.print()" class="futuristic-nav-btn-primary inline-flex items-center space-x-2 px-6 py-3">
-                <i class="fas fa-print mr-2"></i>
-                <span>Imprimir Procuração</span>
+        <!-- Ações (visível apenas na tela) -->
+        <div class="flex justify-center gap-3 mt-8 print:hidden">
+            <button onclick="window.print()" 
+                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                <i class="fas fa-print mr-2"></i>Imprimir Procuração
             </button>
-            <a href="{{ url_for('procuracao.selecionar_modelo') }}" class="futuristic-nav-btn inline-flex items-center space-x-2 px-6 py-3">
-                <i class="fas fa-plus mr-2"></i>
-                <span>Nova Procuração</span>
+            <a href="{{ url_for('procuracao.selecionar_modelo') }}" 
+               class="px-4 py-2 border border-gray-600 text-gray-300 rounded hover:bg-gray-700 transition-colors text-sm">
+                <i class="fas fa-plus mr-2"></i>Nova Procuração
             </a>
         </div>
     </div>
 </div>
 
 <style>
-@media print {
-    .glass-effect-advanced {
-        background: white !important;
-        border: 1px solid #ccc !important;
-        box-shadow: none !important;
+    /* Estilos para impressão - mais escuros */
+    @media print {
+        @page {
+            margin: 1.5cm;
+        }
+        
+        body {
+            background: white !important;
+            color: #1a202c !important; /* Cinza muito escuro */
+            font-size: 14pt;
+            line-height: 1.6;
+        }
+        
+        .print\:hidden {
+            display: none !important;
+        }
+        
+        .bg-white {
+            background: white !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+        }
+        
+        /* Texto mais escuro */
+        h1, h2, h3, strong {
+            color: #000 !important; /* Preto puro */
+        }
+        
+        .text-gray-800, .text-gray-700, .text-gray-900 {
+            color: #1a202c !important; /* Cinza muito escuro */
+        }
+        
+        /* Bordas mais escuras */
+        .border-gray-300, .border-gray-400, .border-gray-500 {
+            border-color: #4a5568 !important; /* Cinza escuro */
+        }
+        
+        /* Tamanho de fonte maior para impressão */
+        .text-base {
+            font-size: 14pt !important;
+        }
+        
+        .text-lg {
+            font-size: 16pt !important;
+        }
+        
+        .text-2xl {
+            font-size: 20pt !important;
+        }
+        
+        /* Melhor espaçamento */
+        .mb-8 {
+            margin-bottom: 2rem !important;
+        }
+        
+        .mt-12 {
+            margin-top: 3rem !important;
+        }
+        
+        .mt-16 {
+            margin-top: 4rem !important;
+        }
+        
+        /* Garantir quebra de página adequada */
+        .grid {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+        
+        /* Remover todos os efeitos visuais */
+        * {
+            text-shadow: none !important;
+            box-shadow: none !important;
+        }
     }
-    .futuristic-nav-btn, .futuristic-nav-btn-primary {
-        display: none !important;
+    
+    /* Estilos para visualização na tela */
+    @media screen {
+        .bg-white {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        /* Cores mais escuras para melhor legibilidade na tela */
+        .text-gray-800 {
+            color: #2d3748;
+        }
+        
+        .text-gray-900 {
+            color: #1a202c;
+        }
     }
-    body {
-        background: white !important;
-        color: black !important;
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .grid-cols-2, .md\:grid-cols-2 {
+            grid-template-columns: 1fr;
+        }
+        
+        .p-6 {
+            padding: 1.5rem !important;
+        }
+        
+        .text-base {
+            font-size: 0.95rem;
+        }
     }
-}
 </style>
+
+<script>
+    // Otimizar para impressão
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ajustar layout para mobile
+        function adjustLayout() {
+            if (window.innerWidth < 768) {
+                // Ajustar espaçamento em mobile
+                document.querySelectorAll('.grid').forEach(grid => {
+                    if (grid.classList.contains('md:grid-cols-2')) {
+                        grid.classList.add('grid-cols-1');
+                    }
+                });
+            }
+        }
+        
+        adjustLayout();
+        window.addEventListener('resize', adjustLayout);
+        
+        // Adicionar cabeçalho de impressão com data/hora
+        window.addEventListener('beforeprint', function() {
+            // Adicionar cabeçalho de impressão
+            const printInfo = document.createElement('div');
+            printInfo.className = 'print-only mb-6 pb-4 border-b border-gray-400 text-xs text-gray-700';
+            printInfo.innerHTML = `
+                <div class="flex justify-between">
+                    <div>
+                        <strong>Documento gerado por:</strong> Sistema Andrade
+                    </div>
+                    <div>
+                        <strong>Data:</strong> ${new Date().toLocaleDateString('pt-BR')}
+                        <span class="mx-2">|</span>
+                        <strong>Hora:</strong> ${new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}
+                    </div>
+                </div>
+            `;
+            
+            const container = document.querySelector('.bg-white');
+            if (container && container.firstChild) {
+                container.insertBefore(printInfo, container.firstChild);
+            }
+        });
+        
+        // Limpar após impressão
+        window.addEventListener('afterprint', function() {
+            const printInfo = document.querySelector('.print-only');
+            if (printInfo) {
+                printInfo.remove();
+            }
+        });
+    });
+</script>
 {% endblock %}
 
 {% set hide_navbar = True %}

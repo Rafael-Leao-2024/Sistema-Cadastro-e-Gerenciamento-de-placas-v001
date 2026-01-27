@@ -1,180 +1,220 @@
 {% extends "layout.html" %}
-
 {% block title %}Procuração - Veículos Novos{% endblock %}
 
 {% block content %}
-<div class="min-h-screen py-8">
-    <div class="max-w-2xl mx-auto px-4">
-        <!-- Header -->
-        <div class="text-center mb-8">
-            <a href="{{ url_for('procuracao.selecionar_modelo') }}" class="futuristic-nav-btn inline-flex items-center space-x-2 mb-6">
-                <i class="fas fa-arrow-left"></i>
-                <span>Voltar</span>
-            </a>
-            <h1 class="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-4">
-                Procuração - Veículos Novos
-            </h1>
-            <p class="text-cyan-200/70">
-                Faça upload do documento para preencher automaticamente a procuração
-            </p>
+<div class="min-h-[70vh] py-8 px-4">
+    <div class="max-w-md mx-auto">
+        <!-- Cabeçalho -->
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <a href="{{ url_for('procuracao.selecionar_modelo') }}" 
+                   class="text-gray-400 hover:text-gray-300 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Voltar
+                </a>
+            </div>
+            <h1 class="text-xl font-semibold text-gray-100 mb-2">Procuração - Veículos Novos</h1>
+            <p class="text-gray-400 text-sm">Faça upload do documento</p>
         </div>
 
-        <!-- Formulário de Upload -->
-        <div class="glass-effect-advanced rounded-2xl p-8 border border-cyan-500/20">
-            <form method="POST" enctype="multipart/form-data" class="space-y-6">
-                <div class="text-center">
-                    <div class="w-24 h-24 mx-auto mb-4 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 flex items-center justify-center">
-                        <i class="fas fa-file-upload text-white text-3xl"></i>
+        <!-- Formulário -->
+        <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+            <form method="POST" enctype="multipart/form-data" class="space-y-4">
+                <!-- Upload compacto -->
+                <div>
+                    <div class="mb-3">
+                        <div class="w-12 h-12 mx-auto mb-3 rounded-full bg-blue-600 flex items-center justify-center">
+                            <i class="fas fa-upload text-white"></i>
+                        </div>
+                        <p class="text-gray-400 text-xs text-center">
+                            Formatos: PDF, DOC, DOCX, TXT
+                        </p>
                     </div>
-                    <h3 class="text-xl font-semibold text-cyan-100 mb-2">Upload do Documento</h3>
-                    <p class="text-cyan-200/70 text-sm mb-6">
-                        Formatos aceitos: PDF, DOC, DOCX, TXT
-                    </p>
+
+                    <!-- Input de arquivo compacto -->
+                    <div class="relative">
+                        <input type="file" 
+                               name="documento" 
+                               id="documento"
+                               class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                               accept=".pdf,.doc,.docx,.txt" 
+                               required>
+                        <div class="border-2 border-dashed border-gray-600 rounded-lg p-4 text-center hover:border-gray-500 transition-colors">
+                            <div id="file-display" class="space-y-2">
+                                <div class="text-gray-300 text-sm">Selecione o arquivo</div>
+                                <div class="text-gray-500 text-xs">ou arraste aqui</div>
+                            </div>
+                            <div id="selected-file" class="hidden">
+                                <div class="flex items-center justify-between">
+                                    <div class="text-left">
+                                        <div class="text-gray-300 text-sm truncate" id="file-name"></div>
+                                        <div class="text-gray-500 text-xs" id="file-size"></div>
+                                    </div>
+                                    <button type="button" 
+                                            onclick="clearFile()"
+                                            class="text-gray-400 hover:text-red-400 ml-2">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="border-2 border-dashed border-cyan-500/30 rounded-xl p-8 text-center hover:border-cyan-400/50 transition-colors duration-300">
-                    <input type="file" name="documento" id="documento" 
-                           class="hidden" accept=".pdf,.doc,.docx,.txt" required>
-                    <label for="documento" class="cursor-pointer">
-                        <i class="fas fa-cloud-upload-alt text-cyan-400 text-4xl mb-4"></i>
-                        <p id="file-instructions" class="text-cyan-200 mb-2">Clique para selecionar o arquivo</p>
-                        <p id="file-name" class="text-cyan-400 font-semibold mb-2 hidden"></p>
-                        <p id="file-hint" class="text-cyan-200/70 text-sm">ou arraste e solte aqui</p>
-                    </label>
-                </div>
-
-                <div class="flex items-center justify-center space-x-4 pt-4">
-                    <button type="submit" 
-                            class="futuristic-nav-btn-primary px-8 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105">
-                        <i class="fas fa-magic mr-2"></i>
-                        Gerar Procuração
-                    </button>
-                </div>
+                <!-- Botão -->
+                <button type="submit" 
+                        class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm">
+                    <i class="fas fa-file-contract mr-2"></i>
+                    Gerar Procuração
+                </button>
             </form>
+        </div>
+
+        <!-- Informações -->
+        <div class="mt-6 bg-gray-800 rounded-lg border border-gray-700 p-4">
+            <div class="space-y-2">
+                <div class="flex items-center text-gray-400 text-sm">
+                    <i class="fas fa-info-circle text-blue-400 mr-2"></i>
+                    <span>O sistema preencherá automaticamente a procuração</span>
+                </div>
+                <div class="flex items-center text-gray-400 text-sm">
+                    <i class="fas fa-file-alt text-green-400 mr-2"></i>
+                    <span>Documento será processado em segundos</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<script>
-
-// Adicione este script ao seu HTML existente
-
-document.addEventListener('DOMContentLoaded', function() {
-    const fileInput = document.getElementById('documento');
-    const fileInstructions = document.getElementById('file-instructions');
-    const fileName = document.getElementById('file-name');
-    const fileHint = document.getElementById('file-hint');
-    
-    fileInput.addEventListener('change', function(e) {
-        if (e.target.files.length > 0) {
-            const selectedFile = e.target.files[0];
-            const fileNameText = selectedFile.name;
-            const fileSize = (selectedFile.size / 1024 / 1024).toFixed(2); // Tamanho em MB
-            
-            // Mostrar o nome do arquivo
-            fileName.textContent = `${fileNameText} (${fileSize} MB)`;
-            fileName.classList.remove('hidden');
-            
-            // Atualizar textos
-            fileInstructions.textContent = 'Arquivo selecionado:';
-            fileHint.textContent = 'Clique para alterar o arquivo';
-            
-            // Adicionar efeito visual de confirmação
-            fileInput.parentElement.classList.add('border-cyan-400', 'bg-cyan-400/5');
-        } else {
-            // Resetar se não há arquivo
-            resetFileDisplay();
-        }
-    });
-
-    const form = document.querySelector('form');
-    const submitBtn = document.querySelector('button[type="submit"]');
-    
-    form.addEventListener('submit', function() {
-        // Desabilitar botão e mostrar loading
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processando...';
-        submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
-        
-        // Adicionar overlay de loading
-        const overlay = document.createElement('div');
-        overlay.id = 'loadingOverlay';
-        overlay.className = 'fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50';
-        overlay.innerHTML = `
-            <div class="glass-effect-advanced rounded-2xl p-8 text-center">
-                <div class="w-16 h-16 mx-auto mb-4">
-                    <div class="relative w-full h-full">
-                        <div class="absolute inset-0 rounded-full border-4 border-cyan-500/30"></div>
-                        <div class="absolute inset-0 rounded-full border-4 border-transparent border-t-cyan-400 animate-spin"></div>
-                    </div>
-                </div>
-                <h3 class="text-lg font-semibold text-cyan-100 mb-2">Gerando Procuração</h3>
-                <p class="text-cyan-200/70 text-sm">Por favor, aguarde...</p>
-            </div>
-        `;
-        document.body.appendChild(overlay);
-    });
-    
-    // Drag and drop functionality
-    const dropArea = fileInput.parentElement;
-    
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, preventDefaults, false);
-    });
-    
-    function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-    
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropArea.addEventListener(eventName, highlight, false);
-    });
-    
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, unhighlight, false);
-    });
-    
-    function highlight() {
-        dropArea.classList.add('border-cyan-400', 'bg-cyan-400/10');
-    }
-    
-    function unhighlight() {
-        dropArea.classList.remove('border-cyan-400', 'bg-cyan-400/10');
-    }
-    
-    dropArea.addEventListener('drop', handleDrop, false);
-    
-    function handleDrop(e) {
-        const dt = e.dataTransfer;
-        const files = dt.files;
-        fileInput.files = files;
-        
-        // Disparar o evento change manualmente
-        const event = new Event('change');
-        fileInput.dispatchEvent(event);
-    }
-    
-    function resetFileDisplay() {
-        fileName.classList.add('hidden');
-        fileInstructions.textContent = 'Clique para selecionar o arquivo';
-        fileHint.textContent = 'ou arraste e solte aqui';
-        fileInput.parentElement.classList.remove('border-cyan-400', 'bg-cyan-400/5');
-    }
-});
-</script>
-
 <style>
-.hidden {
-    display: none;
-}
-
-.border-cyan-400\/5 {
-    border-color: rgba(34, 211, 238, 0.05);
-}
-
-.bg-cyan-400\/10 {
-    background-color: rgba(34, 211, 238, 0.1);
-}
+    /* Animações */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .bg-gray-800.rounded-lg {
+        animation: fadeIn 0.3s ease-out;
+    }
+    
+    /* Drag and drop highlight */
+    .border-dashed.border-gray-600 {
+        transition: all 0.2s ease;
+    }
+    
+    .border-dashed.border-gray-600:hover {
+        border-color: #4b5563;
+        background-color: rgba(55, 65, 81, 0.3);
+    }
+    
+    /* Responsividade extra */
+    @media (max-width: 640px) {
+        .max-w-md {
+            max-width: 100%;
+        }
+    }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('documento');
+        const fileDisplay = document.getElementById('file-display');
+        const selectedFile = document.getElementById('selected-file');
+        const fileName = document.getElementById('file-name');
+        const fileSize = document.getElementById('file-size');
+        
+        // Gerenciar seleção de arquivo
+        fileInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                
+                // Mostrar informações do arquivo
+                fileName.textContent = file.name;
+                fileSize.textContent = formatFileSize(file.size);
+                
+                // Trocar displays
+                fileDisplay.classList.add('hidden');
+                selectedFile.classList.remove('hidden');
+            }
+        });
+        
+        // Drag and drop
+        const dropZone = fileInput.parentElement;
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, function() {
+                dropZone.classList.add('border-blue-500', 'bg-blue-500/10');
+            }, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, function() {
+                dropZone.classList.remove('border-blue-500', 'bg-blue-500/10');
+            }, false);
+        });
+        
+        dropZone.addEventListener('drop', function(e) {
+            const files = e.dataTransfer.files;
+            fileInput.files = files;
+            
+            // Disparar evento change
+            const event = new Event('change');
+            fileInput.dispatchEvent(event);
+        });
+        
+        // Loading no submit
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function() {
+            if (!fileInput.files.length) {
+                alert('Selecione um arquivo primeiro');
+                return false;
+            }
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalHTML = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processando...';
+            submitBtn.disabled = true;
+            
+            // Reset após 10 segundos (caso erro)
+            setTimeout(() => {
+                submitBtn.innerHTML = originalHTML;
+                submitBtn.disabled = false;
+            }, 10000);
+        });
+        
+        // Formatar tamanho do arquivo
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // Função global para limpar arquivo
+        window.clearFile = function() {
+            fileInput.value = '';
+            fileDisplay.classList.remove('hidden');
+            selectedFile.classList.add('hidden');
+        };
+    });
+</script>
 {% endblock %}

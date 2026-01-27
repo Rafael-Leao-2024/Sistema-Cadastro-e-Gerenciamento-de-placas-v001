@@ -1,7 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect
 from flask_login import login_required, current_user
-import os
-from werkzeug.utils import secure_filename
 from grupo_andrade.procuracao.funcao_ia import ler_pdf, leito_nota_fiscal_ia
 from grupo_andrade.models import User
 
@@ -15,8 +13,6 @@ UPLOAD_FOLDER = 'uploads/procuracao'
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-
 
 @procuracao.route("/procuracao")
 @login_required
@@ -35,7 +31,6 @@ def veiculos_novos():
         if not despachante:
             flash("Selecione um despachante ", "info")
             return redirect(request.url)
-        # Processar upload do arquivo
         if 'documento' not in request.files:
             flash('Nenhum arquivo selecionado', 'error')
             return redirect(request.url)
@@ -46,8 +41,6 @@ def veiculos_novos():
             return redirect(request.url)
         
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-
             try:
                 texto_saida = ler_pdf(file)
                 
@@ -59,51 +52,9 @@ def veiculos_novos():
                     return redirect(request.url)
             except:
                 flash('Selecione uma nota fiscal para criar a procuraçao', 'info')
-                return redirect(request.url)
-            # Simulando dados processados do arquivo
-            
-            
+                return redirect(request.url)            
             return render_template('procuracao/procuracao_pronta.html',
                                  modelo='veiculos_novos',
-                                 dados=resultado_estruturado, despachante=despachante)
-    
+                                 titulo=resultado_estruturado.produto.chassi,
+                                 dados=resultado_estruturado, despachante=despachante)    
     return render_template("procuracao/form_veiculos_novos.html")
-
-
-@procuracao.route("/procuracao/transferencia", methods=['GET', 'POST'])
-@login_required
-def transferencia():
-    """Modelo de procuração para transferência"""
-    if request.method == 'POST':
-        despachante = User.query.filter(User.id == current_user.despachante).first()
-        # Processar upload do arquivo
-        if 'documento' not in request.files:
-            flash('Nenhum arquivo selecionado', 'error')
-            return redirect(request.url)
-        
-        file = request.files['documento']
-        if file.filename == '':
-            flash('Nenhum arquivo selecionado', 'error')
-            return redirect(request.url)
-        
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            
-            texto_saida = ler_pdf(file)
-            resultado_estruturado = leito_nota_fiscal_ia(texto=texto_saida)
-            
-            flash('Documento processado com sucesso!', 'success')
-            return render_template('procuracao/procuracao_pronta.html',
-                                   despachante=despachante,
-                                   modelo='transferencia',
-                                    dados=resultado_estruturado)
-    
-    return render_template("procuracao/form_transferencia.html")
-
-
-@procuracao.route("/procuracao/padrao")
-@login_required
-def procuracao_padrao():
-    """Procuração padrão"""
-    conteudo = {"conteudo": "conteudo1"}
-    return render_template("procuracao/procuracao_padrao.html", context=conteudo)
