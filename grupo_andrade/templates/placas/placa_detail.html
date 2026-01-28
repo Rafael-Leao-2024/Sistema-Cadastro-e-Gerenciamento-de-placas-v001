@@ -46,15 +46,52 @@
               <!-- Placa -->
               <div>
                 <label class="block text-gray-400 text-sm mb-2">Placa</label>
-                <div class="font-mono text-white text-lg bg-gray-700 px-3 py-2 rounded">
-                  {{ placa.placa }}
+                <div
+                  onclick="copiarPlaca('{{ placa.placa }}', this)"
+                  class="flex items-center justify-between gap-2
+                        font-mono text-white text-lg
+                        bg-gray-700 px-3 py-2 rounded
+                        cursor-pointer hover:bg-gray-600 transition"
+                  title="Clique para copiar"
+                >
+                  <span>{{ placa.placa }}</span>
+
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 text-gray-300 hover:text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2V10a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
                 </div>
+
               </div>
 
               <!-- Renavan -->
               <div>
                 <label class="block text-gray-400 text-sm mb-2">Renavan</label>
-                <div class="font-mono text-white">{{ placa.renavan or 'N/A' }}</div>
+                <div
+                    onclick="copiarPlaca('{{ placa.renavan }}', this)"
+                    class="flex items-center justify-between
+                          font-mono text-white text-lg
+                          bg-gray-700 px-3 py-2 rounded
+                          cursor-pointer hover:bg-gray-600 transition"
+                  >
+                    <span>{{ placa.renavan }}</span>
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="h-5 w-5 text-gray-300"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        stroke-width="1.8">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2V10a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+
               </div>
 
               <!-- ID -->
@@ -67,9 +104,27 @@
               <div>
                 <label class="block text-gray-400 text-sm mb-2">Chassi</label>
                 {% if placa.chassi %}
-                <div class="font-mono text-white bg-gray-700 px-3 py-2 rounded break-all">
-                  {{ placa.chassi.upper() }}
+                <div
+                  onclick="copiarPlaca('{{ placa.chassi }}', this)"
+                  class="flex items-center justify-between gap-2
+                        font-mono text-white text-lg
+                        bg-gray-700 px-3 py-2 rounded
+                        cursor-pointer hover:bg-gray-600 transition"
+                  title="Clique para copiar"
+                >
+                  <span>{{ placa.chassi }}</span>
+
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 text-gray-300 hover:text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2V10a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
                 </div>
+
                 {% else %}
                 <div class="text-gray-500 italic">N/A</div>
                 {% endif %}
@@ -316,10 +371,32 @@ input[type="checkbox"]:checked + div {
 </style>
 
 <script>
+  function copiarPlaca(texto, elemento) {
+  const span = elemento.querySelector("span");
+  const original = span.innerText;
+  const svg = elemento.querySelector("svg")
+
+  navigator.clipboard.writeText(texto).then(() => {
+    span.innerText = "Copiado ✔";
+    svg.classList.add("text-green-400")
+
+    setTimeout(() => {
+      span.innerText = original;
+      svg.classList.remove("text-green-400")
+    }, 5000);
+  });
+}
+
+</script>
+
+  
+
+<script>
 // Checkbox toggle functionality
 document.addEventListener('DOMContentLoaded', function() {
   const checkbox = document.getElementById('received');
-  const checkboxDiv = checkbox.nextElementSibling;
+  const checkboxDiv = checkbox.nextElementSibling;4
+  
   
   checkbox.addEventListener('change', function() {
     if (this.checked) {

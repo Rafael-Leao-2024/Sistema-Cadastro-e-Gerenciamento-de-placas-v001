@@ -35,8 +35,8 @@ despachantes ou DETRAN).
   - Destinatário pode aparecer como "Comprador", "Adquirente" ou "Cliente".
   - Produto pode aparecer como "Veículo", "Descrição do Produto" ou "Item".
 - Para dados do veículo, procure informações como:
- - chave de acesso EX: 9999 9999 9999 9999 9999 ...
-  - Chassi
+ - chave de acesso EX: 2625 1156 9571 7500 0227 5500 2000 0003 4557 0010 8357
+  - data de emissao da nota
   - Motor
   - Ano/Modelo
   - Ano/Fabricação

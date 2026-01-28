@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 class Nota(BaseModel):
+    data_emissao: str
     chave_acesso: str
 
 class Remetente(BaseModel):

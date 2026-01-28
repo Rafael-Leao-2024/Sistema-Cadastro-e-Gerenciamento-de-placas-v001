@@ -19,7 +19,6 @@ def injetar_notificacao():
     g.notificacoes_nao_lidas = 0
     if current_user.is_authenticated:
         g.notificacoes_nao_lidas = Notificacao.query.filter_by(id_usuario=current_user.id ,lida=False).count()
-    print(g.notificacoes_nao_lidas)
     return (dict(notificacoes_nao_lidas=g.notificacoes_nao_lidas))
 
 
@@ -324,7 +323,6 @@ def gerenciamento_pedidos():
                 .order_by(desc(Placa.date_create))\
                 .paginate(page=page, per_page=per_page, error_out=False)
     form = PlacaStatusForm()
-    print(placas)
     return render_template('placas/status_manager_placas.html', placas=placas, titulo='gerenciamento', tamanho=placas.total, form=form, page=page)
 
 
