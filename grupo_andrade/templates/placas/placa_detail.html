@@ -371,18 +371,34 @@ input[type="checkbox"]:checked + div {
 </style>
 
 <script>
+  const dadosString = localStorage.getItem('{{ placa.placa }}');
+  const tudo = localStorage.key()
+
+  if (dadosString) {
+    const dados = JSON.parse(dadosString);
+
+    console.log(dados);
+
+    // exemplos de acesso 👇
+    console.log(dados.nota.chave_acesso);
+    console.log(tudo);
+  }
+</script>
+
+
+<script>
   function copiarPlaca(texto, elemento) {
   const span = elemento.querySelector("span");
   const original = span.innerText;
   const svg = elemento.querySelector("svg")
 
   navigator.clipboard.writeText(texto).then(() => {
-    span.innerText = "Copiado ✔";
     svg.classList.add("text-green-400")
+    span.innerText = "Copiado ✔";
 
     setTimeout(() => {
-      span.innerText = original;
       svg.classList.remove("text-green-400")
+      span.innerText = original;
     }, 5000);
   });
 }

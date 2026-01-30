@@ -35,6 +35,7 @@
       <div class="border-b border-gray-700 p-6">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <h2 class="text-lg font-bold text-white">Documentos Anexados</h2>
+          
           <span class="px-3 py-1 bg-gray-700 text-gray-300 rounded text-sm">
             {{ files|length }} arquivo(s)
           </span>
@@ -54,9 +55,13 @@
                 </div>
                 <div class="flex-1 min-w-0">
                   <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
-                    <span class="font-medium text-white truncate" title="{{ file.filename }}">
+                    <span 
+                      class="font-medium text-white break-all sm:break-normal line-clamp-2 sm:line-clamp-none"
+                      title="{{ file.filename }}"
+                    >
                       {{ file.filename }}
                     </span>
+
                     <span class="px-2 py-1 bg-gray-700 text-gray-300 rounded text-xs">
                       ID: {{ file.id }}
                     </span>
@@ -205,4 +210,32 @@
   }
 }
 </style>
+
+<script>
+  
+  const estrutura = {{ estrutura | tojson }};
+  const idPaca = {{ placa.id | tojson }};
+  const salvo = localStorage.getItem(idPaca);
+
+  const estruturaValida =
+    estrutura &&
+    typeof estrutura === 'object' &&
+    Object.keys(estrutura).length > 0;
+
+  const localStorageVazio =
+    salvo === null ||
+    salvo === '' ||
+    salvo === 'null' ||
+    salvo === 'undefined';
+
+  if (estruturaValida && localStorageVazio) {
+    localStorage.setItem(idPaca, JSON.stringify(estrutura));
+  }
+
+  const dados = JSON.parse(localStorage.getItem(idPaca));
+  console.log(idPaca);
+  console.log(dados);
+
+</script>
+
 {% endblock %}
