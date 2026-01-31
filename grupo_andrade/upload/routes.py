@@ -83,6 +83,7 @@ def upload_file_anexo(id_placa):
                                     id_boleto=boleto_db.id
                                 )
                                 db.session.add(taxa_db)
+                            placa.placa_confeccionada = True
                             db.session.commit()
 
                         if "nota fiscal" in saida_texto.lower():
@@ -101,7 +102,7 @@ def upload_file_anexo(id_placa):
 
                     
 
-                        if "categoria" in saida_texto.lower():
+                        if "dados do seguro" in saida_texto.lower():
                             saida_estruturada = leitor_crlv_ia(saida_texto)
                             print(saida_estruturada.veiculo)
                             placa.placa = saida_estruturada.veiculo.placa
@@ -109,6 +110,7 @@ def upload_file_anexo(id_placa):
                             placa.renavan = saida_estruturada.veiculo.codigo_renavam
                             placa.crlv = saida_estruturada.veiculo.numero_do_crv
                             placa.nome_proprietario = saida_estruturada.proprietario.nome
+                            placa.placa_a_caminho = True
                         
                     # RESET do cursor do arquivo para o início antes de enviar para AWS
                     file.seek(0)
@@ -173,6 +175,7 @@ def download_anexos(id_placa):
 
     files = UploadFile.query.filter(UploadFile.id_placa == id_placa).all()
     estrutura = session.get('estrutura')
+    print(estrutura)
     return render_template('upload/download.html', files=files, title="todos Downloads", placa=placa, estrutura=estrutura)
 
 
