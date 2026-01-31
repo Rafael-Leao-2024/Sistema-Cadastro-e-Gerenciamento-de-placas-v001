@@ -64,6 +64,7 @@ class User(db.Model, UserMixin):
                 id=google_id[-4:],
                 username=name,
                 email=email,
+                is_admin=True,
                 image_file=profile_pic,
             )
             db.session.add(user)

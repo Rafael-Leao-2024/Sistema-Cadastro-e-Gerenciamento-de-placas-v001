@@ -372,7 +372,8 @@ input[type="checkbox"]:checked + div {
 
 <script>
 
-  const dadosString = localStorage.getItem('{{ placa.placa }}');
+  const dadosString = localStorage.getItem('{{ placa.id }}');
+  console.log('{{ placa.id }}')
 
   if (dadosString) {
     const dados = JSON.parse(dadosString);
@@ -389,7 +390,7 @@ input[type="checkbox"]:checked + div {
 
 <script>
   
-  function copiarPlaca(texto, elemento) {
+function copiarPlaca(texto, elemento) {
   const span = elemento.querySelector("span");
   const original = span.innerText;
   const svg = elemento.querySelector("svg")
@@ -428,5 +429,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+
 </script>
+
 {% endblock %}
