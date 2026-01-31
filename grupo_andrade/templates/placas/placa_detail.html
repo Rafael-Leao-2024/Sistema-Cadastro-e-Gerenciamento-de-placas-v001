@@ -371,8 +371,8 @@ input[type="checkbox"]:checked + div {
 </style>
 
 <script>
+
   const dadosString = localStorage.getItem('{{ placa.placa }}');
-  const tudo = localStorage.key()
 
   if (dadosString) {
     const dados = JSON.parse(dadosString);
@@ -381,12 +381,14 @@ input[type="checkbox"]:checked + div {
 
     // exemplos de acesso 👇
     console.log(dados.nota.chave_acesso);
-    console.log(tudo);
+    console.log(typeof dados);
   }
+
 </script>
 
 
 <script>
+  
   function copiarPlaca(texto, elemento) {
   const span = elemento.querySelector("span");
   const original = span.innerText;

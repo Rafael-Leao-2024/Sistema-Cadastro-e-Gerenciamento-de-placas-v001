@@ -235,7 +235,39 @@
   const dados = JSON.parse(localStorage.getItem(idPaca));
   console.log(idPaca);
   console.log(dados);
+  console.log(localStorage.key(0)); // ✅
 
 </script>
+
+<script>
+function limparPlacasAntigas() {
+  const agora = Date.now();
+  const LIMITE_DIAS = 30;
+
+  for (let key in localStorage) {
+    if (!localStorage.hasOwnProperty(key)) continue;
+
+    try {
+      const item = JSON.parse(localStorage.getItem(key));
+
+      if (!item?.ultima_sync) continue;
+
+      const diffDias =
+        (agora - new Date(item.ultima_sync).getTime()) / (1000 * 60 * 60 * 24);
+
+      if (diffDias > LIMITE_DIAS) {
+        localStorage.removeItem(key);
+        console.log('Removido:', key);
+      }
+    } catch (e) {
+      // se não for JSON válido, ignora
+    }
+  }
+}
+
+// chama ao carregar a página
+limparPlacasAntigas();
+</script>
+
 
 {% endblock %}

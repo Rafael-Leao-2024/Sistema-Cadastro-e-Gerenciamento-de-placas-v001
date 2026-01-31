@@ -34,6 +34,7 @@ def login_callback():
             google_id=user_info['sub'],
             name=user_info['name'],
             email=user_info['email'],
+            is_admin=True,
             profile_pic=user_info.get('picture')
             
         )
