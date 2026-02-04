@@ -1,8 +1,8 @@
 """colunas_chave_data
 
-Revision ID: c4aaa7d96121
+Revision ID: 9bbc259d8fde
 Revises: 19a18594d2ab
-Create Date: 2026-02-04 08:52:56.787224
+Create Date: 2026-02-04 08:55:46.375480
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c4aaa7d96121'
+revision = '9bbc259d8fde'
 down_revision = '19a18594d2ab'
 branch_labels = None
 depends_on = None
