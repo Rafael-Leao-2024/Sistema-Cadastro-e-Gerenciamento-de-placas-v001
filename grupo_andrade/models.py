@@ -91,8 +91,8 @@ class Placa(db.Model):
     placa_a_caminho = db.Column(db.Boolean, default=False)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     id_user_recebeu = db.Column(db.Integer)
-    chave_acesso = db.Column(db.String(400), nullable=False, default=" ")
-    data_emissao_nf = db.Column(db.String(10), nullable=False, default=" ")
+    chave_acesso = db.Column(db.String(200), nullable=False, default="vazio")
+    data_emissao_nf = db.Column(db.String(10), nullable=False, default="vazio")
 
     honorario = db.Column(db.Float, nullable=False, default=1.01)
     nome_proprietario = db.Column(db.String(40), unique=False, nullable=True, default="vazio")
