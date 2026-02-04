@@ -43,7 +43,6 @@ def download_file(name):
 @documentos_bp.route('/upload-anexo/<id_placa>', methods=['GET', 'POST'])
 @login_required
 def upload_file_anexo(id_placa):
-    estrutura = {}
     placa = Placa.query.filter(Placa.id == id_placa).first()
     if request.method == 'POST':
         if 'file' not in request.files:
@@ -90,9 +89,11 @@ def upload_file_anexo(id_placa):
                             estrutura = leito_nota_fiscal_ia(saida_texto)
                             print(estrutura)
                             placa.endereco_placa = estrutura.destinatario.endereco_destinatario
+                            placa.nome_proprietario = estrutura.destinatario.nome_destinatario
+                            placa.data_emissao_nf = estrutura.nota.data_emissao
+                            placa.chave_acesso = estrutura.nota.chave_acesso
                             if estrutura.produto.chassi:
                                 placa.chassi = estrutura.produto.chassi
-                            placa.nome_proprietario = estrutura.destinatario.nome_destinatario
         
 
                         if "assinatura do comprador" in saida_texto.lower():
@@ -146,15 +147,7 @@ def upload_file_anexo(id_placa):
             else:
                 flash('apenas arquivos PDFs sao permitidos', 'info')
                 return redirect(url_for('documentos.upload_file_anexo', id_placa=placa.id))
-            
-        if estrutura:
-            estrutura = {
-                "nota": estrutura.nota.model_dump(),
-                "remetente": estrutura.remetente.model_dump(),
-                "destinatario": estrutura.destinatario.model_dump(),
-                "produto": estrutura.produto.model_dump()
-                }
-            session['estrutura'] = estrutura
+        
         return redirect(url_for('documentos.download_anexos', id_placa=id_placa))           
     return render_template('upload/muitos_file.html', title="muitos uploads", placa=placa)
 
@@ -174,9 +167,7 @@ def download_anexos(id_placa):
         return redirect(url_for('placas.gerenciamento_pedidos'))
 
     files = UploadFile.query.filter(UploadFile.id_placa == id_placa).all()
-    estrutura = session.get('estrutura')
-    print(estrutura)
-    return render_template('upload/download.html', files=files, title="todos Downloads", placa=placa, estrutura=estrutura)
+    return render_template('upload/download.html', files=files, title="todos Downloads", placa=placa, estrutura=None)
 
 
 @documentos_bp.route('/upload/<id_file>/delete', methods=['GET', 'POST'])

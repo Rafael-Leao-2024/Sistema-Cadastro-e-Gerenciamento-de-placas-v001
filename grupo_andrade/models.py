@@ -79,7 +79,6 @@ class Placa(db.Model):
     __tablename__ = 'placas'
     
     id = db.Column(db.Integer, primary_key=True)
-
     placa = db.Column(db.String(10), nullable=False, default="ABC1234")
     chassi = db.Column(db.String(30), nullable=True, default=000000)
     renavan = db.Column(db.String(20))
@@ -92,6 +91,8 @@ class Placa(db.Model):
     placa_a_caminho = db.Column(db.Boolean, default=False)
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     id_user_recebeu = db.Column(db.Integer)
+    chave_acesso = db.Column(db.String(400), nullable=False, default=" ")
+    data_emissao_nf = db.Column(db.String(10), nullable=False, default=" ")
 
     honorario = db.Column(db.Float, nullable=False, default=1.01)
     nome_proprietario = db.Column(db.String(40), unique=False, nullable=True, default="vazio")
@@ -186,7 +187,6 @@ class Notificacao(db.Model):
     data_criacao = db.Column(db.DateTime, default=datetime.now)
     id_solicitacao = db.Column(db.Integer, db.ForeignKey('placas.id'), nullable=False)
     id_usuario = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-
 
     def __repr__(self):
         return f"Notificacao(mensagem='{self.mensagem}', lida={self.lida})"

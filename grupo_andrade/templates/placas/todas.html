@@ -122,8 +122,8 @@
                         
                         {% if placa.chassi %}
                         <div class="text-xs text-gray-500 mb-1">Chassi</div>
-                        <div class="text-sm text-gray-300 font-mono bg-gray-900/50 px-2 py-1 rounded border border-gray-700 truncate">
-                            {{ placa.chassi.upper()|truncate(10, true, '...') }}
+                        <div class="text-sm text-gray-300 font-mono bg-gray-900/50 px-2 py-1 rounded border border-gray-700">
+                            {{ placa.chassi.upper() }}
                         </div>
                         {% else %}
                         <div class="text-xs text-gray-500 italic">Chassi não informado</div>

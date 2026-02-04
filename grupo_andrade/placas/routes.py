@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify
+from flask import Blueprint, render_template, redirect, url_for, flash, request, jsonify, session
 from flask_login import login_required, current_user
 from datetime import datetime, timedelta
 from sqlalchemy.orm import joinedload
@@ -53,10 +53,22 @@ def todas():
 def minhas_placas():
     per_page = 10
     page = request.args.get('page', 1, type=int)
-    placas = Placa.query.options(joinedload(Placa.author))\
+
+
+    status = request.args.get('status')
+
+    query = Placa.query.options(joinedload(Placa.author))\
+               .filter_by(id_user=current_user.id)
+    
+    if status:
+        query = query.filter(Placa.received == status)
+                             
+
+    placas = query.options(joinedload(Placa.author))\
                .filter_by(id_user=current_user.id)\
                .order_by(desc(Placa.date_create))\
                .paginate(page=page, per_page=per_page, error_out=False)
+    
     return render_template('placas/minhas_placas.html', placas=placas, titulo='minhas placas')
 
 
@@ -99,8 +111,8 @@ def placa_detail(placa_id):
             else:
                 flash("Nao e possivel desmarcar apos 10 minutos.", 'info')
         db.session.commit()
-        return redirect(url_for('placas.placa_detail', placa_id=placa.id))    
-    return render_template('placas/placa_detail.html', placa=placa, form=form, titulo='detalhes', usuario=usuario, usuario_solicitante=usuario_solicitante)
+        return redirect(url_for('placas.placa_detail', placa_id=placa.id))
+    return render_template('placas/placa_detail.html', placa=placa, form=form, titulo='detalhes', usuario=usuario, usuario_solicitante=usuario_solicitante, estrutura=None)
 
 @placas.route("/minhas-placas/<int:placa_id>/delete", methods=['GET', 'POST'])
 @login_required

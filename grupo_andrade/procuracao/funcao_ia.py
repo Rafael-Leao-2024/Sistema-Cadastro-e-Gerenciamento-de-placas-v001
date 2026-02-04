@@ -27,6 +27,7 @@ As notas podem ter formatos e layouts diferentes (NF-e, DANFE, concessionárias,
 despachantes ou DETRAN).
 
 ### REGRAS IMPORTANTES:
+- O texto da nota fiscal  passado para voce tem vez que muda a extrutura mais sempre vem as informaçoes 
 - Extraia SOMENTE informações presentes no texto.
 - NÃO invente valores.
 - Se um campo não existir ou não estiver claro, retorne string vazia "".
@@ -35,12 +36,12 @@ despachantes ou DETRAN).
   - Destinatário pode aparecer como "Comprador", "Adquirente" ou "Cliente".
   - Produto pode aparecer como "Veículo", "Descrição do Produto" ou "Item".
 - Para dados do veículo, procure informações como:
- - chave de acesso EX: 2625 1156 9571 7500 0227 5500 2000 0003 4557 0010 8357
-  - data de emissao da nota
-  - Motor
-  - Ano/Modelo
-  - Ano/Fabricação
-  - Cor
+    - chave de acesso EX: 2625 1156 9571 7500 0227 5500 2000 0003 4557 0010 8357
+    - data de emissao da nota
+    - Motor
+    - Ano/Modelo
+    - Ano/Fabricação
+    - Cor
 - Caso existam múltiplos produtos, considere o PRINCIPAL (veículo).
 - Retorne EXCLUSIVAMENTE no formato estruturado solicitado.
 - NÃO adicione explicações, comentários ou texto fora do formato.

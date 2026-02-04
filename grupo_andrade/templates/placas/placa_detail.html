@@ -129,6 +129,81 @@
                 <div class="text-gray-500 italic">N/A</div>
                 {% endif %}
               </div>
+
+
+
+              <!-- Dados nota fiscal -->
+              <div>
+                <label class="block text-gray-400 text-sm mb-2">Chave de acesso</label>
+                {% if placa.chave_acesso %}
+                <div
+                  onclick="copiarPlaca('{{ placa.chave_acesso }}', this)"
+                  class="flex items-center justify-between gap-2
+                        font-mono text-white text-lg
+                        bg-gray-700 px-3 py-2 rounded
+                        cursor-pointer hover:bg-gray-600 transition truncate"
+                  title="Clique para copiar"
+                >
+                  <span 
+                  class="
+                  block truncate
+                  max-w-[100px]
+                  sm:max-w-[200px]
+                  md:max-w-[320px]
+                  lg:max-w-[420px]
+                  "
+                  >
+                  {{ placa.chave_acesso }}
+                  </span>
+
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 flex-shrink-0 text-gray-300 hover:text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2V10a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </div>
+
+                {% else %}
+                <div class="text-gray-500 italic">N/A</div>
+                {% endif %}
+              </div>
+
+
+              <!-- data emçao da nota --->
+
+
+              <div>
+                <label class="block text-gray-400 text-sm mb-2">Data emissao NF</label>
+                {% if placa.data_emissao_nf %}
+                <div
+                  onclick="copiarPlaca('{{ placa.data_emissao_nf }}', this)"
+                  class="flex items-center justify-between gap-2
+                        font-mono text-white text-lg
+                        bg-gray-700 px-3 py-2 rounded
+                        cursor-pointer hover:bg-gray-600 transition"
+                  title="Clique para copiar"
+                >
+                  <span>{{ placa.data_emissao_nf }}</span>
+
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 text-gray-300 hover:text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2V10a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </div>
+
+                {% else %}
+                <div class="text-gray-500 italic">N/A</div>
+                {% endif %}
+              </div>
             </div>
 
             <!-- Column 2 -->
