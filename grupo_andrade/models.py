@@ -94,8 +94,8 @@ class Placa(db.Model):
 
     honorario = db.Column(db.Float, nullable=False, default=1.01)
     nome_proprietario = db.Column(db.String(40), unique=False, nullable=True, default="vazio")
-    chave_acesso = db.Column(db.String(200), nullable=False, default="vazio")
-    data_emissao_nf = db.Column(db.String(10), nullable=False, default="vazio")
+    chave_acesso = db.Column(db.String(200), nullable=True, default="vazio")
+    data_emissao_nf = db.Column(db.String(10), nullable=True, default="vazio")
 
     uploads = db.relationship('UploadFile', backref='placa', lazy=True, cascade='all, delete-orphan')
     notificacoes = db.relationship('Notificacao', backref='placa', lazy=True, cascade='all, delete-orphan')

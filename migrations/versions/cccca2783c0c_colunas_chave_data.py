@@ -1,8 +1,8 @@
 """colunas_chave_data
 
-Revision ID: 9bbc259d8fde
+Revision ID: cccca2783c0c
 Revises: 19a18594d2ab
-Create Date: 2026-02-04 08:55:46.375480
+Create Date: 2026-02-04 08:59:15.900680
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '9bbc259d8fde'
+revision = 'cccca2783c0c'
 down_revision = '19a18594d2ab'
 branch_labels = None
 depends_on = None
@@ -21,8 +21,8 @@ def upgrade():
     op.drop_table('message_store_agente')
     op.drop_table('message_store')
     with op.batch_alter_table('placas', schema=None) as batch_op:
-        batch_op.add_column(sa.Column('chave_acesso', sa.String(length=200), nullable=False))
-        batch_op.add_column(sa.Column('data_emissao_nf', sa.String(length=10), nullable=False))
+        batch_op.add_column(sa.Column('chave_acesso', sa.String(length=200), nullable=True))
+        batch_op.add_column(sa.Column('data_emissao_nf', sa.String(length=10), nullable=True))
 
     with op.batch_alter_table('users', schema=None) as batch_op:
         batch_op.alter_column('image_file',
