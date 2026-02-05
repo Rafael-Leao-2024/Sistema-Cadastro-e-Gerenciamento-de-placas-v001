@@ -9,7 +9,7 @@ load_dotenv()
 
 
 class Proprietario(BaseModel):
-    nome: str
+    nome: str = Field(description='nome é o nome do proprietario do veiculo pode ser pessoal ou secretario ou instituiçoes ministerios orgao do governo e etc.')
     cpf: str
     cidade: str
     uf: str
@@ -17,7 +17,7 @@ class Proprietario(BaseModel):
 
 class Veiculo(BaseModel):
     codigo_renavam : str
-    placa: str 
+    placa: str = Field(description="numeraçao de placa do veiculo ")
     numero_do_crv: str
     chassi: str = Field(description="o chassi é 17 caractere ex 95BO151R484RGC844 e começa sempre com numero nao confunda com numero de motor pois e parecido")
 
@@ -32,6 +32,14 @@ def leitor_crlv_ia(input):
 
     prompt = PromptTemplate(
     template="""
+    Antes de responder:
+- Verifique o tamanho EXATO de cada campo
+- Se não bater o tamanho, retorne vazio ""
+- NÃO chute valores parecidos
+- NÃO use número de motor como chassi
+- NÃO use CRV como renavam
+- Se houver dúvida → campo vazio
+
 Extraia APENAS os dados solicitados no formato estruturado.
 
 ⚠️ REGRAS IMPORTANTES (OBRIGATÓRIO SEGUIR):
@@ -56,7 +64,7 @@ TEXTO DO DOCUMENTO:
     partial_variables={"format_instructions": parser.get_format_instructions()},
 )
 
-    modelo = ChatOpenAI(model="gpt-4o-mini", temperature=0.1)
+    modelo = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
     chain = prompt | modelo | parser
 
