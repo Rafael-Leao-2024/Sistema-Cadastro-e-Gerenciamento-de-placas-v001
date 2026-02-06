@@ -120,6 +120,12 @@ def delete(placa_id):
     placa = Placa.query.get(placa_id)
     if not placa:
         raise ValueError("Placa nao existi")
+    
+    if placa.placa_confeccionada:
+        flash("voce nao pode deletar este processo, pois foi iniciado pelo despachante..", "warning")
+        return redirect(url_for('placas.placa_detail', placa_id=placa.id))
+
+
     if placa.author.username != current_user.username:
         if current_user.email != "rafaelampaz6@gmail.com":
             flash("Voce nao tem permissão para deletar esta placa.", "warning")

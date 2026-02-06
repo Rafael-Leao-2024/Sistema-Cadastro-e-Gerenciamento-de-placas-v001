@@ -9,20 +9,26 @@ import os
 
 load_dotenv()
 
+class PlacaSchema(BaseModel):
+    placa: str = Field(description="numeraçao de placa do veiculo ")
+    chassi: str = Field(description="o chassi é 17 caractere ex 95BO151R484RGC844 e começa sempre com numero nao confunda com numero de motor pois e parecido")
+
 
 class Taxa(BaseModel):
     descricao: str 
     valor: float
+    codigo_barra:str
 
 class Boleto(BaseModel):
     taxas: List[Taxa]
+    veiculo: PlacaSchema
 
 
 
 def extrator_taxa_ia(texto):
      
     # 🔧 Configurar modelo (use sua API KEY)
-    llm = ChatOpenAI(model="gpt-4o-mini", api_key=os.environ.get("OPENAI_API_KEY"), temperature=0.5)  # pode usar gpt-4o, gpt-5, etc.
+    llm = ChatOpenAI(model="gpt-4o-mini", api_key=os.environ.get("OPENAI_API_KEY"), temperature=0)  # pode usar gpt-4o, gpt-5, etc.
     parser = PydanticOutputParser(pydantic_object=Boleto)
 
 
@@ -55,6 +61,8 @@ FORMATO DE SAÍDA (OBRIGATÓRIO):
 - Retorne EXCLUSIVAMENTE no formato abaixo
 - descricao: string (descrição clara da taxa)
 - valor: float (valor numérico, sem símbolos, vírgula convertida para ponto)
+- codigo_barra = linha digitável completa apenas com números ex 
+- remova espaços e hífens do código de barras 
 
 {format_instructions}
 

@@ -71,9 +71,7 @@ def upload_file_anexo(id_placa):
                             boleto_db = Boleto(id_placa=id_placa, usuario_id=current_user.id)
                             db.session.add(boleto_db)
                             db.session.commit()
-                            db.session.refresh(boleto_db)
-
-                            print(taxas_estruturadas)
+                            db.session.refresh(boleto_db)                            
 
                             for taxa in taxas_estruturadas.taxas:
                                 taxa_db = Taxa(
@@ -82,25 +80,24 @@ def upload_file_anexo(id_placa):
                                     id_boleto=boleto_db.id
                                 )
                                 db.session.add(taxa_db)
+                            placa.placa = taxas_estruturadas.veiculo.placa
+                            placa.chassi = taxas_estruturadas.veiculo.chassi
                             placa.placa_confeccionada = True
                             db.session.commit()
 
                         if "nota fiscal" in saida_texto.lower():
                             estrutura = leito_nota_fiscal_ia(saida_texto)
-                            print(estrutura)
                             placa.endereco_placa = estrutura.destinatario.endereco_destinatario
                             placa.nome_proprietario = estrutura.destinatario.nome_destinatario
-                            placa.data_emissao_nf = estrutura.nota.data_emissao
-                            placa.chave_acesso = estrutura.nota.chave_acesso
+                            placa.data_emissao_nf = estrutura.nota.data_emissao.replace('/', '')
+                            placa.chave_acesso = estrutura.nota.chave_acesso.replace(' ', '')
                             if estrutura.produto.chassi:
                                 placa.chassi = estrutura.produto.chassi
         
-
                         if "assinatura do comprador" in saida_texto.lower():
                             veiculo = leitor_atpv_ia(saida_texto)
                             placa.chassi = veiculo.chassi
                             placa.nome_proprietario = veiculo.comprador.nome_comprador
-
                     
 
                         if "dados do seguro" in saida_texto.lower():
