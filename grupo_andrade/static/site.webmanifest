@@ -1,7 +1,7 @@
 {
   "name": "Office Space",
   "short_name": "Office",
-  "start_url": "/",
+  "start_url": "/homepage",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
