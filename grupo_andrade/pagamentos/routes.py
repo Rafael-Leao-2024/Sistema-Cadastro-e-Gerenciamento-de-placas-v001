@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request, send_file
 from flask_login import login_required, current_user
 from sqlalchemy import extract
 from grupo_andrade.models import Placa, Pagamento, User
@@ -9,6 +9,8 @@ from grupo_andrade.placas.routes import injetar_notificacao
 from datetime import datetime
 from sqlalchemy import extract, func
 from grupo_andrade.atividade.services import registrar_atividade
+from io import BytesIO
+import pandas as pd
 
 load_dotenv()
 
@@ -80,6 +82,47 @@ def relatorio():
     if not pagadores:
         pagadores += [current_user]
     return render_template("pagamentos/relatorio_form.html", current_year=datetime.now().year, pagadores=pagadores)
+
+
+@pagamentos.route('/exportar-placas/<int:mes>/<int:ano>/<int:id_usuario_pagador>')
+def exportar_placas(mes, ano, id_usuario_pagador):
+    pessoa = User.query.filter(User.id == id_usuario_pagador).first().username
+
+    placas = Placa.query.filter(
+        Placa.id_user == id_usuario_pagador,
+        extract("month", Placa.date_create) == mes,
+        extract("year", Placa.date_create) == ano
+    ).all()
+
+    dados = []
+
+    for p in placas:
+        dados.append({
+            'Data Criaçao': p.date_create.strftime('%d/%m/%Y %H:%M'),
+            'Placaa': p.placa,
+            'Chassi': p.chassi,
+            'Solicitantes': User.query.filter(User.id == p.id_user).first().username,
+            'Proprietarios': p.nome_proprietario,
+            'Honorarios': p.honorario,
+            'NFs': p.chave_acesso,
+            'Data emissao NFs': p.data_emissao_nf,
+            'Status': 'Finalizado' if  p.placa_a_caminho else 'Pendente',
+            'Totais Taxas': sum(boleto.total_taxas() for boleto in p.boletos)
+        })
+    
+    df = pd.DataFrame(data=dados)
+    print(df)
+
+    output = BytesIO()
+    df.to_excel(output, index=False, sheet_name="Placas")
+    output.seek(0)
+
+    return send_file(
+        output,
+        download_name=f'Relatorio mensal {pessoa} {mes}-{ano}.xlsx',
+        as_attachment=True,
+        mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
 
 
 @pagamentos.route("/relatorio/<int:mes>/<int:ano>/<int:id_usuario_pagador>")

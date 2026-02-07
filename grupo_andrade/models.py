@@ -80,7 +80,7 @@ class Placa(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     placa = db.Column(db.String(10), nullable=False, default="ABC1234")
-    chassi = db.Column(db.String(30), nullable=True, default=000000)
+    chassi = db.Column(db.String(30), nullable=True, default=99999999)
     renavan = db.Column(db.String(20))
     endereco_placa = db.Column(db.String(100), nullable=False, default="nenhum")
     crlv = db.Column(db.String(20))
@@ -92,7 +92,7 @@ class Placa(db.Model):
     id_user = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     id_user_recebeu = db.Column(db.Integer)
 
-    honorario = db.Column(db.Float, nullable=False, default=1.01)
+    honorario = db.Column(db.Float, nullable=False, default=29.99)
     nome_proprietario = db.Column(db.String(40), unique=False, nullable=True, default="vazio")
     chave_acesso = db.Column(db.String(200), nullable=True, default="vazio")
     data_emissao_nf = db.Column(db.String(10), nullable=True, default="vazio")

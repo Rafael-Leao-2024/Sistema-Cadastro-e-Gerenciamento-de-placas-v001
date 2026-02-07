@@ -212,6 +212,8 @@ def editar_placa(placa_id):
 @placas.route('/solicitar_placas', methods=['GET', 'POST'])
 @login_required
 def solicitar_placas():
+    valor_default = Placa.honorario.default.arg
+    chassi_default = Placa.chassi.default.arg
     despachante = "Sem despachante"
 
     if request.method == "POST" and not current_user.despachante:
@@ -280,7 +282,7 @@ def solicitar_placas():
             flash('Voce nao preencheu os campos com os dados!', 'info')
             return redirect(url_for('placas.solicitar_placas'))     
         
-    return render_template('placas/solicitar_placas.html', titulo='solicitar varias placas', honorario=honorario, endereco=endereco, placa=placa, despachante=despachante)
+    return render_template('placas/solicitar_placas.html', titulo='solicitar varias placas', honorario=honorario, endereco=endereco, placa=placa, despachante=despachante, honorario_default=valor_default, chassi_default=chassi_default)
 
 @placas.route('/notificacoes')
 @login_required
