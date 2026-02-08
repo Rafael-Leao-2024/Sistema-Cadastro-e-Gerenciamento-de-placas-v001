@@ -8,6 +8,20 @@ from .main import db, login_manager
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
+class Loja(db.Model):
+    __tablename__ = 'lojas'
+
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(120), nullable=False)
+    cnpj = db.Column(db.String(20))
+    ativa = db.Column(db.Boolean, default=True)
+    usuarios = db.relationship("User", backref="loja", lazy=True)
+
+    def __repr__(self):
+        return f"Loja(nome={self.nome}, cnpj={self.cnpj}, ativa={self.ativa})"
+
+
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
     
@@ -18,6 +32,12 @@ class User(db.Model, UserMixin):
     is_admin = db.Column(db.Boolean, default=False)
     data_criacao = db.Column(db.DateTime, default=datetime.now)
     despachante = db.Column(db.Integer, default=0)
+
+    loja_id = db.Column(
+        db.Integer,
+        db.ForeignKey("lojas.id"),
+        nullable=True  # começa True pra não quebrar dados antigos
+    )
 
     cpf_cnpj = db.Column(db.String(100), nullable=False, default='00.000.000.0000/00 ou 000.000.000-00')
     rg = db.Column(db.String(100), nullable=False, default='71.69553 SDS-PE')
@@ -41,6 +61,12 @@ class User(db.Model, UserMixin):
         if not despachante:
             return "Ainda nao ha despachante"
         return despachante.username
+    
+    def ver_nome_loja(self):
+        loja = Loja.query.filter(Loja.id == self.loja_id).first()
+        if loja:
+            return f'{loja.nome}'
+        return 'Sem loja'
     
     def calcular_honorarios(self):
         honorarios = [placa.honorario for placa in self.placas if placa.honorario]

@@ -1,0 +1,140 @@
+{% extends "layout.html" %}
+{% block title %}Lojas{% endblock %}
+
+{% block content %}
+<div class="min-h-[70vh] py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+        <!-- Cabeçalho -->
+        <div class="mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-100 mb-2">Lojas</h1>
+                    <p class="text-gray-400">Lojas cadastradas no sistema</p>
+                </div>
+                <div class="flex gap-2">
+                    <a href="{{ url_for('loja.criar_loja') }}" 
+                       class="px-4 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors text-sm">
+                        <i class="fas fa-plus mr-2"></i>
+                        Nova Loja
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Contador simples -->
+            <div class="bg-gray-800 rounded-lg border border-gray-700 p-4 inline-block">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center mr-3">
+                        <i class="fas fa-store text-blue-400"></i>
+                    </div>
+                    <div>
+                        <p class="text-gray-400 text-sm">Total</p>
+                        <p class="text-lg font-semibold text-gray-100">{{ lojas|length }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Lojas -->
+        <div class="space-y-4">
+            {% for loja in lojas %}
+            <a href="{{ url_for('loja.loja_usuarios', loja_id=loja.id) }}">
+            <div class="bg-gray-800 rounded-lg border border-gray-700 p-4 hover:border-gray-600 transition-colors">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <!-- Informações da Loja -->
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full {{ 'bg-green-900/30' if loja.ativa else 'bg-gray-700' }} flex items-center justify-center mr-4">
+                            {% if loja.ativa %}
+                            <i class="fas fa-store text-green-400"></i>
+                            {% else %}
+                            <i class="fas fa-store-slash text-gray-400"></i>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <div class="flex items-center mb-1">
+                                <h3 class="text-gray-100 font-medium">{{ loja.nome }}</h3>
+                                {% if loja.ativa %}
+                                <span class="ml-2 px-2 py-0.5 bg-green-900/30 text-green-400 rounded text-xs">Ativa</span>
+                                {% else %}
+                                <span class="ml-2 px-2 py-0.5 bg-gray-700 text-gray-400 rounded text-xs">Inativa</span>
+                                {% endif %}
+                            </div>
+                            <div class="text-gray-500 text-sm">
+                                ID: {{ loja.id }}
+                                {% if loja.cnpj %}
+                                • CNPJ: {{ loja.cnpj }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ações -->
+                    <div class="flex gap-2">
+                        <a href="{{ url_for('loja.editar_loja', loja_id=loja.id) }}"
+                           class="px-3 py-1.5 border border-gray-600 text-gray-300 rounded hover:bg-gray-700 transition-colors text-sm">
+                            Editar
+                        </a>
+                    </div>
+                </div>
+            </div>
+            </a>
+            {% endfor %}
+            
+            {% if not lojas %}
+            <!-- Estado vazio -->
+            <div class="bg-gray-800 rounded-lg border border-gray-700 p-8 text-center">
+                <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-gray-700 flex items-center justify-center">
+                    <i class="fas fa-store text-gray-400"></i>
+                </div>
+                <h3 class="text-gray-300 mb-2">Nenhuma loja cadastrada</h3>
+                <p class="text-gray-500 text-sm mb-6">Comece criando sua primeira loja</p>
+                <a href="{{ url_for('loja.criar_loja') }}" 
+                   class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm inline-block">
+                    <i class="fas fa-plus mr-2"></i>
+                    Criar Primeira Loja
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Animações sutis */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .space-y-4 > div {
+        animation: fadeIn 0.3s ease-out forwards;
+        opacity: 0;
+    }
+    
+    .space-y-4 > div:nth-child(1) { animation-delay: 0.1s; }
+    .space-y-4 > div:nth-child(2) { animation-delay: 0.2s; }
+    .space-y-4 > div:nth-child(3) { animation-delay: 0.3s; }
+    
+    /* Responsividade */
+    @media (max-width: 640px) {
+        .flex-col {
+            align-items: stretch;
+        }
+        
+        .flex-col .flex {
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Nada complexo, apenas a página simples
+    });
+</script>
+{% endblock %}

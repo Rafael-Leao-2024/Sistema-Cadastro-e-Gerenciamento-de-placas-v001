@@ -70,7 +70,7 @@
                         <p class="text-gray-400 text-sm">Pagador</p>
                         <p class="text-sm font-medium text-gray-100 truncate">
                             {% if pagador_selecionado %}
-                                {{ pagador_selecionado.username }}
+                                {{ pagador_selecionado.ver_nome_loja() }}
                             {% else %}
                                 Todos
                             {% endif %}

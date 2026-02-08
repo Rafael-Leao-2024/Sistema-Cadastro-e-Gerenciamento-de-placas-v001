@@ -1,0 +1,227 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="min-h-[70vh] py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+        <!-- Cabeçalho -->
+        <div class="mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                    <h1 class="text-xl font-semibold text-gray-100 mb-2">{{ loja.nome }}</h1>
+                    <div class="flex items-center gap-4">
+                        <span class="text-gray-400 text-sm">ID: {{ loja.id }}</span>
+                        {% if loja.ativa %}
+                        <span class="px-2 py-1 bg-green-900/30 text-green-400 rounded text-xs">Ativa</span>
+                        {% else %}
+                        <span class="px-2 py-1 bg-gray-700 text-gray-400 rounded text-xs">Inativa</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <a href="{{ url_for('loja.mostrar_lojas') }}" 
+                       class="px-3 py-2 border border-gray-600 text-gray-300 rounded hover:bg-gray-700 transition-colors text-sm">
+                        ← Voltar
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Estatísticas -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-gray-800 rounded border border-gray-700 p-4">
+                    <div class="text-gray-400 text-xs mb-1">Total Usuários</div>
+                    <div class="text-xl font-semibold text-gray-100">{{ usuarios|length }}</div>
+                </div>
+                
+                <div class="bg-gray-800 rounded border border-gray-700 p-4">
+                    <div class="text-gray-400 text-xs mb-1">Total Placas</div>
+                    <div class="text-xl font-semibold text-gray-100">
+                        {{ usuarios|sum(attribute='total_placas') }}
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800 rounded border border-gray-700 p-4">
+                    <div class="text-gray-400 text-xs mb-1">Média/Usuário</div>
+                    <div class="text-xl font-semibold text-gray-100">
+                        {% if usuarios|length > 0 %}
+                        {{ (usuarios|sum(attribute='total_placas') / usuarios|length)|round(1) }}
+                        {% else %}0{% endif %}
+                    </div>
+                </div>
+                
+                <div class="bg-gray-800 rounded border border-gray-700 p-4">
+                    <div class="text-gray-400 text-xs mb-1">Disponíveis</div>
+                    <div class="text-xl font-semibold text-gray-100">{{ usuarios_sem_loja|length }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Usuários da Loja -->
+        <div class="mb-8">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-medium text-gray-300">Usuários desta Loja</h2>
+                <span class="text-gray-400 text-sm">{{ usuarios|length }} usuário(s)</span>
+            </div>
+            
+            {% if usuarios %}
+            <div class="space-y-3">
+                {% for usuario in usuarios %}
+                <div class="bg-gray-800 rounded border border-gray-700 p-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <!-- Informações do Usuário -->
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-4">
+                                <span class="text-gray-300 font-medium">{{ usuario.username|first|upper }}</span>
+                            </div>
+                            <div>
+                                <div class="text-gray-100 font-medium">{{ usuario.username }}</div>
+                                <div class="text-gray-500 text-sm">{{ usuario.email }}</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Estatísticas do Usuário -->
+                        <div class="flex items-center gap-6">
+                            <div class="text-center">
+                                <div class="text-gray-400 text-xs">Placas</div>
+                                <div class="text-gray-100 font-semibold">{{ usuario.total_placas }}</div>
+                            </div>
+                            
+                            <div class="text-center">
+                                <div class="text-gray-400 text-xs">Cadastro</div>
+                                <div class="text-gray-100 text-sm">{{ usuario.data_criacao.strftime('%d/%m/%y') }}</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Ações -->
+                        <div class="flex gap-2">
+                            <a href="{{ url_for('loja.remover_usuario_loja', loja_id=loja.id, usuario_id=usuario.id) }}"
+                               onclick="return confirm('Remover este usuário da loja?')"
+                               class="px-3 py-1.5 border border-gray-600 text-gray-300 rounded hover:bg-red-900/30 hover:text-red-300 transition-colors text-sm">
+                                Remover
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="bg-gray-800 rounded border border-gray-700 p-8 text-center">
+                <div class="w-12 h-12 mx-auto mb-4 rounded-full bg-gray-700 flex items-center justify-center">
+                    <i class="fas fa-users text-gray-400"></i>
+                </div>
+                <h3 class="text-gray-300 mb-2">Nenhum usuário na loja</h3>
+                <p class="text-gray-500 text-sm">Adicione usuários abaixo</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Adicionar Usuários -->
+        {% if usuarios_sem_loja %}
+        <div>
+            <h2 class="text-lg font-medium text-gray-300 mb-4">Adicionar Usuários à Loja</h2>
+            
+            <div class="space-y-3">
+                {% for usuario in usuarios_sem_loja %}
+                <div class="bg-gray-800 rounded border border-gray-700 p-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <!-- Informações do Usuário -->
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center mr-4">
+                                <span class="text-gray-300 font-medium">{{ usuario.username|first|upper }}</span>
+                            </div>
+                            <div>
+                                <div class="text-gray-100 font-medium">{{ usuario.username }}</div>
+                                <div class="text-gray-500 text-sm">{{ usuario.email }}</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Estatísticas -->
+                        <div class="text-sm text-gray-400">
+                            {% set user_placas = usuario.placas|length %}
+                            {% if user_placas > 0 %}
+                            {{ user_placas }} placa(s)
+                            {% else %}
+                            Sem placas
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Botão Adicionar -->
+                        <a href="{{ url_for('loja.adicionar_usuario_loja', loja_id=loja.id, usuario_id=usuario.id) }}"
+                           class="px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm">
+                            Adicionar
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    /* Animações */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .space-y-3 > div {
+        animation: fadeIn 0.3s ease-out forwards;
+        opacity: 0;
+    }
+    
+    .space-y-3 > div:nth-child(1) { animation-delay: 0.1s; }
+    .space-y-3 > div:nth-child(2) { animation-delay: 0.2s; }
+    .space-y-3 > div:nth-child(3) { animation-delay: 0.3s; }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .grid-cols-4 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (max-width: 640px) {
+        .grid-cols-4, .grid-cols-2 {
+            grid-template-columns: 1fr;
+        }
+        
+        .flex-col .flex {
+            margin-bottom: 0.5rem;
+        }
+        
+        .gap-6 {
+            gap: 1rem;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tooltip para emails longos
+        const emails = document.querySelectorAll('.text-gray-500.text-sm');
+        emails.forEach(email => {
+            if (email.scrollWidth > email.clientWidth) {
+                email.title = email.textContent;
+            }
+        });
+        
+        // Confirmação para remover usuário
+        const removeLinks = document.querySelectorAll('a[href*="remover_usuario_loja"]');
+        removeLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (!confirm('Tem certeza que deseja remover este usuário da loja?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

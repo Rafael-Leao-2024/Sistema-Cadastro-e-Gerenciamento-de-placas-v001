@@ -5,7 +5,7 @@ import secrets
 import os
 
 from grupo_andrade.users.forms import EnderecoForm, UpdateAccountForm
-from grupo_andrade.models import User, Endereco
+from grupo_andrade.models import User, Endereco, Loja
 from grupo_andrade.main import db
 
 
@@ -87,10 +87,13 @@ def account():
 @login_required
 def info_user(user_id):
     user = User.query.filter(User.id == user_id).first()
+    loja = Loja.query.filter_by(id=user.loja_id).first()
+    nome_loja = loja.nome
+
     if not user:
         flash(f"Usuario de ID: {user_id} nao encontrado ", "info")
         return redirect(url_for("users.listar_usuarios"))
-    return render_template('users/info_user.html', user=user)
+    return render_template('users/info_user.html', user=user, nome_loja=nome_loja)
 
 
 @users.route("/usuario/<int:user_id>/delete", methods=['GET', 'POST'])

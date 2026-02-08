@@ -53,6 +53,7 @@ def create_app():
     from grupo_andrade.auth.routes import auth
     from grupo_andrade.users.routes import users
     from grupo_andrade.admin.routes import admin
+    from grupo_andrade.loja.routes import loja_bp
     from grupo_andrade.placas.routes import placas
     from grupo_andrade.pagamentos.routes import pagamentos
     from grupo_andrade.support.routes import support
@@ -65,6 +66,7 @@ def create_app():
     app.register_blueprint(auth)
     app.register_blueprint(users)
     app.register_blueprint(admin)
+    app.register_blueprint(loja_bp)
     app.register_blueprint(placas)
     app.register_blueprint(pagamentos)
     app.register_blueprint(support)

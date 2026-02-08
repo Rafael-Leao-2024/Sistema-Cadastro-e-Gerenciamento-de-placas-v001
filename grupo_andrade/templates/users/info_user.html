@@ -84,6 +84,12 @@
               {{ 'Administrador' if user.is_admin else 'Cliente' }}
             </p>
           </div>
+          <div>
+            <label class="text-sm text-gray-400 block mb-1">Concecionaria</label>
+            <p class="text-gray-200 font-medium">
+              {{ nome_loja|title if nome_loja else 'Nenhuma' }}
+            </p>
+          </div>
         </div>
       </div>
     </div>

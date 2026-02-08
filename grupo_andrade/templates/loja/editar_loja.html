@@ -1,0 +1,186 @@
+{% extends "layout.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="min-h-[70vh] py-8 px-4">
+    <div class="max-w-md mx-auto">
+        <!-- Cabeçalho -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h1 class="text-xl font-semibold text-gray-100 mb-2">Editar Loja</h1>
+                    <p class="text-gray-400 text-sm">ID: {{ loja.id }}</p>
+                </div>
+                <a href="{{ url_for('loja.mostrar_lojas') }}" 
+                   class="px-3 py-2 border border-gray-600 text-gray-300 rounded hover:bg-gray-700 transition-colors text-sm">
+                    Voltar
+                </a>
+            </div>
+        </div>
+
+        <!-- Formulário -->
+        <div class="bg-gray-800 rounded-lg border border-gray-700 p-5">
+            <form method="POST" class="space-y-5">
+                {{ form.hidden_tag() }}
+                
+                <!-- Nome da Loja -->
+                <div>
+                    <label class="block text-gray-300 text-sm mb-2">
+                        Nome da Loja
+                    </label>
+                    {{ form.nome(
+                        class="w-full px-3 py-2.5 bg-gray-900 text-gray-100 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 text-sm",
+                        placeholder="Digite o nome da loja"
+                    ) }}
+                    {% if form.nome.errors %}
+                    <div class="text-red-400 text-xs mt-1">
+                        {% for error in form.nome.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- CNPJ -->
+                <div>
+                    <label class="block text-gray-300 text-sm mb-2">
+                        CNPJ
+                    </label>
+                    {{ form.cnpj(
+                        class="w-full px-3 py-2.5 bg-gray-900 text-gray-100 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 text-sm",
+                        placeholder="00.000.000/0000-00"
+                    ) }}
+                    {% if form.cnpj.errors %}
+                    <div class="text-red-400 text-xs mt-1">
+                        {% for error in form.cnpj.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Status -->
+                <div>
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                        {{ form.ativa(
+                            class="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 focus:ring-2"
+                        ) }}
+                        <span class="text-gray-300 text-sm">Loja ativa</span>
+                    </label>
+                </div>
+
+                <!-- Botões -->
+                <div class="pt-4 border-t border-gray-700">
+                    <div class="flex gap-3">
+                        <button type="submit" 
+                                class="flex-1 bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium text-sm">
+                            Salvar Alterações
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Informações da Loja -->
+        <div class="mt-6 bg-gray-800 rounded-lg border border-gray-700 p-4">
+            <h3 class="text-gray-300 text-sm font-medium mb-3">Informações</h3>
+            <div class="space-y-2 text-sm">
+                <div class="flex justify-between">
+                    <span class="text-gray-400">ID:</span>
+                    <span class="text-gray-300">{{ loja.id }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Status:</span>
+                    {% if loja.ativa %}
+                    <span class="text-green-400">Ativa</span>
+                    {% else %}
+                    <span class="text-gray-400">Inativa</span>
+                    {% endif %}
+                </div>
+                {% if loja.date_created %}
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Criada em:</span>
+                    <span class="text-gray-300">{{ loja.date_created.strftime('%d/%m/%Y') }}</span>
+                </div>
+                {% endif %}
+                {% if loja.usuarios %}
+                <div class="flex justify-between">
+                    <span class="text-gray-400">Vendedores:</span>
+                    <span class="text-gray-300">{{ loja.usuarios|length }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Animação suave */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .bg-gray-800.rounded-lg {
+        animation: fadeIn 0.3s ease-out;
+    }
+    
+    /* Responsividade */
+    @media (max-width: 640px) {
+        .max-w-md {
+            max-width: 100%;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Máscara para CNPJ
+        const cnpjInput = document.querySelector('input[name="cnpj"]');
+        if (cnpjInput) {
+            cnpjInput.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                
+                if (value.length > 14) {
+                    value = value.substring(0, 14);
+                }
+                
+                // Formatar CNPJ
+                if (value.length > 12) {
+                    value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+                } else if (value.length > 8) {
+                    value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})/, "$1.$2.$3/$4");
+                } else if (value.length > 5) {
+                    value = value.replace(/^(\d{2})(\d{3})(\d{3})/, "$1.$2.$3");
+                } else if (value.length > 2) {
+                    value = value.replace(/^(\d{2})(\d{3})/, "$1.$2");
+                }
+                
+                e.target.value = value;
+            });
+        }
+        
+        // Loading no submit
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function() {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalHTML = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = 'Salvando...';
+            submitBtn.disabled = true;
+            
+            // Reset após 5 segundos
+            setTimeout(() => {
+                submitBtn.innerHTML = originalHTML;
+                submitBtn.disabled = false;
+            }, 5000);
+        });
+    });
+</script>
+{% endblock %}
