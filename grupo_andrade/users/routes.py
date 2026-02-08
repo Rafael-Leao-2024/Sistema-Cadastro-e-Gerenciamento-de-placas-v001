@@ -86,9 +86,12 @@ def account():
 @users.route("/usuario/<int:user_id>", methods=['GET', 'POST'])
 @login_required
 def info_user(user_id):
+    nome_loja = "Sem loja"
     user = User.query.filter(User.id == user_id).first()
     loja = Loja.query.filter_by(id=user.loja_id).first()
-    nome_loja = loja.nome
+    if loja:
+        nome_loja = loja.nome
+
 
     if not user:
         flash(f"Usuario de ID: {user_id} nao encontrado ", "info")
