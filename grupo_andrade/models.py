@@ -172,6 +172,14 @@ class UploadFile(db.Model):
     id_usuario = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     id_placa = db.Column(db.Integer, db.ForeignKey('placas.id'), nullable=False)
 
+    def to_public_dict(self):
+        return {
+            "id": self.id,
+            "filename": self.filename,
+            "proprietario": self.placa.nome_proprietario
+        }
+
+
 
 class Boleto(db.Model):
     __tablename__ = "boletos"
