@@ -74,30 +74,33 @@
               </div>
 
               <!-- Actions -->
-              <div class="flex space-x-2">
-                <!-- <a href="https://api.whatsapp.com/send?text={{ url_for('documentos.download_file', name=file.filename, _external=True) }}"
-                   target="_blank"
-                   class="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm">
-                  <i class="fab fa-whatsapp mr-1"></i>
-                  Compartilhar
-                </a> -->
+              <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                <!-- Botão Compartilhar -->
                 <button onclick="sharePDF('{{ file.filename }}')"
-                        class="bg-green-600 text-white px-3 py-2 rounded">
-                  Compartilhar arquivo
+                        class="flex-1 sm:flex-none px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm min-w-[140px] sm:min-w-0">
+                  <i class="fab fa-whatsapp mr-1"></i>
+                  <span class="hidden sm:inline">Compartilhar</span>
+                  <span class="sm:hidden">Compart.</span>
                 </button>
 
+                  <!-- Botão Baixar -->
                 <a href="{{ url_for('documentos.download_file', name=file.filename) }}"
-                   target="_blank"
-                   class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm">
+                  target="_blank"
+                  class="flex-1 sm:flex-none px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm min-w-[100px] sm:min-w-0 text-center">
                   <i class="fas fa-download mr-1"></i>
-                  Baixar
+                  <span class="hidden sm:inline">Baixar</span>
+                  <span class="sm:hidden">Baixar</span>
                 </a>
+
+                  <!-- Botão Excluir -->
                 <a href="{{ url_for('documentos.delete_file', id_file=file.id) }}"
-                   class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm"
-                   onclick="return confirm('Tem certeza que deseja excluir este documento?')">
+                  class="flex-1 sm:flex-none px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm min-w-[100px] sm:min-w-0 text-center"
+                  onclick="return confirm('Tem certeza que deseja excluir este documento?')">
                   <i class="fas fa-trash mr-1"></i>
-                  Excluir
+                  <span class="hidden sm:inline">Excluir</span>
+                  <span class="sm:hidden">Excluir</span>
                 </a>
+
               </div>
             </div>
           </div>
