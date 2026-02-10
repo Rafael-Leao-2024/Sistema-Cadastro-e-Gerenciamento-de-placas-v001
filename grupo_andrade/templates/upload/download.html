@@ -75,6 +75,17 @@
 
               <!-- Actions -->
               <div class="flex space-x-2">
+                <!-- <a href="https://api.whatsapp.com/send?text={{ url_for('documentos.download_file', name=file.filename, _external=True) }}"
+                   target="_blank"
+                   class="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm">
+                  <i class="fab fa-whatsapp mr-1"></i>
+                  Compartilhar
+                </a> -->
+                <button onclick="sharePDF('{{ file.filename }}')"
+                        class="bg-green-600 text-white px-3 py-2 rounded">
+                  Compartilhar arquivo
+                </button>
+
                 <a href="{{ url_for('documentos.download_file', name=file.filename) }}"
                    target="_blank"
                    class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm">
@@ -268,6 +279,46 @@ function limparPlacasAntigas() {
 
 // chama ao carregar a página
 limparPlacasAntigas();
+
+</script>
+
+<script>
+
+async function sharePDF(filename) {
+
+  // verifica suporte
+  if (!navigator.canShare || !navigator.share) {
+    alert("Seu navegador não suporta compartilhar arquivo");
+    return;
+  }
+
+  try {
+
+    // 1️⃣ busca o PDF da sua rota Flask
+    const resp = await fetch(`/documentos/upload/${filename}`);
+
+    // 2️⃣ transforma em blob
+    const blob = await resp.blob();
+
+    // 3️⃣ cria arquivo
+    const file = new File(
+      [blob],
+      "documento.pdf",
+      { type: "application/pdf" }
+    );
+
+    // 4️⃣ abre menu compartilhar
+    await navigator.share({
+      title: "Documento",
+      text: "Segue o PDF",
+      files: [file]
+    });
+
+  } catch (e) {
+    alert("Erro ao compartilhar");
+    console.error(e);
+  }
+}
 
 </script>
 

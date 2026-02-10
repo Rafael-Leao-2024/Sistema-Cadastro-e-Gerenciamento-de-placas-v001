@@ -34,7 +34,6 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @documentos_bp.route("/upload/<name>")
-@login_required
 def download_file(name):
     return ver_arquivo(filename=name)
 
@@ -164,7 +163,7 @@ def download_anexos(id_placa):
         return redirect(url_for('placas.gerenciamento_pedidos'))
 
     files = UploadFile.query.filter(UploadFile.id_placa == id_placa).all()
-    return render_template('upload/download.html', files=files, title="todos Downloads", placa=placa, estrutura=None)
+    return render_template('upload/download.html', files=files, title="todos Downloads", placa=placa, estrutura={})
 
 
 @documentos_bp.route('/upload/<id_file>/delete', methods=['GET', 'POST'])
