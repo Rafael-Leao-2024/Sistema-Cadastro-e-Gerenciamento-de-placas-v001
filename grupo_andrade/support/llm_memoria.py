@@ -49,21 +49,21 @@ def memory_window(messages, k=30):
 
 def conversa_memoria():
 # crie uma cadeia LLM simples que usa apenas as ultimas K conversas  
-    chatgpt = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.1)
+    # chatgpt = ChatOpenAI(model_name="gpt-4o-mini", temperature=0.1)
 
-    llm_chain = (RunnablePassthrough.assign(history=lambda x: memory_window(x["history"]))  
-                | prompt  
-                | chatgpt  
-                | StrOutputParser()) 
+    # llm_chain = (RunnablePassthrough.assign(history=lambda x: memory_window(x["history"]))  
+    #             | prompt  
+    #             | chatgpt  
+    #             | StrOutputParser()) 
 
-    # crie uma cadeia de conversacao para lidar com o historico baseado em sessao.  
-    conv_chain = RunnableWithMessageHistory(
-        llm_chain,
-        get_session_history_db,
-        input_messages_key="input",
-        history_messages_key="history",
-        prompt=prompt
-        )
+    # # crie uma cadeia de conversacao para lidar com o historico baseado em sessao.  
+    # conv_chain = RunnableWithMessageHistory(
+    #     llm_chain,
+    #     get_session_history_db,
+    #     input_messages_key="input",
+    #     history_messages_key="history",
+    #     prompt=prompt
+    #     )
 
-    return conv_chain
+    return {}#conv_chain
 

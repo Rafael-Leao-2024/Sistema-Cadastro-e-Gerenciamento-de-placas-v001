@@ -46,15 +46,15 @@ def chat():
 
 
 def agent_ferramenta(memory):
-        agent = initialize_agent(
-        agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
-        llm=ChatOpenAI(temperature=0.5, model_name="gpt-4o-mini"),
-        tools=ferramentas,
-        memory=memory,
-        verbose=True,
-        handle_parsing_errors=True,
-       )
-        return agent
+#         agent = initialize_agent(
+#         agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
+#         llm=ChatOpenAI(temperature=0.5, model_name="gpt-4o-mini"),
+#         tools=ferramentas,
+#         memory=memory,
+#         verbose=True,
+#         handle_parsing_errors=True,
+    return {}# agent
+
 
 
 @support.route('/question', methods=['POST'])
